@@ -4,7 +4,7 @@ Business tools belong to Core and do not inherit from PydanticAI Tool. Parameter
 are a Pydantic BaseModel subclass; the adapter owns upstream schema conversion.
 
 PydanticAI 2.48.0 `Tool.from_schema` does not perform strong validation using our
-business parameter model. A future bridge must execute this before any side effect:
+business parameter model. The implemented bridge executes this before any business side effect:
 
 ```python
 validated = parameters.model_validate(raw_args)
@@ -17,8 +17,16 @@ Catch parameter ValidationError and translate it to a safe retry signal without
 disclosing raw sensitive inputs. Do not invoke the tool first. Do not translate all
 ordinary business exceptions into parameter retries or repeat side effects blindly.
 
-Phase 1A stores the definition; it does not implement this bridge. Phase 0 used a
-FunctionModel probe to verify invalid arguments -> retry -> valid arguments -> one
-business side effect. The production bridge must retain an equivalent regression test.
+Phase 1B uses a positional-only injected RunContext and passes the original ctx.deps
+to invoke; the injected argument does not appear in the business parameter schema.
+Strict types and extra="forbid" are enforced when specified by the parameter model.
+ValidationError becomes a generic ModelRetry; the business invocation sits outside
+that exception handler, so ordinary business failures propagate.
+
+Offline regression tests migrate Phase 0's invalid -> retry -> valid scenario and
+verify exactly one side effect for that corrected call, zero calls on invalid input,
+JSON-compatible tool results, and heterogeneous parameter models. This is not a
+general exactly-once guarantee. The JSON return contract remains a typed obligation
+of business tools, not a new adapter coercion/serialization policy.
 
 Source: [Tool.from_schema at the tested baseline](https://github.com/pydantic/pydantic-ai/blob/06be8e7a0056d6c6c72d2868f6b26ee8e7364c77/pydantic_ai_slim/pydantic_ai/tools.py).

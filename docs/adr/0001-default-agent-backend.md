@@ -1,6 +1,6 @@
 # ADR-0001: Default Agent backend
 
-Status: accepted in Phase 0; Phase 1A implements contracts and guards only.
+Status: accepted in Phase 0; Phase 1B implements the runtime without changing Core.
 
 ## Context
 
@@ -27,7 +27,11 @@ The hypothesis that Tool.from_schema enforces the supplied business schema was
 false: the bridge must explicitly validate before side effects. A FunctionModel
 probe verified invalid -> retry -> valid -> one side effect. See [tool rules](../architecture/tool-contract.md).
 AbstractAgent.run already encapsulates graph iteration, so a thin adapter need not
-depend on private graph or schema helpers.
+depend on private graph or schema helpers. Phase 1B migrates all five probe behaviors
+into self-contained product tests through PydanticAgentBackend: schema context
+exclusion, dependency/history continuity, typed output, request limits, and validated
+retry before side effects. Additional tests cover version/decode ordering, malformed
+payload redaction, finite tool budgets, and failure without returned replacement state.
 
 Sources: [Agent run](https://github.com/pydantic/pydantic-ai/blob/06be8e7a0056d6c6c72d2868f6b26ee8e7364c77/pydantic_ai_slim/pydantic_ai/agent/abstract.py),
 [Tool](https://github.com/pydantic/pydantic-ai/blob/06be8e7a0056d6c6c72d2868f6b26ee8e7364c77/pydantic_ai_slim/pydantic_ai/tools.py),
@@ -59,8 +63,9 @@ Native message/schema semantics and tracing may change despite stable method nam
 Tool.from_schema needs explicit validation. Tool side effects are not transactional;
 basic snapshots are not crash recovery or exactly-once execution. Real providers,
 streaming, cancellation and lifecycle semantics remain future validation work.
-Phase 0 ran Python 3.12.7 only; Phase 1A adds Python 3.11 validation for the contract
-and package boundary, not a complete backend runtime certification.
+Phase 0 ran Python 3.12.7 only; the product validation matrix now covers Python 3.11
+and 3.12 with offline models. This does not certify real providers or the deferred
+cancellation, resource ownership, and same-session serialization requirements in #6.
 
 ## Version pinning strategy
 

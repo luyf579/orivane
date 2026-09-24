@@ -1,7 +1,7 @@
 [project]
 name = "agent-framework-backend-pydantic"
 version = "0.1.0.dev0"
-description = "Provisional PydanticAI adapter boundary; execution not yet implemented"
+description = "Development PydanticAI runtime with validated tools and native session state"
 requires-python = ">=3.11"
 dependencies = ["agent-framework-core==0.1.0.dev0", "pydantic-ai-slim==2.48.0"]
 classifiers = ["Private :: Do Not Upload"]

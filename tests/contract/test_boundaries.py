@@ -34,3 +34,27 @@ def test_distribution_dependency_direction() -> None:
 def test_adapter_can_use_core_without_initializing_a_model() -> None:
     state = agent_framework_core.SessionState("pydantic-ai", 1, "2.48.0", b"opaque")
     agent_framework_pydantic.validate_session_state(state)
+
+
+def test_core_has_no_native_history_types_or_new_public_abstractions() -> None:
+    forbidden = {
+        "ModelMessage",
+        "ModelRequest",
+        "ModelResponse",
+        "ModelMessagesTypeAdapter",
+        "Message",
+        "ChatMessage",
+        "UniversalMessage",
+        "ToolCall",
+        "ToolResult",
+        "ProviderBackend",
+        "ModelBackend",
+        "TraceEvent",
+        "UniversalRunContext",
+    }
+    for path in (ROOT / "packages/core/src").rglob("*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        names = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name)}
+        names.update(n.name for n in ast.walk(tree) if isinstance(n, ast.ClassDef))
+        assert names.isdisjoint(forbidden), path
+    assert forbidden.isdisjoint(agent_framework_core.__all__)

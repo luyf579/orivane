@@ -6,17 +6,46 @@ Working name. Repository and package names may change before public release.
 Names are provisional until pre-public branding review.
 
 This repository is in private development and is **not production ready**.
-Agent is the core abstraction. PydanticAI is the first planned backend; business
+Agent is the core abstraction. PydanticAI is the first backend; business
 code should depend on our contract rather than directly on PydanticAI.
 Commerce extension is planned but not in current scope.
 
-## Phase 1A status
+## Phase 1B status
 
 - `agent-framework-core` / `agent_framework_core`: five public contract types.
-- `agent-framework-backend-pydantic` / `agent_framework_pydantic`: package boundary
-  and session compatibility guards only; actual Agent execution is not implemented.
+- `agent-framework-backend-pydantic` / `agent_framework_pydantic`: real PydanticAI
+  backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
 - No CLI, workflow engine, commerce, multi-backend implementation, or public release.
+
+`PydanticAgentBackend` takes a public PydanticAI Model object, an explicit output_type,
+optional instructions/tools, and finite request/tool-call budgets (50 each by default).
+Only the composition root imports backend/model types; business callers use AgentBackend.
+Offline example after development setup:
+
+```python
+import asyncio
+from agent_framework_core import AgentBackend, RunRequest
+from agent_framework_pydantic import PydanticAgentBackend
+from pydantic_ai.models.test import TestModel
+
+
+async def main() -> None:
+    backend: AgentBackend[None, str] = PydanticAgentBackend(
+        TestModel(custom_output_text="done"), output_type=str
+    )
+    result = await backend.run(RunRequest("hello", None))
+    print(result.output)
+
+
+asyncio.run(main())
+```
+
+Only successful runs return a replacement SessionState. Failures propagate without
+automatic whole-run retry; tool side effects cannot be rolled back. Session storage,
+same-session serialization, cancellation/resource ownership, and real-provider
+integration are not certified in this phase. Native histories may contain sensitive
+inputs; callers must protect stored payloads. This is not a durable session system.
 
 ## Development
 
