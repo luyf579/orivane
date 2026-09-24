@@ -15,7 +15,11 @@ _OutputT = TypeVar("_OutputT")
 
 
 class PydanticAgentBackend(Generic[_DepsT, _OutputT]):
-    """Development runtime; no session storage, resource ownership, or automatic run retries."""
+    """Borrow the caller's Model; own only the Agent, with no external resources.
+
+    Cancellation propagates without a result or automatic whole-run retry.
+    Model lifecycle and logical-session serialization remain caller responsibilities.
+    """
 
     def __init__(
         self,
