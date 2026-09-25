@@ -1,7 +1,7 @@
 # Minimal Backend Contract v0
 
 Phase 0 established one replaceable runtime boundary: an Agent's complete async run.
-Phase 1A established the following five types in `agent_framework_core`; Phases 1B/1C
+Phase 1A established the following five types in `agent_framework_core`; Phases 1B–1D-B
 keep their source and public API unchanged:
 
 | Type | Fields / method |
@@ -96,8 +96,9 @@ Offline tests use asyncio.Event handshakes and bounded waits, not timing sleeps.
 ## Same-session serialization
 
 AgentBackend itself does not serialize concurrent runs belonging to one logical
-session. Caller/Core runtime must eventually provide logical session identity and
-serialization; the design is left to Phase 1D and remains open in Issue #6.
+session. Phase 1D-B adds the separate Core
+[InMemorySessionRuntime](session-runtime.md) to own explicit identity and in-process
+serialization above this unchanged backend contract.
 The current contract has no session_id, store, executor, or lock ownership. Do not
 infer identity from id(SessionState), payload hashes, prompt text, or context
 identity. No global/backend-wide lock is added to serialize unrelated sessions,
@@ -112,8 +113,8 @@ round-trips, finite limits and failure non-commit. Phase 1C adds offline model/t
 cancellation, prior-state preservation, and borrowed-resource lifecycle regressions
 on Python 3.11/3.12, without changing Core public API or the pinned PydanticAI version.
 Owned-external-resource closure is N/A in v0; it needs tests if ownership is introduced.
-Same-session serialization remains open in Issue #6; the adapter does not persist
-sessions. A second backend must pass the same applicable contract tests.
+Phase 1D-B covers same-session ordering in the outer in-memory runtime; the adapter
+does not persist sessions. A second backend must pass the same applicable contract tests.
 Existing native sessions stay with their original backend; prefer new sessions
 when switching. Define tested conversion only when lossless migration is required.
 

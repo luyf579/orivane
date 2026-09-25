@@ -10,9 +10,10 @@ Agent is the core abstraction. PydanticAI is the first backend; business
 code should depend on our contract rather than directly on PydanticAI.
 Commerce extension is planned but not in current scope.
 
-## Phase 1B status
+## Development status
 
-- `agent-framework-core` / `agent_framework_core`: five public contract types.
+- `agent-framework-core` / `agent_framework_core`: five public contract types plus
+  `InMemorySessionRuntime` for explicit in-process session ordering.
 - `agent-framework-backend-pydantic` / `agent_framework_pydantic`: real PydanticAI
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
@@ -42,10 +43,26 @@ asyncio.run(main())
 ```
 
 Only successful runs return a replacement SessionState. Failures propagate without
-automatic whole-run retry; tool side effects cannot be rolled back. Session storage,
-same-session serialization, cancellation/resource ownership, and real-provider
-integration are not certified in this phase. Native histories may contain sensitive
-inputs; callers must protect stored payloads. This is not a durable session system.
+automatic whole-run retry; tool side effects cannot be rolled back. Cancellation and
+borrowed-model ownership are covered by offline tests. Real-provider integration is
+not certified. Native histories may contain sensitive inputs; callers must protect them.
+
+For logical session ordering above an existing backend, inside an async caller:
+
+```python
+from agent_framework_core import InMemorySessionRuntime
+
+runtime = InMemorySessionRuntime(backend, max_sessions=100)
+runtime.create_session("example")
+result = await runtime.run("example", "hello", deps)
+runtime.delete_session("example")  # requires an idle session
+```
+
+Reuse one runtime on one event loop. Creation is explicit, capacity is required, and
+unknown IDs fail. Same-session load/run/commit is serialized while different sessions
+may overlap. State exists only in memory; no persistence or multi-process guarantee.
+See [session runtime](docs/architecture/session-runtime.md) for cancellation, deletion
+and capacity rules.
 
 ## Development
 

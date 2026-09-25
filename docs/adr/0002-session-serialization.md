@@ -1,6 +1,25 @@
 # ADR-0002: Same-session serialization
 
-Status: Proposed
+Status: Accepted
+
+Implementation: `InMemorySessionRuntime` (Phase 1D-B).
+
+## Implementation
+
+Phase 1D-B implements the accepted in-process decision as one public concrete Core
+type: `InMemorySessionRuntime[DepsT, OutputT]`, above the unchanged AgentBackend.
+It uses explicit creation, an opaque non-empty string ID, a required positive
+`max_sessions`, idle-only deletion, and reference-counted per-session entries.
+Load/run/synchronous commit occur under the same lock. Holders and waiters retain
+their entry before the first await; finally releases the reference on every exit.
+Idle lock cleanup preserves committed state; only explicit deletion frees capacity.
+
+The guarantee requires one shared runtime, one process/event loop, and same-thread
+management. There is no persistence, thread/process coordination, transaction manager,
+automatic retry, or exactly-once guarantee. No second runtime/store protocol is added.
+See [the implemented API and error semantics](../architecture/session-runtime.md).
+The option comparison and future-storage analysis below retain the Phase 1D-A design
+rationale; deferred durable/multi-process capabilities are not implemented by acceptance.
 
 ## Context
 
@@ -9,7 +28,8 @@ AgentBackend. Issue #6 still requires same-session serialization. A SessionState
 an opaque replacement snapshot, not a logical session handle. RunRequest carries
 prompt, context and optional state; it carries no durable identity or storage policy.
 We need a design usable from both a local CLI and a Web service, while preserving
-the five existing Core types. **NO SESSION RUNTIME IMPLEMENTED** in this PR.
+the five existing Core types. Phase 1D-A implemented no runtime; Phase 1D-B adds only
+the concrete type identified above and leaves those five types unchanged.
 
 ## Empirical current behavior
 
@@ -77,7 +97,7 @@ D: introduce a SessionStore/runtime abstraction owning identity, state and seria
 
 ## Decision
 
-PROPOSED: prefer **B**, one small concrete session execution runtime above
+ACCEPTED: prefer **B**, one small concrete session execution runtime above
 AgentBackend, initially owning identity lookup, in-memory latest state and per-session
 coordination together. Do not introduce separate public Executor, Store and LockRegistry
 protocols at once. B takes the minimal identity/state responsibilities needed for correct
@@ -210,11 +230,12 @@ it through AgentBackend. Do not add a public storage protocol for an imagined se
 ## Public API pressure
 
 No change to ToolDefinition, SessionState, RunRequest, RunResult or AgentBackend is required.
-No Core export, runtime module, custom ID class, store or locking API is implemented here.
-The recommended future concrete runtime entry point is itself new surface and needs
-Maintainer approval in Phase 1D-B; preserving the five Core types does not pre-approve
-that future API. There is no evidence requiring PUBLIC_API_CHANGE_REQUIRED for the current
-backend contract. State retention and durable save outcomes remain explicit review gates.
+Phase 1D-B approval adds only the concrete InMemorySessionRuntime export and its private
+implementation module. No custom ID class, store protocol or public locking API is added.
+The five original types remain unchanged. There is no evidence requiring
+PUBLIC_API_CHANGE_REQUIRED for the current backend contract. The implemented capacity
+and idle deletion rules address in-memory retention; durable save outcomes remain a
+future review gate.
 
 ## Implementation sketch
 
@@ -244,14 +265,15 @@ are reviewed. No application should bypass this owner when accessing managed ses
 
 ## Exit criteria
 
-Phase 1D-A: empirical same-state and independent-session probes, both completion orders,
+Phase 1D-A completed: empirical same-state and independent-session probes, both completion orders,
 weak-reference lifetime probe, Proposed ADR, Python 3.11/3.12 checks and review bundle;
-Issue #6 stays OPEN. Maintainer reviews this decision before any implementation.
+Issue #6 stayed OPEN. Maintainer accepted this decision for Phase 1D-B implementation.
 
-If approved, Phase 1D-B must prove: same-ID requests load the previous committed result;
+Phase 1D-B acceptance requires: same-ID requests load the previous committed result;
 different IDs overlap; cancellation while waiting/holding/running releases ownership;
 failure never produces a false successful commit; entry cleanup cannot create two active
 locks per ID and does not grow with idle IDs; session deletion/capacity rules are explicit;
 Core/backend contracts remain unchanged. Persistence or multi-process claims need separate
 evidence. Today's fork characterization should remain explicitly about raw AgentBackend;
-future runtime correctness needs different tests. No Phase 1D-B work starts in this PR.
+runtime correctness uses separate tests. The Phase 1D-B PR remains open for code review;
+Issue #6 closes only when that PR is merged.

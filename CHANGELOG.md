@@ -4,6 +4,9 @@
 
 ### Added
 
+- InMemorySessionRuntime with explicit logical session identity.
+- Per-session in-process serialization and cancellation-safe entry cleanup.
+- Explicit session creation, capacity and idle-only deletion semantics.
 - Initial workspace.
 - Minimal backend contract.
 - Development tooling.
