@@ -13,11 +13,12 @@ Commerce extension is planned but not in current scope.
 ## Development status
 
 - `agent-framework-core` / `agent_framework_core`: five public contract types plus
-  `InMemorySessionRuntime` for explicit in-process session ordering.
+  `InMemorySessionRuntime` for explicit in-process session ordering and `Workflow`
+  for typed linear async steps and basic if/else.
 - `agent-framework-backend-pydantic` / `agent_framework_pydantic`: real PydanticAI
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
-- No CLI, workflow engine, commerce, multi-backend implementation, or public release.
+- No CLI, durable workflow engine, commerce, multi-backend implementation, or public release.
 
 `PydanticAgentBackend` takes a public PydanticAI Model object, an explicit output_type,
 optional instructions/tools, and finite request/tool-call budgets (50 each by default).
@@ -63,6 +64,38 @@ unknown IDs fail. Same-session load/run/commit is serialized while different ses
 may overlap. State exists only in memory; no persistence or multi-process guarantee.
 See [session runtime](docs/architecture/session-runtime.md) for cancellation, deletion
 and capacity rules.
+
+For linear async steps and basic if/else:
+
+```python
+import asyncio
+from agent_framework_core import Workflow
+
+
+async def prepare(value: str) -> str:
+    return value.strip()
+
+
+async def revise(value: str) -> str:
+    return "ready"
+
+
+async def accept(value: str) -> str:
+    return value
+
+
+workflow = (
+    Workflow[str]()
+    .then("prepare", prepare)
+    .branch("quality", lambda value: not value, if_true=revise, if_false=accept)
+)
+assert asyncio.run(workflow.run("  ")) == "ready"
+```
+
+Composition returns new workflows; each run executes only the selected branch.
+Errors and cancellation propagate without retry or rollback. This is linear only,
+with no DAG, Graph or durable workflow. See [Workflow v0](docs/architecture/workflow.md)
+for value ownership, concurrency and an example using the owned AgentBackend contract.
 
 ## Development
 

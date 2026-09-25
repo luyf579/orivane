@@ -4,6 +4,9 @@
 
 ### Added
 
+- Typed linear Workflow with explicit named async steps.
+- Basic conditional branching with synchronous, strictly boolean predicates.
+- Workflow failure/cancellation propagation without implicit retry or rollback.
 - InMemorySessionRuntime with explicit logical session identity.
 - Per-session in-process serialization and cancellation-safe entry cleanup.
 - Explicit session creation, capacity and idle-only deletion semantics.

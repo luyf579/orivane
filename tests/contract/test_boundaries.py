@@ -1,4 +1,5 @@
 import ast
+import sys
 import tomllib
 from pathlib import Path
 
@@ -31,6 +32,17 @@ def test_distribution_dependency_direction() -> None:
     assert adapter["tool"]["uv"]["sources"]["agent-framework-core"] == {"workspace": True}
 
 
+def test_workflow_imports_only_standard_library() -> None:
+    path = ROOT / "packages/core/src/agent_framework_core/_workflow.py"
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        if isinstance(node, ast.Import):
+            assert all(alias.name.split(".")[0] in sys.stdlib_module_names for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            assert node.level == 0
+            assert node.module is not None
+            assert node.module.split(".")[0] in sys.stdlib_module_names
+
+
 def test_adapter_can_use_core_without_initializing_a_model() -> None:
     state = agent_framework_core.SessionState("pydantic-ai", 1, "2.48.0", b"opaque")
     agent_framework_pydantic.validate_session_state(state)
@@ -51,6 +63,17 @@ def test_core_has_no_native_history_types_or_new_public_abstractions() -> None:
         "ModelBackend",
         "TraceEvent",
         "UniversalRunContext",
+        "WorkflowStep",
+        "WorkflowNode",
+        "BranchNode",
+        "Graph",
+        "DAG",
+        "StateMachine",
+        "WorkflowContext",
+        "WorkflowResult",
+        "WorkflowBuilder",
+        "WorkflowEngine",
+        "WorkflowExecutor",
     }
     for path in (ROOT / "packages/core/src").rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"))

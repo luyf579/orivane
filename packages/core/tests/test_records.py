@@ -48,6 +48,7 @@ def test_public_surface_stays_minimal() -> None:
         "RunResult",
         "AgentBackend",
         "InMemorySessionRuntime",
+        "Workflow",
     }
     assert {f.name for f in fields(ToolDefinition)} == {
         "name",
