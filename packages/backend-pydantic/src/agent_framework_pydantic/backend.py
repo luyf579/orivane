@@ -4,8 +4,12 @@ from collections.abc import Sequence
 from typing import Any, Generic, TypeVar
 
 from agent_framework_core import RunRequest, RunResult, ToolDefinition
+from agent_framework_core._observability import _operation
+from opentelemetry import trace
 from pydantic_ai import Agent, UsageLimits
+from pydantic_ai.capabilities import Instrumentation
 from pydantic_ai.models import Model
+from pydantic_ai.models.instrumented import InstrumentationSettings
 
 from ._session import decode_state, encode_result
 from ._tools import build_tool
@@ -42,14 +46,25 @@ class PydanticAgentBackend(Generic[_DepsT, _OutputT]):
             output_type=output_type,
             instructions=instructions,
             tools=[build_tool(tool) for tool in tools],
+            capabilities=[
+                Instrumentation(
+                    settings=InstrumentationSettings(
+                        tracer_provider=trace.get_tracer_provider(),
+                        include_content=False,
+                        include_binary_content=False,
+                        include_model_request_parameters=False,
+                    )
+                )
+            ],
         )
 
     async def run(self, request: RunRequest[_DepsT]) -> RunResult[_OutputT]:
-        history = decode_state(request.state) if request.state is not None else None
-        result = await self._agent.run(
-            request.prompt,
-            deps=request.context,
-            message_history=history,
-            usage_limits=self._limits,
-        )
-        return RunResult(result.output, encode_result(result))
+        with _operation("agent", "run", backend_id="pydantic-ai"):
+            history = decode_state(request.state) if request.state is not None else None
+            result = await self._agent.run(
+                request.prompt,
+                deps=request.context,
+                message_history=history,
+                usage_limits=self._limits,
+            )
+            return RunResult(result.output, encode_result(result))

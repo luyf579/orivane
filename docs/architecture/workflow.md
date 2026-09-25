@@ -133,12 +133,13 @@ special nested workflow node.
 
 No DAG, Graph, State Machine, parallel branches, durable execution, checkpointing,
 automatic retry, multi-agent orchestration, backend selection, provider management,
-session storage, or rollback. No dependency was added; PydanticAI remains 2.48.0.
+session storage, or rollback. Workflow v0 added no dependency; Phase 1F adds the
+OpenTelemetry API for private observability. PydanticAI remains 2.48.0.
 PydanticAI's internal graph is not this public workflow API.
 
 ## Future evolution
 
-Explicit names reserve stable node identity for future observability. Issue #8 will
-address structured logging/tracing separately; no logging, spans, trace events,
-run IDs or metadata were added here. More complex scheduling requires a concrete
+Phase 1F uses explicit names as structural attributes in private
+[logging/tracing](observability.md), without changing Workflow's public API.
+More complex scheduling requires a concrete
 requirement and a separate design decision. See [ADR-0003](../adr/0003-workflow-v0.md).

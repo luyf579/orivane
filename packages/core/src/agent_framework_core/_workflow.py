@@ -4,6 +4,8 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 from typing import Generic, TypeVar
 
+from ._observability import _operation
+
 T = TypeVar("T")
 
 
@@ -53,14 +55,17 @@ class Workflow(Generic[T]):
 
     async def run(self, value: T) -> T:
         """Pass each result to the next node; errors and cancellation propagate."""
-        current = value
-        for node in self._nodes:
-            if isinstance(node, _Step):
-                current = await node.function(current)
-            else:
-                decision = node.predicate(current)
-                if type(decision) is not bool:
-                    raise TypeError("predicate must return bool")
-                function = node.if_true if decision else node.if_false
-                current = await function(current)
-        return current
+        with _operation("workflow", "run"):
+            current = value
+            for node in self._nodes:
+                kind = "step" if isinstance(node, _Step) else "branch"
+                with _operation("workflow", "node", node_name=node.name, node_kind=kind):
+                    if isinstance(node, _Step):
+                        current = await node.function(current)
+                    else:
+                        decision = node.predicate(current)
+                        if type(decision) is not bool:
+                            raise TypeError("predicate must return bool")
+                        function = node.if_true if decision else node.if_false
+                        current = await function(current)
+            return current

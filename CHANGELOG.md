@@ -4,6 +4,9 @@
 
 ### Added
 
+- Structured lifecycle logging and OpenTelemetry parent spans for workflows, sessions and agents.
+- Private run correlation with context restoration and concurrent task isolation.
+- Privacy-safe telemetry defaults and PydanticAI native model/tool spans with content capture disabled.
 - Typed linear Workflow with explicit named async steps.
 - Basic conditional branching with synchronous, strictly boolean predicates.
 - Workflow failure/cancellation propagation without implicit retry or rollback.

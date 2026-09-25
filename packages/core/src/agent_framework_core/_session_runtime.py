@@ -5,6 +5,7 @@ from dataclasses import dataclass, field
 from typing import Generic, TypeVar
 
 from ._contracts import AgentBackend, RunRequest, RunResult, SessionState
+from ._observability import _operation
 
 _DepsT = TypeVar("_DepsT")
 _OutputT = TypeVar("_OutputT")
@@ -52,23 +53,24 @@ class InMemorySessionRuntime(Generic[_DepsT, _OutputT]):
 
     async def run(self, session_id: str, prompt: str, context: _DepsT) -> RunResult[_OutputT]:
         """Load, run and commit under the session lock; propagate failure/cancellation."""
-        self._require_session(session_id)
-        # Lookup/create/retain is synchronous. Count both the holder and all waiters.
-        entry = self._entries.get(session_id)
-        if entry is None:
-            entry = _SessionEntry()
-            self._entries[session_id] = entry
-        entry.users += 1
-        try:
-            async with entry.lock:
-                state = self._sessions[session_id]
-                result = await self._backend.run(RunRequest(prompt, context, state))
-                self._sessions[session_id] = result.next_state
-                return result
-        finally:
-            entry.users -= 1
-            if entry.users == 0 and self._entries.get(session_id) is entry:
-                del self._entries[session_id]
+        with _operation("session", "run"):
+            self._require_session(session_id)
+            # Lookup/create/retain is synchronous. Count both the holder and all waiters.
+            entry = self._entries.get(session_id)
+            if entry is None:
+                entry = _SessionEntry()
+                self._entries[session_id] = entry
+            entry.users += 1
+            try:
+                async with entry.lock:
+                    state = self._sessions[session_id]
+                    result = await self._backend.run(RunRequest(prompt, context, state))
+                    self._sessions[session_id] = result.next_state
+                    return result
+            finally:
+                entry.users -= 1
+                if entry.users == 0 and self._entries.get(session_id) is entry:
+                    del self._entries[session_id]
 
     def delete_session(self, session_id: str) -> None:
         """Delete only an idle session, freeing capacity without cancelling work."""

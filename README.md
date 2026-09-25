@@ -97,6 +97,17 @@ Errors and cancellation propagate without retry or rollback. This is linear only
 with no DAG, Graph or durable workflow. See [Workflow v0](docs/architecture/workflow.md)
 for value ownership, concurrency and an example using the owned AgentBackend contract.
 
+## Observability
+
+The framework emits structural lifecycle logging and OpenTelemetry spans, with
+private run correlation across Workflow, sessions and backend calls. Raw prompts,
+contexts, outputs and tool content are excluded; PydanticAI native child spans use
+content capture disabled. No telemetry is uploaded by default.
+
+The host application controls logging handlers/levels, TracerProvider, sampler,
+exporters and their lifecycle. See [observability](docs/architecture/observability.md)
+for privacy boundaries and configuration responsibility.
+
 ## Development
 
 Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
