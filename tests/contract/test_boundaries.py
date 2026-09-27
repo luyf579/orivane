@@ -90,6 +90,27 @@ def test_observability_does_not_expand_public_api_or_install_exporters() -> None
                     assert node.func.attr not in forbidden_calls, path
 
 
+def test_cli_dependency_and_private_import_boundary() -> None:
+    manifest = tomllib.loads((ROOT / "packages/cli/pyproject.toml").read_text())
+    assert manifest["project"]["dependencies"] == [
+        "agent-framework-core==0.1.0.dev0",
+        "agent-framework-backend-pydantic==0.1.0.dev0",
+        "opentelemetry-sdk>=1.44,<2",
+    ]
+    for path in (ROOT / "packages/cli/src").rglob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if isinstance(node, ast.Import):
+                names = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                names = [node.module or ""]
+            else:
+                names = []
+            assert not any(name.startswith("agent_framework_core._") for name in names)
+            assert not any(name.startswith("opentelemetry.exporter") for name in names)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                assert node.func.id not in {"eval", "exec"}
+
+
 def test_core_has_no_native_history_types_or_new_public_abstractions() -> None:
     forbidden = {
         "ModelMessage",

@@ -4,6 +4,7 @@
 
 ### Added
 
+- Separate developer CLI package with safe offline init, static TOML validate, stdin run and local trace.
 - Structured lifecycle logging and OpenTelemetry parent spans for workflows, sessions and agents.
 - Private run correlation with context restoration and concurrent task isolation.
 - Privacy-safe telemetry defaults and PydanticAI native model/tool spans with content capture disabled.

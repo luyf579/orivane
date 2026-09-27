@@ -137,6 +137,15 @@ The application owns logging handlers, levels and formatting, OTel SDK providers
 sampling, processors, exporters and resource lifecycle. Configure these before
 constructing backends. For local development a host can opt into stdlib logging:
 
+Host applications that want PydanticAI native model/tool spans must configure the
+desired OpenTelemetry TracerProvider before constructing `PydanticAgentBackend`,
+because the adapter supplies the then-current provider to the per-Agent
+instrumentation settings.
+
+backend-pydantic currently accesses Core's private observability helpers as internal
+monorepo coupling, relying on its exact matching Core version dependency. This is
+not a public observability API; the CLI uses standard OTel SDK capture instead.
+
 ```python
 import logging
 

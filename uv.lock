@@ -10,6 +10,7 @@ resolution-markers = [
 [manifest]
 members = [
     "agent-framework-backend-pydantic",
+    "agent-framework-cli",
     "agent-framework-core",
     "agent-framework-workspace",
 ]
@@ -27,6 +28,23 @@ dependencies = [
 requires-dist = [
     { name = "agent-framework-core", editable = "packages/core" },
     { name = "pydantic-ai-slim", specifier = "==2.48.0" },
+]
+
+[[package]]
+name = "agent-framework-cli"
+version = "0.1.0.dev0"
+source = { editable = "packages/cli" }
+dependencies = [
+    { name = "agent-framework-backend-pydantic" },
+    { name = "agent-framework-core" },
+    { name = "opentelemetry-sdk" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "agent-framework-backend-pydantic", editable = "packages/backend-pydantic" },
+    { name = "agent-framework-core", editable = "packages/core" },
+    { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
 ]
 
 [[package]]

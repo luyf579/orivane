@@ -18,7 +18,8 @@ Commerce extension is planned but not in current scope.
 - `agent-framework-backend-pydantic` / `agent_framework_pydantic`: real PydanticAI
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
-- No CLI, durable workflow engine, commerce, multi-backend implementation, or public release.
+- `agent-framework-cli` / `agent_framework_cli`: local init, validate, run and trace commands.
+- No durable workflow engine, commerce, multi-backend implementation, or public release.
 
 `PydanticAgentBackend` takes a public PydanticAI Model object, an explicit output_type,
 optional instructions/tools, and finite request/tool-call budgets (50 each by default).
@@ -96,6 +97,23 @@ Composition returns new workflows; each run executes only the selected branch.
 Errors and cancellation propagate without retry or rollback. This is linear only,
 with no DAG, Graph or durable workflow. See [Workflow v0](docs/architecture/workflow.md)
 for value ownership, concurrency and an example using the owned AgentBackend contract.
+
+## CLI quickstart
+
+After the development setup below, run from the repository root in PowerShell:
+
+```powershell
+uv run --no-sync agent-framework init demo
+uv run --no-sync agent-framework validate demo
+"hello" | uv run --no-sync agent-framework run demo
+"hello" | uv run --no-sync agent-framework trace demo
+```
+
+The generated starter is fully offline and needs no API key. `validate` does not read
+stdin or import the application. `run` and `trace` read the whole prompt from stdin;
+trace displays a local structural span list after the application result. Names are
+provisional. See [CLI documentation](docs/cli.md) for configuration, factory convention,
+privacy and exit codes.
 
 ## Observability
 
