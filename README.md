@@ -1,12 +1,14 @@
-# orivane
+# Orivane
 
-Private development repository for a backend-agnostic Python AI agent framework.
+A small, typed Python runtime for building backend-adaptable AI agents, sessions,
+workflows, observability, and developer tooling.
 
 Orivane is the approved project name. The user accepted the documented GitHub
 same-name discoverability risk; see the [naming decision](docs/release/naming-gate.md).
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**. Naming approval does
-not authorize a release. Versions remain 0.1.0.dev0 and the repository remains private.
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**. This is the early-stage
+v0.1.0 pre-release, version **0.1.0rc1**, under the MIT license. Naming and license
+approval do not authorize publication; the repository remains private.
 
 This repository is in private development and is **not production ready**.
 Agent is the core abstraction. PydanticAI is the first backend; business
@@ -159,7 +161,7 @@ uv run --no-sync coverage report
 
 If uv is installed as a Python user package but its executable is not on PATH,
 replace `uv` with `python -m uv`. Normal tests need no real model credentials.
-Do not publish until license and publication approvals are complete.
+Do not publish until the separate publication approval is complete.
 
 See [contributing](CONTRIBUTING.md), [contract](docs/architecture/backend-contract.md),
 [ADR-0001](docs/adr/0001-default-agent-backend.md), and
@@ -182,8 +184,8 @@ changes require Maintainer approval. The [public release checklist](docs/release
 and [packaging verification](docs/release/packaging.md) describe work still required;
 this repository remains PRIVATE, with no tag, GitHub Release or upload authorized.
 
-## License status
+## License
 
-**LICENSE_DECISION_REQUIRED**. No license has been selected. MIT / Apache-2.0 require
-Maintainer/user decision after [dependency license review](docs/release/license-review.md).
-No public author or maintainer identity is invented in package metadata.
+MIT. See [LICENSE](LICENSE) and the [dependency license review](docs/release/license-review.md).
+Dependencies retain their own licenses. No public author or maintainer identity is
+invented in package metadata.

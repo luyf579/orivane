@@ -1,12 +1,13 @@
-# Security policy (private pre-release)
+# Security policy (0.x / pre-release)
 
-No public release has a supported security maintenance window yet. This repository
-is private development and not production ready. Do not include secrets, prompts,
-native histories or credentials in issues, logs or reports.
+Orivane 0.x is early-stage software. Only the current pre-release line receives
+best-effort fixes; there is no long-term support or guaranteed response window.
+No public release has been published. Do not put credentials, prompts or native
+session histories in Issues, logs or reports.
 
-Use GitHub private vulnerability reporting once enabled. Enabling and verifying that
-channel, or approving an alternative private contact, is a publication gate; this
-document does not claim it is currently enabled. No public security email has been
-approved. Until then, authorized collaborators should contact the repository
-Maintainer through their existing private channel rather than a public issue.
-See [publication gate](docs/release/publication-gate.md).
+After public conversion, use GitHub Private Vulnerability Reporting once enabled
+and verified in the publication phase. The current repository is PRIVATE; this
+document does not claim that reporting is currently enabled. Its unavailability
+for the private repository is not an RC blocker. Until then, authorized collaborators
+should use their existing private Maintainer channel, not a public Issue. No
+unapproved contact email is invented. See [publication gate](docs/release/publication-gate.md).

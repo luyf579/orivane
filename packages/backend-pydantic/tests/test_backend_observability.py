@@ -28,7 +28,7 @@ def spans(
     provider.add_span_processor(SimpleSpanProcessor(exporter))
     monkeypatch.setattr(trace, "get_tracer_provider", lambda: provider)
     for name in ["workflow", "session", "backend.pydantic"]:
-        caplog.set_level(logging.INFO, logger="agent_framework." + name)
+        caplog.set_level(logging.INFO, logger="orivane." + name)
     try:
         yield exporter
     finally:
@@ -84,6 +84,15 @@ async def test_full_chain_privacy_correlation_and_native_model_tool_spans(
     assert calls == ["model", "tool", "model"] * 2
     assert _run_id.get() is None
     text = telemetry_text(spans, caplog)
+    legacy_namespace = "agent" + "_framework"
+    assert legacy_namespace not in text
+    assert all(
+        not key.startswith("a" + "f_") for record in caplog.records for key in record.__dict__
+    )
+    assert {"orivane.workflow", "orivane.session", "orivane.backend.pydantic"} <= {
+        record.name for record in caplog.records
+    }
+    assert all("orivane_event" in record.__dict__ for record in caplog.records)
     for kind in [
         "PROMPT",
         "CONTEXT",
@@ -96,13 +105,16 @@ async def test_full_chain_privacy_correlation_and_native_model_tool_spans(
     ]:
         assert f"SECRET_{kind}_9f12" not in text
     finished = spans.get_finished_spans()
-    framework = [s for s in finished if s.name.startswith("agent_framework.")]
+    framework = [s for s in finished if s.name.startswith("orivane.")]
     assert len(framework) == 8
+    assert all(
+        s.instrumentation_scope and s.instrumentation_scope.name == "orivane" for s in framework
+    )
     by_id = {s.context.span_id: s for s in finished if s.context}
     expected_parent = {
-        "agent_framework.agent.run": "agent_framework.session.run",
-        "agent_framework.session.run": "agent_framework.workflow.node",
-        "agent_framework.workflow.node": "agent_framework.workflow.run",
+        "orivane.agent.run": "orivane.session.run",
+        "orivane.session.run": "orivane.workflow.node",
+        "orivane.workflow.node": "orivane.workflow.run",
     }
     for span in framework:
         assert span.attributes and span.context
@@ -110,21 +122,18 @@ async def test_full_chain_privacy_correlation_and_native_model_tool_spans(
             assert span.parent and by_id[span.parent.span_id].name == expected_parent[span.name]
             parent = by_id[span.parent.span_id]
             assert parent.attributes
-            assert (
-                parent.attributes["agent_framework.run_id"]
-                == span.attributes["agent_framework.run_id"]
-            )
+            assert parent.attributes["orivane.run_id"] == span.attributes["orivane.run_id"]
         records = [
             r
             for r in caplog.records
-            if getattr(r, "af_span_id", None) == format(span.context.span_id, "016x")
+            if getattr(r, "orivane_span_id", None) == format(span.context.span_id, "016x")
         ]
         assert len(records) == 2
         assert all(
-            r.__dict__["af_trace_id"] == format(span.context.trace_id, "032x") for r in records
+            r.__dict__["orivane_trace_id"] == format(span.context.trace_id, "032x") for r in records
         )
         assert all(
-            r.__dict__["af_run_id"] == span.attributes["agent_framework.run_id"] for r in records
+            r.__dict__["orivane_run_id"] == span.attributes["orivane.run_id"] for r in records
         )
     native = [
         s
@@ -135,9 +144,9 @@ async def test_full_chain_privacy_correlation_and_native_model_tool_spans(
     assert {"chat", "execute_tool"} <= operations
     for span in native:
         ancestor = span
-        while ancestor.parent and not ancestor.name.startswith("agent_framework."):
+        while ancestor.parent and not ancestor.name.startswith("orivane."):
             ancestor = by_id[ancestor.parent.span_id]
-        assert ancestor.name == "agent_framework.agent.run"
+        assert ancestor.name == "orivane.agent.run"
 
 
 @pytest.mark.asyncio
@@ -223,25 +232,23 @@ async def test_concurrent_full_chains_and_cancellation(
         await asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=2)
     assert not runtime._entries and _run_id.get() is None
     assert "SECRET_" not in telemetry_text(spans, caplog)
-    framework = [s for s in spans.get_finished_spans() if s.name.startswith("agent_framework.")]
+    framework = [s for s in spans.get_finished_spans() if s.name.startswith("orivane.")]
     assert len(framework) == 8
     for run_id in observed:
-        chain = [
-            s
-            for s in framework
-            if s.attributes and s.attributes["agent_framework.run_id"] == run_id
-        ]
+        chain = [s for s in framework if s.attributes and s.attributes["orivane.run_id"] == run_id]
         assert len(chain) == 4
         assert len({s.context.trace_id for s in chain if s.context}) == 1
     if cancel:
         cancelled = [
-            s
-            for s in framework
-            if s.attributes and s.attributes["agent_framework.outcome"] == "cancelled"
+            s for s in framework if s.attributes and s.attributes["orivane.outcome"] == "cancelled"
         ]
         assert len(cancelled) == 4
         assert (
-            sum(r.af_event.endswith(".cancel") for r in caplog.records if hasattr(r, "af_event"))
+            sum(
+                r.orivane_event.endswith(".cancel")
+                for r in caplog.records
+                if hasattr(r, "orivane_event")
+            )
             == 4
         )
 
@@ -267,7 +274,7 @@ assert trace.get_tracer_provider() is before
 assert root.handlers == handlers and root.level == level
 assert not trace.get_current_span().get_span_context().is_valid
 for name in ["workflow", "session", "backend.pydantic"]:
-    assert not logging.getLogger("agent_framework." + name).handlers
+    assert not logging.getLogger("orivane." + name).handlers
 """
     env = os.environ.copy()
     for name in ["PYTEST_VERSION", "PYTEST_CURRENT_TEST", "CI", "PYDANTIC_AI_NO_BANNER"]:
@@ -278,7 +285,7 @@ for name in ["workflow", "session", "backend.pydantic"]:
     )
     assert result.returncode == 0, result.stderr
     assert result.stdout == ""
-    assert "private" not in result.stderr and "agent_framework." not in result.stderr
+    assert "private" not in result.stderr and "orivane." not in result.stderr
     # The upstream local startup banner is separate from telemetry. Only the host
     # opts out through this public setting; the adapter never changes global policy.
     quiet = "import pydantic_ai\npydantic_ai.BANNER_ENABLED = False\n" + script

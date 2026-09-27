@@ -1,19 +1,19 @@
 # Versioning
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
-Current development version is **0.1.0.dev0** for Core, backend and CLI. Keep it for
-all Phase 1H local builds. No release candidate or final bump is authorized.
+The approved RC version is **0.1.0rc1**, consistently used by Core, backend, CLI and
+the virtual workspace. It replaces private development 0.1.0.dev0. A separately
+approved final release may become 0.1.0; no final bump, tag or upload is authorized here.
 
-Naming is approved. After license approval, a separately approved release may use optional
-`0.1.0rc1`, followed by final `0.1.0`. These are a future sequence, not existing releases.
-The three distributions move together in v0; do not version them independently.
-Backend/Core are tightly coupled, including a private observability helper within
-the monorepo. Backend requires Core == the same version; CLI requires Core and
-backend == that version. Published metadata must contain normal requirements,
-never workspace=true or a checkout path. Current private Orivane wheels test this rule.
+The three distributions move together in v0. Backend/Core are tightly coupled,
+including a private observability helper. Backend requires Core == the same version;
+CLI requires Core and backend == that version. Wheel requirements are ordinary exact
+requirements, never workspace=true or checkout paths. CLI --version reads installed
+distribution metadata, without a second runtime version constant.
 
-Version, dependency pins, lock, changelog, docs and CLI --version must agree. Do not
-rewrite history. Tags/releases/uploads require separate approval after all gates.
-PydanticAI and pydantic-graph remain 2.48.0; an upstream upgrade is deferred to a
-post-v0.1.0 compatibility PR, independent of release metadata preparation.
+The lock change is limited to workspace RC versions; external packages are frozen.
+PydanticAI and pydantic-graph remain 2.48.0; OpenTelemetry API/SDK remain 1.44.0 and
+SDK-required semantic conventions remain 0.65b0 (TRANSITIVE). Keep Private :: Do Not
+Upload until the separately approved final release. MIT and naming approval do not
+authorize publication or a history rewrite.

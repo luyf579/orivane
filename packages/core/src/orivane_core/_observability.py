@@ -10,7 +10,7 @@ from uuid import uuid4
 
 from opentelemetry import trace
 
-_run_id: ContextVar[str | None] = ContextVar("agent_framework_run_id", default=None)
+_run_id: ContextVar[str | None] = ContextVar("orivane_run_id", default=None)
 
 
 @contextmanager
@@ -32,11 +32,15 @@ def _emit(
     with _quiet():
         if not logger.isEnabledFor(logging.INFO):
             return
-        extra: dict[str, object] = {**fields, "af_event": event, "af_duration_ms": duration_ms}
+        extra: dict[str, object] = {
+            **fields,
+            "orivane_event": event,
+            "orivane_duration_ms": duration_ms,
+        }
         context = span.get_span_context()
         if context.is_valid:
-            extra["af_trace_id"] = format(context.trace_id, "032x")
-            extra["af_span_id"] = format(context.span_id, "016x")
+            extra["orivane_trace_id"] = format(context.trace_id, "032x")
+            extra["orivane_span_id"] = format(context.span_id, "016x")
         # INFO avoids logging.lastResort output when the host has no handlers.
         logger.info(event, extra=extra)
 
@@ -53,22 +57,26 @@ def _operation(
     run_id = _run_id.get() or str(uuid4())
     token = _run_id.set(run_id)
     started = perf_counter_ns()
-    fields = {"af_component": component, "af_operation": operation, "af_run_id": run_id}
+    fields = {
+        "orivane_component": component,
+        "orivane_operation": operation,
+        "orivane_run_id": run_id,
+    }
     attributes = {
-        "agent_framework.component": component,
-        "agent_framework.operation": operation,
-        "agent_framework.run_id": run_id,
+        "orivane.component": component,
+        "orivane.operation": operation,
+        "orivane.run_id": run_id,
     }
     for key, attribute, value in (
-        ("af_node_name", "agent_framework.node.name", node_name),
-        ("af_node_kind", "agent_framework.node.kind", node_kind),
-        ("af_backend_id", "agent_framework.backend.id", backend_id),
+        ("orivane_node_name", "orivane.node.name", node_name),
+        ("orivane_node_kind", "orivane.node.kind", node_kind),
+        ("orivane_backend_id", "orivane.backend.id", backend_id),
     ):
         if value is not None:
             fields[key] = value
             attributes[attribute] = value
     logger_name = "backend.pydantic" if component == "agent" else component
-    logger = logging.getLogger("agent_framework." + logger_name)
+    logger = logging.getLogger("orivane." + logger_name)
     event = component + "." + operation
     span: trace.Span = trace.INVALID_SPAN
     stack = ExitStack()
@@ -76,8 +84,8 @@ def _operation(
     terminal = "end"
     try:
         with _quiet():
-            span = trace.get_tracer("agent_framework").start_span(
-                "agent_framework." + event,
+            span = trace.get_tracer("orivane").start_span(
+                "orivane." + event,
                 attributes=attributes,
                 record_exception=False,
                 set_status_on_exception=False,
@@ -91,14 +99,14 @@ def _operation(
         except BaseException as error:
             outcome = "cancelled" if isinstance(error, asyncio.CancelledError) else "error"
             terminal = "cancel" if outcome == "cancelled" else "error"
-            fields["af_error_type"] = type(error).__name__
+            fields["orivane_error_type"] = type(error).__name__
             raise
         finally:
-            fields["af_outcome"] = outcome
+            fields["orivane_outcome"] = outcome
             with _quiet():
-                span.set_attribute("agent_framework.outcome", outcome)
+                span.set_attribute("orivane.outcome", outcome)
                 if outcome == "error":
-                    span.set_attribute("error.type", fields["af_error_type"])
+                    span.set_attribute("error.type", fields["orivane_error_type"])
                     span.set_status(trace.StatusCode.ERROR)
             _emit(logger, event + "." + terminal, fields, span, (perf_counter_ns() - started) / 1e6)
     finally:

@@ -1,8 +1,10 @@
 [project]
 name = "orivane-core"
-version = "0.1.0.dev0"
+version = "0.1.0rc1"
 description = "Typed Orivane agent contracts, sessions and linear workflows"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 keywords = ["agents", "typing", "workflow", "sessions"]
 dependencies = ["pydantic>=2.12,<3", "opentelemetry-api>=1.44,<2"]
@@ -21,4 +23,4 @@ build-backend = "hatchling.build"
 packages = ["src/orivane_core"]
 
 [tool.hatch.build.targets.sdist]
-include = ["/src", "/README.md", "/pyproject.toml"]
+include = ["/src", "/README.md", "/pyproject.toml", "/LICENSE"]

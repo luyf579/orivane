@@ -1,13 +1,15 @@
 [project]
 name = "orivane-cli"
-version = "0.1.0.dev0"
+version = "0.1.0rc1"
 description = "Local developer CLI for Orivane"
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.11"
 keywords = ["agents", "cli", "opentelemetry"]
 dependencies = [
-    "orivane-core==0.1.0.dev0",
-    "orivane-backend-pydantic==0.1.0.dev0",
+    "orivane-core==0.1.0rc1",
+    "orivane-backend-pydantic==0.1.0rc1",
     "opentelemetry-sdk>=1.44,<2",
 ]
 classifiers = ["Private :: Do Not Upload", "Development Status :: 3 - Alpha", "Intended Audience :: Developers", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12"]
@@ -32,4 +34,4 @@ build-backend = "hatchling.build"
 packages = ["src/orivane_cli"]
 
 [tool.hatch.build.targets.sdist]
-include = ["/src", "/README.md", "/pyproject.toml"]
+include = ["/src", "/README.md", "/pyproject.toml", "/LICENSE"]

@@ -35,7 +35,7 @@ def test_cli_init_validate_run_trace_subprocess_roundtrip(tmp_path: Path) -> Non
     assert output == "offline starter"
     assert "SECRET_" not in trace_output + result.stderr
     rows = [json.loads(line) for line in trace_output.splitlines()]
-    framework = next(row for row in rows if row["name"] == "agent_framework.agent.run")
+    framework = next(row for row in rows if row["name"] == "orivane.agent.run")
     native = [row for row in rows if row["attributes"].get("gen_ai.operation.name") == "chat"]
     assert native  # provider installed before backend construction in the starter factory
     assert all(row["trace_id"] == framework["trace_id"] for row in native)

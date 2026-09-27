@@ -57,13 +57,14 @@ def create_runner():
     result, structural = captured.out.split("\nTRACE\n", 1)
     assert result == "SECRET_PROMPT_CLI_9f12"
     assert "SECRET_" not in structural and captured.err == ""
+    assert "agent" + "_framework." not in structural
     if instrumented:
         captured_rows = [json.loads(line) for line in structural.splitlines()]
         rows = {row["name"]: row for row in captured_rows}
-        assert set(rows) == {"agent_framework.workflow.run", "agent_framework.workflow.node"}
+        assert set(rows) == {"orivane.workflow.run", "orivane.workflow.node"}
         assert (
-            rows["agent_framework.workflow.node"]["parent_span_id"]
-            == rows["agent_framework.workflow.run"]["span_id"]
+            rows["orivane.workflow.node"]["parent_span_id"]
+            == rows["orivane.workflow.run"]["span_id"]
         )
     else:
         assert structural == "(no spans)\n"
@@ -166,8 +167,10 @@ def test_cli_trace_formatter_allowlist_ignores_sensitive_native_attributes_and_e
             parent.set_attribute("prompt", secret)
             parent.set_attribute("gen_ai.tool.definitions", secret)
             parent.set_attribute("session_id", secret)
-            parent.set_attribute("agent_framework.run_id", "excluded even though opaque")
-            parent.set_attribute("agent_framework.operation", "run")
+            parent.set_attribute("orivane.run_id", "excluded even though opaque")
+            parent.set_attribute("orivane.operation", "run")
+            parent.set_attribute("agent" + "_framework.operation", "legacy-sentinel")
+            parent.set_attribute("a" + "f_event", "legacy-sentinel")
             parent.set_attribute("gen_ai.operation.name", "chat")
             parent.add_event("SECRET_EXCEPTION_CLI_9f12", {"exception.message": secret})
             parent.set_status(trace.Status(trace.StatusCode.ERROR, secret))
@@ -177,11 +180,12 @@ def test_cli_trace_formatter_allowlist_ignores_sensitive_native_attributes_and_e
         text = format_spans(spans)
         assert text == format_spans(list(reversed(spans)))
         assert "SECRET_" not in text and "excluded even though opaque" not in text
+        assert "legacy-sentinel" not in text
         captured_rows = [json.loads(line) for line in text.splitlines()]
         rows = {row["name"]: row for row in captured_rows}
         parent_row, child_row = rows["safe-parent"], rows["safe-child"]
         assert parent_row["attributes"] == {
-            "agent_framework.operation": "run",
+            "orivane.operation": "run",
             "gen_ai.operation.name": "chat",
         }
         assert parent_row["status"] == "ERROR"

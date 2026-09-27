@@ -13,7 +13,7 @@ Stable event names are LogRecord messages; structured values are LogRecord `extr
 fields. The framework installs no handler or formatter and never calls `basicConfig`
 or changes logger levels. All lifecycle events use INFO, including error/cancel
 events, so unconfigured logging does not trigger Python's WARNING-level lastResort
-handler. Applications can filter on `af_outcome` instead of severity.
+handler. Applications can filter on `orivane_outcome` instead of severity.
 
 Each operation emits `.start` followed by one `.end`, `.error`, or `.cancel` event.
 Ordinary handler/formatter exceptions are isolated and never replace a business
@@ -24,20 +24,20 @@ serialization or repr is performed on either logging path.
 
 | Logger | Event prefixes |
 | --- | --- |
-| `agent_framework.workflow` | `workflow.run`, `workflow.node` |
-| `agent_framework.session` | `session.run` |
-| `agent_framework.backend.pydantic` | `agent.run` |
+| `orivane.workflow` | `workflow.run`, `workflow.node` |
+| `orivane.session` | `session.run` |
+| `orivane.backend.pydantic` | `agent.run` |
 
 ## Stable structural fields
 
-`af_event`, `af_component`, `af_operation`, `af_run_id`, and `af_duration_ms` identify
-events. Terminal records add `af_outcome` (`success`, `error`, `cancelled`). Failure
-and cancellation add only `af_error_type`, never the exception text or traceback.
+`orivane_event`, `orivane_component`, `orivane_operation`, `orivane_run_id`, and `orivane_duration_ms` identify
+events. Terminal records add `orivane_outcome` (`success`, `error`, `cancelled`). Failure
+and cancellation add only `orivane_error_type`, never the exception text or traceback.
 Duration uses `perf_counter_ns`, converted to milliseconds; start records use zero.
 
-Nodes add `af_node_name` and `af_node_kind` (`step` or `branch`). Backend operations
-add `af_backend_id` (`pydantic-ai`). When the current span context is valid, records
-include 32-digit hexadecimal `af_trace_id` and 16-digit `af_span_id`. No-op contexts
+Nodes add `orivane_node_name` and `orivane_node_kind` (`step` or `branch`). Backend operations
+add `orivane_backend_id` (`pydantic-ai`). When the current span context is valid, records
+include 32-digit hexadecimal `orivane_trace_id` and 16-digit `orivane_span_id`. No-op contexts
 omit these fields; the framework does not invent trace IDs.
 
 ## Run correlation
@@ -58,10 +58,10 @@ runs, each with its own run_id but sharing the host's trace_id.
 Stable framework span names are:
 
 ```text
-agent_framework.workflow.run
-  agent_framework.workflow.node
-    agent_framework.session.run
-      agent_framework.agent.run
+orivane.workflow.run
+  orivane.workflow.node
+    orivane.session.run
+      orivane.agent.run
         PydanticAI agent/model/tool spans
 ```
 
@@ -70,7 +70,7 @@ directly or call no Agent at all. A branch uses one node span around both its
 predicate and selected callable, with no additional decision span. User values,
 session IDs and node names never become framework span names.
 
-Framework attributes are `agent_framework.run_id`, `.component`, `.operation`,
+Framework attributes are `orivane.run_id`, `.component`, `.operation`,
 `.node.name`, `.node.kind`, `.backend.id`, and `.outcome`, as applicable. Error spans
 also contain `error.type` and ERROR status without a description. Framework spans
 disable automatic exception events and automatic exception status descriptions.
@@ -150,8 +150,8 @@ not a public observability API; the CLI uses standard OTel SDK capture instead.
 import logging
 
 handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter("%(message)s run=%(af_run_id)s"))
-logger = logging.getLogger("agent_framework")
+handler.setFormatter(logging.Formatter("%(message)s run=%(orivane_run_id)s"))
+logger = logging.getLogger("orivane")
 logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 # At application shutdown: logger.removeHandler(handler); handler.close()

@@ -41,7 +41,7 @@ async def identity(value: int) -> int:
 async def test_nested_workflow_inherits_run_id_and_restores_context(
     spans: InMemorySpanExporter, caplog: pytest.LogCaptureFixture
 ) -> None:
-    caplog.set_level(logging.INFO, logger="agent_framework.workflow")
+    caplog.set_level(logging.INFO, logger="orivane.workflow")
     child = Workflow[int]().branch(
         "choose", lambda value: True, if_true=identity, if_false=identity
     )
@@ -51,7 +51,7 @@ async def test_nested_workflow_inherits_run_id_and_restores_context(
     assert _run_id.get() is None
     finished = spans.get_finished_spans()
     assert len(finished) == 4
-    ids = {s.attributes["agent_framework.run_id"] for s in finished if s.attributes}
+    ids = {s.attributes["orivane.run_id"] for s in finished if s.attributes}
     assert len(ids) == 1
     UUID(str(next(iter(ids))))
     for span in finished:
@@ -59,15 +59,16 @@ async def test_nested_workflow_inherits_run_id_and_restores_context(
         matching = [
             r
             for r in caplog.records
-            if r.__dict__["af_span_id"] == format(span.context.span_id, "016x")
+            if r.__dict__["orivane_span_id"] == format(span.context.span_id, "016x")
         ]
         assert len(matching) == 2
         assert all(
-            r.__dict__["af_trace_id"] == format(span.context.trace_id, "032x") for r in matching
+            r.__dict__["orivane_trace_id"] == format(span.context.trace_id, "032x")
+            for r in matching
         )
-        assert matching[0].__dict__["af_run_id"] == next(iter(ids))
-        assert matching[1].__dict__["af_outcome"] == "success"
-        assert matching[1].__dict__["af_duration_ms"] >= 0
+        assert matching[0].__dict__["orivane_run_id"] == next(iter(ids))
+        assert matching[1].__dict__["orivane_outcome"] == "success"
+        assert matching[1].__dict__["orivane_duration_ms"] >= 0
         assert not span.events and span.status.description is None
     root = finished[-1]
     outer_node = finished[-2]
@@ -81,11 +82,11 @@ async def test_nested_workflow_inherits_run_id_and_restores_context(
     ]:
         assert parent.context is not None and child_span.parent is not None
         assert child_span.parent.span_id == parent.context.span_id
-    assert outer_node.attributes and outer_node.attributes["agent_framework.node.name"] == "child"
-    assert inner_node.attributes and inner_node.attributes["agent_framework.node.kind"] == "branch"
+    assert outer_node.attributes and outer_node.attributes["orivane.node.name"] == "child"
+    assert inner_node.attributes and inner_node.attributes["orivane.node.kind"] == "branch"
     await Workflow[int]().run(0)
     last = spans.get_finished_spans()[-1]
-    assert last.attributes and last.attributes["agent_framework.run_id"] not in ids
+    assert last.attributes and last.attributes["orivane.run_id"] not in ids
 
 
 @pytest.mark.asyncio
@@ -125,7 +126,7 @@ async def test_concurrent_run_ids_are_isolated_at_event_barrier(
 async def test_errors_and_cancellation_preserve_identity_without_text(
     spans: InMemorySpanExporter, caplog: pytest.LogCaptureFixture, cancelled: bool
 ) -> None:
-    caplog.set_level(logging.INFO, logger="agent_framework.workflow")
+    caplog.set_level(logging.INFO, logger="orivane.workflow")
     error = (
         asyncio.CancelledError("SECRET_EXCEPTION_9f12")
         if cancelled
@@ -141,15 +142,16 @@ async def test_errors_and_cancellation_preserve_identity_without_text(
     assert len(spans.get_finished_spans()) == 2
     for span in spans.get_finished_spans():
         assert span.attributes
-        assert span.attributes["agent_framework.outcome"] == ("cancelled" if cancelled else "error")
+        assert span.attributes["orivane.outcome"] == ("cancelled" if cancelled else "error")
         assert span.status.status_code == (
             trace.StatusCode.UNSET if cancelled else trace.StatusCode.ERROR
         )
         assert span.status.description is None and not span.events
-    terminal = [r for r in caplog.records if not r.__dict__["af_event"].endswith("start")]
+    terminal = [r for r in caplog.records if not r.__dict__["orivane_event"].endswith("start")]
     assert len(terminal) == 2
     assert all(
-        r.__dict__["af_error_type"] == type(error).__name__ and r.exc_info is None for r in terminal
+        r.__dict__["orivane_error_type"] == type(error).__name__ and r.exc_info is None
+        for r in terminal
     )
     serialized = str([r.__dict__ for r in caplog.records]) + str(
         [s.to_json() for s in spans.get_finished_spans()]
@@ -161,7 +163,7 @@ async def test_errors_and_cancellation_preserve_identity_without_text(
 async def test_session_cancellation_does_not_commit_or_leak_id(
     spans: InMemorySpanExporter, caplog: pytest.LogCaptureFixture
 ) -> None:
-    caplog.set_level(logging.INFO, logger="agent_framework.session")
+    caplog.set_level(logging.INFO, logger="orivane.session")
     entered = asyncio.Event()
     blocker = asyncio.Event()
 
@@ -187,8 +189,8 @@ async def test_session_cancellation_does_not_commit_or_leak_id(
         await asyncio.wait_for(asyncio.gather(task, return_exceptions=True), timeout=2)
     assert _run_id.get() is None
     (span,) = spans.get_finished_spans()
-    assert span.name == "agent_framework.session.run"
-    assert span.attributes and span.attributes["agent_framework.outcome"] == "cancelled"
+    assert span.name == "orivane.session.run"
+    assert span.attributes and span.attributes["orivane.outcome"] == "cancelled"
     assert "SECRET_" not in str([r.__dict__ for r in caplog.records]) + span.to_json()
 
 
@@ -205,7 +207,7 @@ async def test_broken_logging_formatter_never_changes_business_result(
         def emit(self, record: logging.LogRecord) -> None:
             self.format(record)
 
-    logger = logging.getLogger("agent_framework.workflow")
+    logger = logging.getLogger("orivane.workflow")
     previous = logger.level
     handler = Handler()
     handler.setFormatter(BrokenFormatter())
@@ -256,12 +258,13 @@ async def test_noop_provider_with_logging_and_disabled_logger(
 ) -> None:
     provider = trace.NoOpTracerProvider()
     monkeypatch.setattr(trace, "get_tracer_provider", lambda: provider)
-    logger = logging.getLogger("agent_framework.workflow")
+    logger = logging.getLogger("orivane.workflow")
     caplog.set_level(logging.INFO, logger=logger.name)
     assert await Workflow[int]().run(8) == 8
     assert len(caplog.records) == 2
     assert all(
-        "af_trace_id" not in r.__dict__ and "af_span_id" not in r.__dict__ for r in caplog.records
+        "orivane_trace_id" not in r.__dict__ and "orivane_span_id" not in r.__dict__
+        for r in caplog.records
     )
     caplog.clear()
     caplog.set_level(logging.WARNING, logger=logger.name)

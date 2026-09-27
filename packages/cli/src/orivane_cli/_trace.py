@@ -11,12 +11,12 @@ from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanE
 
 _ATTRIBUTES = frozenset(
     {
-        "agent_framework.component",
-        "agent_framework.operation",
-        "agent_framework.node.name",
-        "agent_framework.node.kind",
-        "agent_framework.backend.id",
-        "agent_framework.outcome",
+        "orivane.component",
+        "orivane.operation",
+        "orivane.node.name",
+        "orivane.node.kind",
+        "orivane.backend.id",
+        "orivane.outcome",
         "gen_ai.operation.name",
     }
 )

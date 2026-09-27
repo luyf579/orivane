@@ -1,6 +1,6 @@
 # Naming requirements
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
 Require an English, short, readable brand with valid Python import spelling, distinct
 GitHub discoverability and CLI command, and an available PyPI distribution family.

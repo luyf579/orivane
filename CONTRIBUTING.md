@@ -37,9 +37,9 @@ Normal CI must not call real models or require model credentials. Use local fake
 backends; future adapter tests should use TestModel/FunctionModel.
 Do not publish releases or packages until explicitly approved and licensed.
 
-Package/release changes require Maintainer approval. Naming is approved; license and
-publication gates remain open. Never reserve names by uploading placeholder packages.
+Package/release changes require Maintainer approval. Naming and MIT are approved; the
+publication gate remains open. Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
-sdist/wheel inclusion or entry points. Keep versions at 0.1.0.dev0 until a separately
+sdist/wheel inclusion or entry points. Keep versions at 0.1.0rc1 until a separately
 approved release. The [offline examples](examples/README.md) are tested and included
 in strict mypy; update them alongside documented API usage.

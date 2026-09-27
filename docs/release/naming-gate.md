@@ -1,11 +1,12 @@
 # Naming gate
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
 Status: **APPROVED**. On 2026-09-27 the user selected **Orivane**, then explicitly
 accepted the discovered GitHub same-name situation and authorized the coordinated
 rename. This closes the naming decision; it does not approve public visibility,
-licensing, a version bump, tags, Releases, or uploads.
+tags, Releases, or uploads. The subsequent RC decision separately approves MIT
+and 0.1.0rc1.
 
 | Surface | Approved identity |
 | --- | --- |
@@ -43,9 +44,9 @@ not retained as distribution aliases or import shims; no public release preceded
 the rename. Current imports, console script and config use Orivane. Historical
 issue text and Git history remain unchanged.
 
-Class/function exports, SessionState envelopes and runtime behavior are unchanged.
-Existing structural telemetry names/keys (`agent_framework.*`, `af_*`) are retained
-to avoid an unrelated observability schema change. They are telemetry labels, not
-old Python import packages. Native PydanticAI identity remains pydantic-ai / 2.48.0.
+Class/function exports, SessionState envelopes and agent execution behavior are unchanged.
+The RC telemetry migration uses Orivane logger/span/attribute names and structured
+log fields. See [migration details](rename-impact.md). Native PydanticAI identity
+remains pydantic-ai / 2.48.0.
 See [rename impact](rename-impact.md), [license review](license-review.md) and
 [publication gate](publication-gate.md).

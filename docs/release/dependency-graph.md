@@ -1,6 +1,6 @@
 # Direct dependency graph
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
 Derived from the three current pyproject.toml files and uv.lock. Internal package
 requirements in wheel METADATA must match these declarations after normalization.
@@ -8,8 +8,8 @@ requirements in wheel METADATA must match these declarations after normalization
 | Distribution | Direct production requirements |
 | --- | --- |
 | orivane-core | pydantic>=2.12,<3; opentelemetry-api>=1.44,<2 |
-| orivane-backend-pydantic | orivane-core==0.1.0.dev0; pydantic-ai-slim==2.48.0 |
-| orivane-cli | orivane-core==0.1.0.dev0; orivane-backend-pydantic==0.1.0.dev0; opentelemetry-sdk>=1.44,<2 |
+| orivane-backend-pydantic | orivane-core==0.1.0rc1; pydantic-ai-slim==2.48.0 |
+| orivane-cli | orivane-core==0.1.0rc1; orivane-backend-pydantic==0.1.0rc1; opentelemetry-sdk>=1.44,<2 |
 
 Core has no backend/PydanticAI dependency. Backend points to Core; CLI points to both.
 Workspace source overrides are local development instructions, not wheel requirements.

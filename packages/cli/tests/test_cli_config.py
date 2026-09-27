@@ -69,3 +69,11 @@ def test_cli_factory_syntax_is_static_and_strict(tmp_path: Path, factory: str) -
 def test_cli_missing_config_is_safe(tmp_path: Path) -> None:
     with pytest.raises(_ConfigError, match="cannot read valid TOML"):
         load_config(tmp_path)
+
+
+def test_cli_legacy_config_is_not_a_fallback(tmp_path: Path) -> None:
+    (tmp_path / "agent-framework.toml").write_text(
+        'schema_version = 1\n[app]\nfactory = "app:create_runner"\n', encoding="utf-8"
+    )
+    with pytest.raises(_ConfigError, match="cannot read valid TOML"):
+        load_config(tmp_path)

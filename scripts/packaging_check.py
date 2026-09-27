@@ -58,7 +58,7 @@ def main() -> None:
     metadata_dir.mkdir()
 
     def run(
-        log: str, command: list[str], cwd: Path = REPO, prompt: str = ""
+        log: str, command: list[str], cwd: Path = REPO, prompt: str = "", expected_code: int = 0
     ) -> subprocess.CompletedProcess[str]:
         result = subprocess.run(
             command,
@@ -78,7 +78,7 @@ def main() -> None:
                 + result.stderr
                 + f"\nExit code: {result.returncode}\n"
             )
-        assert result.returncode == 0, f"Command failed; see {output / log}"
+        assert result.returncode == expected_code, f"Unexpected exit code; see {output / log}"
         return result
 
     first, second = output / "dist", output / "repeat-dist"
@@ -104,27 +104,29 @@ def main() -> None:
         wheel = next(first.glob(project["name"].replace("-", "_") + "-*.whl"))
         files = wheel_files(wheel)
         assert files == wheel_files(second / wheel.name), "Repeated wheel content changed"
-        prefix = project["name"].replace("-", "_") + "-0.1.0.dev0.dist-info/"
+        prefix = project["name"].replace("-", "_") + "-0.1.0rc1.dist-info/"
         expected = {
             str(p.relative_to(REPO / "packages" / package / "src")).replace("\\", "/")
             for p in (REPO / "packages" / package / "src" / module).rglob("*")
             if p.is_file() and "__pycache__" not in p.parts
         }
-        expected |= {prefix + name for name in ["METADATA", "WHEEL", "RECORD"]}
+        expected |= {prefix + name for name in ["METADATA", "WHEEL", "RECORD", "licenses/LICENSE"]}
         if package == "cli":
             expected.add(prefix + "entry_points.txt")
         assert set(files) == expected, (package, set(files) ^ expected)
         for name, data in files.items():
             check_content(name, data)
         metadata = email.parser.BytesParser().parsebytes(files[prefix + "METADATA"])
-        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.1.0.dev0"
+        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.1.0rc1"
         assert metadata["Requires-Python"] == ">=3.11"
         assert {requirement(r) for r in metadata.get_all("Requires-Dist", [])} == {
             requirement(r) for r in project["dependencies"]
         }
         assert "Private :: Do Not Upload" in metadata.get_all("Classifier", [])
         assert metadata["Description-Content-Type"] == "text/markdown"
-        assert metadata["License"] is None and metadata["License-Expression"] is None
+        assert metadata["License-Expression"] == "MIT"
+        assert metadata.get_all("License-File") == ["LICENSE"]
+        assert files[prefix + "licenses/LICENSE"] == (REPO / "LICENSE").read_bytes()
         assert metadata["Author"] is None and metadata["Maintainer"] is None
         if package != "cli":
             assert module + "/py.typed" in files
@@ -152,14 +154,18 @@ def main() -> None:
                         names.append(name)
                         assert name in {
                             "README.md",
+                            "LICENSE",
                             "pyproject.toml",
                             "PKG-INFO",
                             ".gitignore",
                         } or name.startswith("src/" + module + "/")
                         extracted = archive.extractfile(member)
                         assert extracted is not None
-                        check_content(name, extracted.read())
-                assert {"README.md", "pyproject.toml", "PKG-INFO"} <= set(names)
+                        content = extracted.read()
+                        check_content(name, content)
+                        if name == "LICENSE":
+                            assert content == (REPO / "LICENSE").read_bytes()
+                assert {"README.md", "LICENSE", "pyproject.toml", "PKG-INFO"} <= set(names)
                 archive.extractall(unpacked, filter="data")
             run(
                 "sdist-rebuild.txt",
@@ -277,33 +283,53 @@ assert BACKEND_ID == 'pydantic-ai' and BACKEND_VERSION == '2.48.0' and FORMAT_VE
 print(json.dumps(paths))
 for old in ['agent_framework_core', 'agent_framework_pydantic', 'agent_framework_cli']:
     assert importlib.util.find_spec(old) is None, 'Legacy import must not be installed'
+    try:
+        importlib.import_module(old)
+    except ModuleNotFoundError as error:
+        assert error.name == old
+    else:
+        raise AssertionError('Legacy import must fail')
+for old in ['agent-framework-core', 'agent-framework-backend-pydantic', 'agent-framework-cli']:
+    try:
+        metadata.distribution(old)
+    except metadata.PackageNotFoundError:
+        pass
+    else:
+        raise AssertionError('Legacy distribution must not be installed')
 for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
-    assert metadata.version(name) == '0.1.0.dev0'
+    assert metadata.version(name) == '0.1.0rc1'
 """
         run("wheel-install.txt", [str(python), "-I", "-c", smoke], cwd=root)
         result = run("wheel-install.txt", [str(command), "--version"], cwd=root)
-        assert result.stdout == "0.1.0.dev0\n"
+        assert result.stdout == "0.1.0rc1\n"
         run("wheel-install.txt", [str(command), "--help"], cwd=root)
         assert not command.with_name(
             "agent-framework.exe" if os.name == "nt" else "agent-framework"
         ).exists()
-        for action in ["init", "validate", "run", "trace"]:
-            result = run(
-                "wheel-install.txt",
-                [str(command), action, "demo"],
-                cwd=root,
-                prompt="SECRET_PROMPT_PACKAGING",
-            )
-            assert "SECRET_" not in result.stdout + result.stderr
-            if action == "init":
-                assert (root / "demo" / "orivane.toml").is_file()
-                assert not (root / "demo" / "agent-framework.toml").exists()
-            if action == "trace":
-                assert result.stdout.startswith("offline starter\nTRACE\n")
-                rows = [
-                    json.loads(line) for line in result.stdout.split("\nTRACE\n", 1)[1].splitlines()
-                ]
-                assert any(row["attributes"].get("gen_ai.operation.name") == "chat" for row in rows)
+        for round_number in range(10):
+            project_name = f"demo-{round_number}"
+            for action in ["init", "validate", "run", "trace"]:
+                result = run(
+                    "wheel-install.txt",
+                    [str(command), action, project_name],
+                    cwd=root,
+                    prompt="SECRET_PROMPT_PACKAGING",
+                )
+                assert "SECRET_" not in result.stdout + result.stderr
+                if action == "init":
+                    assert (root / project_name / "orivane.toml").is_file()
+                    assert not (root / project_name / "agent-framework.toml").exists()
+                if action == "trace":
+                    assert result.stdout.startswith("offline starter\nTRACE\n")
+                    structural = result.stdout.split("\nTRACE\n", 1)[1]
+                    assert "agent" + "_framework." not in structural
+                    rows = [json.loads(line) for line in structural.splitlines()]
+                    assert any(row["name"] == "orivane.agent.run" for row in rows)
+                    assert any(
+                        row["attributes"].get("gen_ai.operation.name") == "chat" for row in rows
+                    )
+        (root / "demo-0" / "orivane.toml").rename(root / "demo-0" / "agent-framework.toml")
+        run("wheel-install.txt", [str(command), "validate", "demo-0"], cwd=root, expected_code=2)
         for source, expected in zip(
             sorted((REPO / "examples").glob("*.py")),
             ["offline agent\n", "offline session\n", "offline workflow\n"],
@@ -319,6 +345,10 @@ for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
                 "packages": records,
                 "clean_install": "PASS",
                 "cli_roundtrip": "PASS",
+                "cli_roundtrip_rounds": 10,
+                "legacy_config": "NOT ACCEPTED",
+                "legacy_imports_distributions_cli": "NOT INSTALLED",
+                "license": "MIT; root, package, wheel and sdist copies match",
                 "examples": "PASS",
                 "path_scan": "PASS",
                 "secret_scan": "PASS",

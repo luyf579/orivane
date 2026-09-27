@@ -5,7 +5,9 @@
 ### Changed
 
 - Approved Orivane repository, distribution, import and executable names; local config is orivane.toml.
-- Existing public exports, runtime behavior and telemetry field names are preserved.
+- MIT adopted; all packages move to 0.1.0rc1 with included license files.
+- Pre-public telemetry schema migrates to Orivane with no legacy aliases.
+- Existing public exports, execution behavior and privacy guarantees are preserved.
 
 ### Added
 

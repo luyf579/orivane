@@ -1,11 +1,12 @@
 # Local packaging verification
 
-**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**
+**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
-Hatchling remains the build backend. All versions remain 0.1.0.dev0 and retain
+Hatchling remains the build backend. All versions remain 0.1.0rc1 and retain
 Private :: Do Not Upload. Package readmes are self-contained; sdists include only
-README, pyproject, source/type markers and build metadata. No project license is
-invented: license fields/files wait for the license gate.
+README, pyproject, source/type markers, MIT LICENSE and build metadata. Root LICENSE
+is canonical; each package has an exact copy checked by tests. SPDX license metadata
+and wheel/sdist license bytes are verified against the root file.
 
 From the repository root in PowerShell, after development setup:
 
@@ -29,7 +30,9 @@ Then it creates a new unseeded venv outside the repository and installs only the
 CLI wheel as the requested package with `uv pip install --offline --no-index
 --find-links <wheelhouse>`. Core/backend are resolved from wheel requirements.
 It verifies module paths are under that venv's site-packages, runs all examples,
-checks help/version and performs init/validate/run/trace with the installed executable.
+checks help/version and performs ten init/validate/run/trace rounds with the installed
+executable. It rejects the old config filename and verifies that old modules,
+distributions, executable and telemetry namespace are absent.
 Core/backend py.typed and dependency direction are verified in actual wheels.
 The CLI is a command interface and does not claim an intended typed library API.
 

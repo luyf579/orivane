@@ -16,80 +16,6 @@ members = [
 ]
 
 [[package]]
-name = "orivane-backend-pydantic"
-version = "0.1.0.dev0"
-source = { editable = "packages/backend-pydantic" }
-dependencies = [
-    { name = "orivane-core" },
-    { name = "pydantic-ai-slim" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "orivane-core", editable = "packages/core" },
-    { name = "pydantic-ai-slim", specifier = "==2.48.0" },
-]
-
-[[package]]
-name = "orivane-cli"
-version = "0.1.0.dev0"
-source = { editable = "packages/cli" }
-dependencies = [
-    { name = "orivane-backend-pydantic" },
-    { name = "orivane-core" },
-    { name = "opentelemetry-sdk" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "orivane-backend-pydantic", editable = "packages/backend-pydantic" },
-    { name = "orivane-core", editable = "packages/core" },
-    { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
-]
-
-[[package]]
-name = "orivane-core"
-version = "0.1.0.dev0"
-source = { editable = "packages/core" }
-dependencies = [
-    { name = "opentelemetry-api" },
-    { name = "pydantic" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "opentelemetry-api", specifier = ">=1.44,<2" },
-    { name = "pydantic", specifier = ">=2.12,<3" },
-]
-
-[[package]]
-name = "orivane-workspace"
-version = "0.1.0.dev0"
-source = { virtual = "." }
-
-[package.dev-dependencies]
-dev = [
-    { name = "coverage", extra = ["toml"] },
-    { name = "mypy" },
-    { name = "opentelemetry-sdk" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "coverage", extras = ["toml"], specifier = ">=7,<8" },
-    { name = "mypy", specifier = ">=1.15,<2" },
-    { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
-    { name = "pytest", specifier = ">=8,<10" },
-    { name = "pytest-asyncio", specifier = ">=1,<2" },
-    { name = "ruff", specifier = ">=0.12,<1" },
-]
-
-[[package]]
 name = "annotated-types"
 version = "0.8.0"
 source = { registry = "https://pypi.org/simple" }
@@ -548,6 +474,80 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8f/73/0cbdebcb4cf545fdd328da14f5137e37d0770c3f26185e478b0d15d94f50/opentelemetry_semantic_conventions-0.65b0.tar.gz", hash = "sha256:f9b2b81e9d5b64f11bc952075e7e9c7fb0aab075c7fd1c46d597f1b919852d60", size = 148774, upload-time = "2026-07-16T15:25:46.902Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/0e/49df70d9b81fb5cbae4bbf2a49d865b09bcbcbc4eb53f5851b1027738d78/opentelemetry_semantic_conventions-0.65b0-py3-none-any.whl", hash = "sha256:1cacde7b0ad306f84c5ef08c3dbe1bbaf20165bba6f8bff43b670e555a086bcb", size = 204645, upload-time = "2026-07-16T15:25:30.688Z" },
+]
+
+[[package]]
+name = "orivane-backend-pydantic"
+version = "0.1.0rc1"
+source = { editable = "packages/backend-pydantic" }
+dependencies = [
+    { name = "orivane-core" },
+    { name = "pydantic-ai-slim" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "orivane-core", editable = "packages/core" },
+    { name = "pydantic-ai-slim", specifier = "==2.48.0" },
+]
+
+[[package]]
+name = "orivane-cli"
+version = "0.1.0rc1"
+source = { editable = "packages/cli" }
+dependencies = [
+    { name = "opentelemetry-sdk" },
+    { name = "orivane-backend-pydantic" },
+    { name = "orivane-core" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
+    { name = "orivane-backend-pydantic", editable = "packages/backend-pydantic" },
+    { name = "orivane-core", editable = "packages/core" },
+]
+
+[[package]]
+name = "orivane-core"
+version = "0.1.0rc1"
+source = { editable = "packages/core" }
+dependencies = [
+    { name = "opentelemetry-api" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opentelemetry-api", specifier = ">=1.44,<2" },
+    { name = "pydantic", specifier = ">=2.12,<3" },
+]
+
+[[package]]
+name = "orivane-workspace"
+version = "0.1.0rc1"
+source = { virtual = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "coverage", extra = ["toml"] },
+    { name = "mypy" },
+    { name = "opentelemetry-sdk" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "coverage", extras = ["toml"], specifier = ">=7,<8" },
+    { name = "mypy", specifier = ">=1.15,<2" },
+    { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
+    { name = "pytest", specifier = ">=8,<10" },
+    { name = "pytest-asyncio", specifier = ">=1,<2" },
+    { name = "ruff", specifier = ">=0.12,<1" },
 ]
 
 [[package]]
