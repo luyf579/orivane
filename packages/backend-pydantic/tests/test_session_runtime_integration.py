@@ -1,8 +1,8 @@
 import asyncio
 
 import pytest
-from agent_framework_core import InMemorySessionRuntime, RunResult
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import InMemorySessionRuntime, RunResult
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.messages import (
     ModelMessage,
     ModelMessagesTypeAdapter,

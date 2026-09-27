@@ -1,6 +1,6 @@
 import pytest
-from agent_framework_core import RunRequest, ToolDefinition
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import RunRequest, ToolDefinition
+from orivane_pydantic import PydanticAgentBackend
 from pydantic import BaseModel, JsonValue
 from pydantic_ai.exceptions import UsageLimitExceeded
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart

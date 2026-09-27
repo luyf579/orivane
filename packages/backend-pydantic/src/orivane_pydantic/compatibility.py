@@ -2,7 +2,7 @@
 
 from typing import Final
 
-from agent_framework_core import SessionState
+from orivane_core import SessionState
 
 BACKEND_ID: Final = "pydantic-ai"
 FORMAT_VERSION: Final = 1

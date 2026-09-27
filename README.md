@@ -1,47 +1,57 @@
-# agent-framework
+# orivane
 
 Private development repository for a backend-agnostic Python AI agent framework.
 
-Working name. Repository and package names may change before public release.
-Names are provisional until pre-public branding review.
+Orivane is the approved project name. The user accepted the documented GitHub
+same-name discoverability risk; see the [naming decision](docs/release/naming-gate.md).
+
+**DO NOT PUBLISH — LICENSE AND PUBLICATION GATES OPEN**. Naming approval does
+not authorize a release. Versions remain 0.1.0.dev0 and the repository remains private.
 
 This repository is in private development and is **not production ready**.
 Agent is the core abstraction. PydanticAI is the first backend; business
 code should depend on our contract rather than directly on PydanticAI.
 Commerce extension is planned but not in current scope.
 
-## Development status
+## Current features
 
-- `agent-framework-core` / `agent_framework_core`: five public contract types plus
+- `orivane-core` / `orivane_core`: five public contract types plus
   `InMemorySessionRuntime` for explicit in-process session ordering and `Workflow`
   for typed linear async steps and basic if/else.
-- `agent-framework-backend-pydantic` / `agent_framework_pydantic`: real PydanticAI
+- `orivane-backend-pydantic` / `orivane_pydantic`: real PydanticAI
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
-- `agent-framework-cli` / `agent_framework_cli`: local init, validate, run and trace commands.
+- `orivane-cli` / `orivane_cli`: local init, validate, run and trace commands.
 - No durable workflow engine, commerce, multi-backend implementation, or public release.
 
-`PydanticAgentBackend` takes a public PydanticAI Model object, an explicit output_type,
+## Core concepts and backend
+
+The [public API guide](docs/api.md) covers AgentBackend, typed requests/results,
+validated tools, opaque SessionState, sessions and workflows. `PydanticAgentBackend`
+takes a public PydanticAI Model object, an explicit output_type,
 optional instructions/tools, and finite request/tool-call budgets (50 each by default).
 Only the composition root imports backend/model types; business callers use AgentBackend.
 Offline example after development setup:
 
 ```python
 import asyncio
-from agent_framework_core import AgentBackend, RunRequest
-from agent_framework_pydantic import PydanticAgentBackend
+
+from orivane_core import AgentBackend, RunRequest
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.models.test import TestModel
 
 
 async def main() -> None:
     backend: AgentBackend[None, str] = PydanticAgentBackend(
-        TestModel(custom_output_text="done"), output_type=str
+        TestModel(custom_output_text="offline agent"), output_type=str
     )
     result = await backend.run(RunRequest("hello", None))
+    assert result.output == "offline agent"
     print(result.output)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 Only successful runs return a replacement SessionState. Failures propagate without
@@ -49,10 +59,12 @@ automatic whole-run retry; tool side effects cannot be rolled back. Cancellation
 borrowed-model ownership are covered by offline tests. Real-provider integration is
 not certified. Native histories may contain sensitive inputs; callers must protect them.
 
+## Session
+
 For logical session ordering above an existing backend, inside an async caller:
 
 ```python
-from agent_framework_core import InMemorySessionRuntime
+from orivane_core import InMemorySessionRuntime
 
 runtime = InMemorySessionRuntime(backend, max_sessions=100)
 runtime.create_session("example")
@@ -66,11 +78,13 @@ may overlap. State exists only in memory; no persistence or multi-process guaran
 See [session runtime](docs/architecture/session-runtime.md) for cancellation, deletion
 and capacity rules.
 
+## Workflow
+
 For linear async steps and basic if/else:
 
 ```python
 import asyncio
-from agent_framework_core import Workflow
+from orivane_core import Workflow
 
 
 async def prepare(value: str) -> str:
@@ -103,16 +117,16 @@ for value ownership, concurrency and an example using the owned AgentBackend con
 After the development setup below, run from the repository root in PowerShell:
 
 ```powershell
-uv run --no-sync agent-framework init demo
-uv run --no-sync agent-framework validate demo
-"hello" | uv run --no-sync agent-framework run demo
-"hello" | uv run --no-sync agent-framework trace demo
+uv run --no-sync orivane init demo
+uv run --no-sync orivane validate demo
+"hello" | uv run --no-sync orivane run demo
+"hello" | uv run --no-sync orivane trace demo
 ```
 
 The generated starter is fully offline and needs no API key. `validate` does not read
 stdin or import the application. `run` and `trace` read the whole prompt from stdin;
 trace displays a local structural span list after the application result. Names are
-provisional. See [CLI documentation](docs/cli.md) for configuration, factory convention,
+approved as Orivane. See [CLI documentation](docs/cli.md) for configuration, factory convention,
 privacy and exit codes.
 
 ## Observability
@@ -126,7 +140,11 @@ The host application controls logging handlers/levels, TracerProvider, sampler,
 exporters and their lifecycle. See [observability](docs/architecture/observability.md)
 for privacy boundaries and configuration responsibility.
 
-## Development
+## Installation and development
+
+This project has **not been published to PyPI**. Authorized collaborators use
+the private uv workspace below.
+Local wheels are verification artifacts, not an approved public release.
 
 Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
 
@@ -141,8 +159,31 @@ uv run --no-sync coverage report
 
 If uv is installed as a Python user package but its executable is not on PATH,
 replace `uv` with `python -m uv`. Normal tests need no real model credentials.
-Do not publish these provisional distribution names to PyPI.
+Do not publish until license and publication approvals are complete.
 
 See [contributing](CONTRIBUTING.md), [contract](docs/architecture/backend-contract.md),
 [ADR-0001](docs/adr/0001-default-agent-backend.md), and
 [Python support](docs/development/python-support.md).
+
+Run the [three offline examples](examples/README.md) after setup; tests execute them
+on both supported Python versions. The [documentation index](docs/README.md) links
+all architecture, API, CLI and release preparation documents.
+
+## Limitations
+
+Not production ready. No real-provider certification, durable workflow, persistent
+session store, multi-process session ordering, commerce or second backend. Applications
+own model resources, side effects, native-history protection and telemetry configuration.
+
+## Contributing and release preparation
+
+See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. Package/release
+changes require Maintainer approval. The [public release checklist](docs/release/checklist.md)
+and [packaging verification](docs/release/packaging.md) describe work still required;
+this repository remains PRIVATE, with no tag, GitHub Release or upload authorized.
+
+## License status
+
+**LICENSE_DECISION_REQUIRED**. No license has been selected. MIT / Apache-2.0 require
+Maintainer/user decision after [dependency license review](docs/release/license-review.md).
+No public author or maintainer identity is invented in package metadata.

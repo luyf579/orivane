@@ -2,7 +2,7 @@
 
 from typing import TypeVar
 
-from agent_framework_core import ToolDefinition
+from orivane_core import ToolDefinition
 from pydantic import BaseModel, JsonValue, ValidationError
 from pydantic_ai import ModelRetry, RunContext, Tool
 

@@ -1,5 +1,8 @@
 # ADR-0002: Same-session serialization
 
+Package/import/command references reflect the approved Orivane rename. The original
+architectural decision is unchanged; historical issues and Git history are preserved.
+
 Status: Accepted
 
 Implementation: `InMemorySessionRuntime` (Phase 1D-B).

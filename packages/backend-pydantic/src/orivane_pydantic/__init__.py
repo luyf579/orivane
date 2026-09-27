@@ -1,4 +1,4 @@
-"""Development backend. Names are provisional until pre-public branding review."""
+"""Orivane's PydanticAI backend for private development."""
 
 from .backend import PydanticAgentBackend
 from .compatibility import BACKEND_ID, BACKEND_VERSION, FORMAT_VERSION, validate_session_state

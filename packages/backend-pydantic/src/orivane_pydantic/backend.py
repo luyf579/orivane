@@ -3,9 +3,9 @@
 from collections.abc import Sequence
 from typing import Any, Generic, TypeVar
 
-from agent_framework_core import RunRequest, RunResult, ToolDefinition
-from agent_framework_core._observability import _operation
 from opentelemetry import trace
+from orivane_core import RunRequest, RunResult, ToolDefinition
+from orivane_core._observability import _operation
 from pydantic_ai import Agent, UsageLimits
 from pydantic_ai.capabilities import Instrumentation
 from pydantic_ai.models import Model

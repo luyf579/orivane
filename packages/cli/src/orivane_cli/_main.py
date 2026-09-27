@@ -20,8 +20,8 @@ class _Parser(argparse.ArgumentParser):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = _Parser(prog="agent-framework", description="Local Agent Framework developer commands")
-    parser.add_argument("--version", action="version", version=version("agent-framework-cli"))
+    parser = _Parser(prog="orivane", description="Local Orivane developer commands")
+    parser.add_argument("--version", action="version", version=version("orivane-cli"))
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text in (
         ("init", "Create an offline starter in a new or empty directory"),

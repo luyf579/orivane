@@ -1,9 +1,9 @@
 import json
 
 import pytest
-from agent_framework_core import RunRequest, ToolDefinition
-from agent_framework_pydantic import PydanticAgentBackend
-from agent_framework_pydantic._tools import build_tool
+from orivane_core import RunRequest, ToolDefinition
+from orivane_pydantic import PydanticAgentBackend
+from orivane_pydantic._tools import build_tool
 from pydantic import BaseModel, ConfigDict, JsonValue
 from pydantic_ai.exceptions import UnexpectedModelBehavior
 from pydantic_ai.messages import (

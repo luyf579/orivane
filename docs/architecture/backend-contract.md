@@ -1,7 +1,7 @@
 # Minimal Backend Contract v0
 
 Phase 0 established one replaceable runtime boundary: an Agent's complete async run.
-Phase 1A established the following five types in `agent_framework_core`; Phases 1B–1D-B
+Phase 1A established the following five types in `orivane_core`; Phases 1B–1D-B
 keep their source and public API unchanged:
 
 | Type | Fields / method |

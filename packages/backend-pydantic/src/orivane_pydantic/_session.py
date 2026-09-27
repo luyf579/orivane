@@ -2,7 +2,7 @@
 
 from typing import TypeVar
 
-from agent_framework_core import SessionState
+from orivane_core import SessionState
 from pydantic import ValidationError
 from pydantic_ai.messages import ModelMessage, ModelMessagesTypeAdapter
 from pydantic_ai.run import AgentRunResult

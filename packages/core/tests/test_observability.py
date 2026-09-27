@@ -5,19 +5,19 @@ from collections.abc import Iterator
 from uuid import UUID
 
 import pytest
-from agent_framework_core import (
+from opentelemetry import trace
+from opentelemetry.sdk.trace import Span, TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from opentelemetry.sdk.trace.sampling import ALWAYS_OFF
+from orivane_core import (
     InMemorySessionRuntime,
     RunRequest,
     RunResult,
     SessionState,
     Workflow,
 )
-from agent_framework_core._observability import _run_id
-from opentelemetry import trace
-from opentelemetry.sdk.trace import Span, TracerProvider
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-from opentelemetry.sdk.trace.sampling import ALWAYS_OFF
+from orivane_core._observability import _run_id
 
 
 @pytest.fixture

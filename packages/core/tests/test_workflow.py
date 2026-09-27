@@ -3,7 +3,7 @@ from collections.abc import Awaitable, Callable
 from typing import cast
 
 import pytest
-from agent_framework_core import AgentBackend, RunRequest, RunResult, SessionState, Workflow
+from orivane_core import AgentBackend, RunRequest, RunResult, SessionState, Workflow
 
 
 async def increment(value: int) -> int:

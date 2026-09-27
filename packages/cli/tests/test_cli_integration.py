@@ -10,7 +10,7 @@ import pytest
 
 def invoke(root: Path, *args: str, prompt: str = "") -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        [sys.executable, "-m", "agent_framework_cli", *args],
+        [sys.executable, "-m", "orivane_cli", *args],
         cwd=root,
         input=prompt,
         text=True,
@@ -46,7 +46,7 @@ def test_cli_init_validate_run_trace_subprocess_roundtrip(tmp_path: Path) -> Non
 
 
 def test_cli_trace_privacy_subprocess_separates_requested_output(tmp_path: Path) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
     )
     (tmp_path / "app.py").write_text("""from opentelemetry import trace
@@ -72,7 +72,7 @@ def create_runner():
 
 @pytest.mark.parametrize("command", ["run", "trace"])
 def test_cli_subprocess_error_message_privacy(tmp_path: Path, command: str) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
     )
     (tmp_path / "app.py").write_text("""def create_runner():
@@ -110,7 +110,7 @@ def test_cli_subprocess_error_message_privacy(tmp_path: Path, command: str) -> N
 def test_cli_systemexit_subprocess_privacy(
     tmp_path: Path, command: str, source: str, diagnostic: str
 ) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
     )
     (tmp_path / "app.py").write_text(source)
@@ -124,7 +124,7 @@ def test_cli_systemexit_subprocess_privacy(
 @pytest.mark.parametrize("command", ["run", "trace"])
 @pytest.mark.parametrize("exception", ["KeyboardInterrupt", "asyncio.CancelledError"])
 def test_cli_subprocess_interruptions(tmp_path: Path, command: str, exception: str) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
     )
     (tmp_path / "app.py").write_text(
@@ -138,21 +138,17 @@ def test_cli_subprocess_interruptions(tmp_path: Path, command: str, exception: s
 
 def test_cli_console_entrypoint_matches_module_and_help(tmp_path: Path) -> None:
     entries = [
-        entry
-        for entry in distribution("agent-framework-cli").entry_points
-        if entry.name == "agent-framework"
+        entry for entry in distribution("orivane-cli").entry_points if entry.name == "orivane"
     ]
-    assert len(entries) == 1 and entries[0].value == "agent_framework_cli._main:main"
+    assert len(entries) == 1 and entries[0].value == "orivane_cli._main:main"
     assert callable(entries[0].load())
-    executable = Path(sys.executable).parent / (
-        "agent-framework.exe" if os.name == "nt" else "agent-framework"
-    )
+    executable = Path(sys.executable).parent / ("orivane.exe" if os.name == "nt" else "orivane")
     result = subprocess.run(
         [str(executable), "--version"], capture_output=True, text=True, timeout=15
     )
     module = invoke(tmp_path, "--version")
     assert result.returncode == module.returncode == 0
-    assert result.stdout == module.stdout == version("agent-framework-cli") + "\n"
+    assert result.stdout == module.stdout == version("orivane-cli") + "\n"
     for args in [
         ("--help",),
         ("init", "--help"),
@@ -165,7 +161,7 @@ def test_cli_console_entrypoint_matches_module_and_help(tmp_path: Path) -> None:
 
 
 def test_cli_validation_subprocess_never_executes_application(tmp_path: Path) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
     )
     (tmp_path / "app.py").write_text(

@@ -9,46 +9,46 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "agent-framework-backend-pydantic",
-    "agent-framework-cli",
-    "agent-framework-core",
-    "agent-framework-workspace",
+    "orivane-backend-pydantic",
+    "orivane-cli",
+    "orivane-core",
+    "orivane-workspace",
 ]
 
 [[package]]
-name = "agent-framework-backend-pydantic"
+name = "orivane-backend-pydantic"
 version = "0.1.0.dev0"
 source = { editable = "packages/backend-pydantic" }
 dependencies = [
-    { name = "agent-framework-core" },
+    { name = "orivane-core" },
     { name = "pydantic-ai-slim" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "agent-framework-core", editable = "packages/core" },
+    { name = "orivane-core", editable = "packages/core" },
     { name = "pydantic-ai-slim", specifier = "==2.48.0" },
 ]
 
 [[package]]
-name = "agent-framework-cli"
+name = "orivane-cli"
 version = "0.1.0.dev0"
 source = { editable = "packages/cli" }
 dependencies = [
-    { name = "agent-framework-backend-pydantic" },
-    { name = "agent-framework-core" },
+    { name = "orivane-backend-pydantic" },
+    { name = "orivane-core" },
     { name = "opentelemetry-sdk" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "agent-framework-backend-pydantic", editable = "packages/backend-pydantic" },
-    { name = "agent-framework-core", editable = "packages/core" },
+    { name = "orivane-backend-pydantic", editable = "packages/backend-pydantic" },
+    { name = "orivane-core", editable = "packages/core" },
     { name = "opentelemetry-sdk", specifier = ">=1.44,<2" },
 ]
 
 [[package]]
-name = "agent-framework-core"
+name = "orivane-core"
 version = "0.1.0.dev0"
 source = { editable = "packages/core" }
 dependencies = [
@@ -63,7 +63,7 @@ requires-dist = [
 ]
 
 [[package]]
-name = "agent-framework-workspace"
+name = "orivane-workspace"
 version = "0.1.0.dev0"
 source = { virtual = "." }
 

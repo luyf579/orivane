@@ -1,5 +1,8 @@
 # ADR-0003: Workflow v0
 
+Package/import/command references reflect the approved Orivane rename. The original
+architectural decision is unchanged; historical issues and Git history are preserved.
+
 Status: Accepted
 
 ## Context

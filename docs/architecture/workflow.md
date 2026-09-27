@@ -8,7 +8,7 @@ a dataclass, Pydantic model, or another domain object; there is no framework sta
 
 ## Public API
 
-`Workflow` is the only new public type, exported from `agent_framework_core`.
+`Workflow` is the only new public type, exported from `orivane_core`.
 
 ```python
 Workflow[T]()
@@ -99,8 +99,8 @@ ordinary async closure, as in this complete offline example:
 ```python
 import asyncio
 
-from agent_framework_core import AgentBackend, RunRequest, Workflow
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import AgentBackend, RunRequest, Workflow
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.models.test import TestModel
 
 

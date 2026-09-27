@@ -7,13 +7,13 @@ import sys
 from collections.abc import Iterator
 
 import pytest
-from agent_framework_core import InMemorySessionRuntime, RunRequest, ToolDefinition, Workflow
-from agent_framework_core._observability import _run_id
-from agent_framework_pydantic import PydanticAgentBackend
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from orivane_core import InMemorySessionRuntime, RunRequest, ToolDefinition, Workflow
+from orivane_core._observability import _run_id
+from orivane_pydantic import PydanticAgentBackend
 from pydantic import BaseModel, JsonValue
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart, ToolReturnPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
@@ -251,8 +251,8 @@ def test_default_process_has_no_telemetry_configuration_or_payload_output() -> N
 import asyncio
 import logging
 from opentelemetry import trace
-from agent_framework_core import Workflow, RunRequest
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import Workflow, RunRequest
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.models.test import TestModel
 before = trace.get_tracer_provider()
 root = logging.getLogger()

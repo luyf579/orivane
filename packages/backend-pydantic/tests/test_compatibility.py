@@ -1,8 +1,8 @@
 from importlib.metadata import version
 
 import pytest
-from agent_framework_core import SessionState
-from agent_framework_pydantic import (
+from orivane_core import SessionState
+from orivane_pydantic import (
     BACKEND_ID,
     BACKEND_VERSION,
     FORMAT_VERSION,

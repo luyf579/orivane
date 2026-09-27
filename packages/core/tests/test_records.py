@@ -1,8 +1,8 @@
 from dataclasses import fields
 
-import agent_framework_core
+import orivane_core
 import pytest
-from agent_framework_core import RunRequest, RunResult, SessionState, ToolDefinition
+from orivane_core import RunRequest, RunResult, SessionState, ToolDefinition
 from pydantic import BaseModel, ConfigDict, JsonValue
 
 
@@ -41,7 +41,7 @@ def test_records_preserve_context_and_opaque_snapshot() -> None:
 
 
 def test_public_surface_stays_minimal() -> None:
-    assert set(agent_framework_core.__all__) == {
+    assert set(orivane_core.__all__) == {
         "ToolDefinition",
         "SessionState",
         "RunRequest",

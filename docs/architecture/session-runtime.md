@@ -16,7 +16,7 @@ result = await runtime.run("example", "hello", deps)
 runtime.delete_session("example")  # only after all runs/waiters are finished
 ```
 
-Import InMemorySessionRuntime from `agent_framework_core`. `backend` is borrowed;
+Import InMemorySessionRuntime from `orivane_core`. `backend` is borrowed;
 the runtime neither creates providers nor closes the backend or its resources.
 It returns the backend's RunResult after committing its next_state. There is no public
 state/lock registry, entry count, state decoder, or lifecycle shutdown method.

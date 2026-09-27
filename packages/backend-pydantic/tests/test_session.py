@@ -2,8 +2,8 @@ import traceback
 from dataclasses import replace
 
 import pytest
-from agent_framework_core import RunRequest, SessionState, ToolDefinition
-from agent_framework_pydantic import PydanticAgentBackend, _session
+from orivane_core import RunRequest, SessionState, ToolDefinition
+from orivane_pydantic import PydanticAgentBackend, _session
 from pydantic import BaseModel, JsonValue
 from pydantic_ai.messages import (
     ModelMessage,

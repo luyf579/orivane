@@ -1,7 +1,7 @@
 import asyncio
 
 import pytest
-from agent_framework_core import InMemorySessionRuntime, RunRequest, RunResult, SessionState
+from orivane_core import InMemorySessionRuntime, RunRequest, RunResult, SessionState
 
 
 class FakeBackend:

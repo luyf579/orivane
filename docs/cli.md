@@ -1,7 +1,7 @@
 # Developer CLI v0
 
-Working project, distribution and command names remain provisional. This private
-development CLI is not a published release. It is a separate `agent-framework-cli`
+Project, distribution and command names are approved as Orivane. This private
+development CLI is not a published release. It is a separate `orivane-cli`
 package; Core and backend public APIs remain unchanged.
 
 ## Install and development invocation
@@ -10,11 +10,11 @@ From the repository root in PowerShell, using Python 3.11+ and the existing uv t
 
 ```powershell
 uv sync --locked --all-packages --python 3.11
-uv run --no-sync agent-framework --help
-uv run --no-sync python -m agent_framework_cli --version
+uv run --no-sync orivane --help
+uv run --no-sync python -m orivane_cli --version
 ```
 
-The installed console command `agent-framework` and `python -m agent_framework_cli`
+The installed console command `orivane` and `python -m orivane_cli`
 use the same entry point. `--version` prints only the CLI distribution version.
 Both top-level and per-command help work without importing an application.
 
@@ -23,16 +23,16 @@ Both top-level and per-command help work without importing an application.
 From the repository root in PowerShell:
 
 ```powershell
-uv run --no-sync agent-framework init demo
+uv run --no-sync orivane init demo
 ```
 
 `init [PATH]` defaults to the current directory. Only a nonexistent or empty directory
-is accepted. Existing `app.py`, `agent-framework.toml`, unrelated files or a file
+is accepted. Existing `app.py`, `orivane.toml`, unrelated files or a file
 target cause rejection. There is no `--force`. Template files use exclusive creation;
 ordinary write failures clean up only files created by that invocation. Concurrent
 external modification of the target directory is not a supported initialization mode.
 
-The fixed, deterministic starter contains `agent-framework.toml`, `app.py` and
+The fixed, deterministic starter contains `orivane.toml`, `app.py` and
 `.gitignore` (ignoring `.env`, `.venv/`, `__pycache__/`, and `*.pyc`). No timestamps,
 random identifiers, secret files or dependency installation are generated. Success
 prints `INITIALIZED`.
@@ -44,7 +44,7 @@ provider calls. The CLI does not choose providers or pay for model calls automat
 
 ## Configuration
 
-`PATH/agent-framework.toml` has exactly this v0 schema:
+`PATH/orivane.toml` has exactly this v0 schema:
 
 ```toml
 schema_version = 1
@@ -89,7 +89,7 @@ close/aclose methods on arbitrary application resources.
 ## validate
 
 ```powershell
-uv run --no-sync agent-framework validate demo
+uv run --no-sync orivane validate demo
 ```
 
 `validate [PATH]` defaults to `.` and statically checks only TOML/schema/factory
@@ -102,7 +102,7 @@ It cannot certify importability or the runtime factory contract.
 From the repository root in PowerShell:
 
 ```powershell
-"hello" | uv run --no-sync agent-framework run demo
+"hello" | uv run --no-sync orivane run demo
 ```
 
 `run [PATH]` validates config, makes the resolved project root temporarily importable,
@@ -124,7 +124,7 @@ remain in Python's module cache. There is no reload system or sys.modules cleanu
 ## trace
 
 ```powershell
-"hello" | uv run --no-sync agent-framework trace demo
+"hello" | uv run --no-sync orivane trace demo
 ```
 
 `trace [PATH]` follows the same application convention and stdin contract, but first

@@ -4,12 +4,12 @@ import sys
 from pathlib import Path
 
 import pytest
-from agent_framework_cli._main import main
-from agent_framework_cli._trace import capture, format_spans
 from opentelemetry import trace
 from opentelemetry.sdk.trace import ReadableSpan, TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+from orivane_cli._main import main
+from orivane_cli._trace import capture, format_spans
 
 
 @pytest.fixture
@@ -32,13 +32,13 @@ def test_cli_trace_output_and_provider_before_module_and_factory(
     local_provider: None,
     instrumented: bool,
 ) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "trace_app:create_runner"\n'
     )
     (tmp_path / "trace_app.py").write_text(
         """from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
-from agent_framework_core import Workflow
+from orivane_core import Workflow
 assert isinstance(trace.get_tracer_provider(), TracerProvider)
 def create_runner():
     assert isinstance(trace.get_tracer_provider(), TracerProvider)
@@ -117,7 +117,7 @@ def test_cli_trace_systemexit_cleans_provider_without_partial_output(
 
     monkeypatch.setattr(TracerProvider, "force_flush", flush)
     monkeypatch.setattr(TracerProvider, "shutdown", shutdown)
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "trace_exit_app:create_runner"\n'
     )
     (tmp_path / "trace_exit_app.py").write_text(

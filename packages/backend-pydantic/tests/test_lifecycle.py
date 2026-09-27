@@ -5,8 +5,8 @@ from types import TracebackType
 from typing import Self
 
 import pytest
-from agent_framework_core import RunRequest, RunResult, ToolDefinition
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import RunRequest, RunResult, ToolDefinition
+from orivane_pydantic import PydanticAgentBackend
 from pydantic import BaseModel, JsonValue
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionDef, FunctionModel

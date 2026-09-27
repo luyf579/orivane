@@ -5,15 +5,15 @@ import sys
 from pathlib import Path
 
 import pytest
-from agent_framework_cli import _commands
-from agent_framework_cli._commands import _InitError, initialize
-from agent_framework_cli._loader import project_path
-from agent_framework_cli._main import main
 from opentelemetry import trace
+from orivane_cli import _commands
+from orivane_cli._commands import _InitError, initialize
+from orivane_cli._loader import project_path
+from orivane_cli._main import main
 
 
 def application(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, source: str) -> None:
-    (tmp_path / "agent-framework.toml").write_text(
+    (tmp_path / "orivane.toml").write_text(
         'schema_version = 1\n[app]\nfactory = "cli_test_app:create_runner"\n', encoding="utf-8"
     )
     (tmp_path / "cli_test_app.py").write_text(source, encoding="utf-8")
@@ -29,10 +29,10 @@ def test_cli_init_is_deterministic_and_safe(tmp_path: Path, existing: bool) -> N
     assert {p.name: p.read_bytes() for p in one.iterdir()} == {
         p.name: p.read_bytes() for p in two.iterdir()
     }
-    assert {p.name for p in one.iterdir()} == {"app.py", "agent-framework.toml", ".gitignore"}
+    assert {p.name for p in one.iterdir()} == {"app.py", "orivane.toml", ".gitignore"}
 
 
-@pytest.mark.parametrize("name", ["agent-framework.toml", "app.py", "unrelated.txt"])
+@pytest.mark.parametrize("name", ["orivane.toml", "app.py", "unrelated.txt"])
 def test_cli_init_never_overwrites_or_partially_writes(tmp_path: Path, name: str) -> None:
     original = tmp_path / name
     original.write_bytes(b"user content")
@@ -66,7 +66,7 @@ def test_cli_validate_does_not_import_app_or_read_stdin(
     assert main(["validate"]) == 0  # pytest stdin raises on read
     assert capsys.readouterr().out == "VALID\n"
     assert "cli_test_app" not in sys.modules
-    (tmp_path / "agent-framework.toml").write_text('secret invalid TOML "SECRET_CONTEXT_CLI_9f12"')
+    (tmp_path / "orivane.toml").write_text('secret invalid TOML "SECRET_CONTEXT_CLI_9f12"')
     assert main(["validate"]) == 2
     error = capsys.readouterr().err
     assert "SECRET_" not in error and "Traceback" not in error
@@ -237,9 +237,9 @@ def test_cli_help_and_version(argv: list[str], capsys: pytest.CaptureFixture[str
 
 
 def test_cli_module_entry_point(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(sys, "argv", ["agent-framework", "--version"])
+    monkeypatch.setattr(sys, "argv", ["orivane", "--version"])
     with pytest.raises(SystemExit) as caught:
-        runpy.run_module("agent_framework_cli", run_name="__main__")
+        runpy.run_module("orivane_cli", run_name="__main__")
     assert caught.value.code == 0
 
 

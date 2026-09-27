@@ -2,8 +2,15 @@
 
 ## Unreleased
 
+### Changed
+
+- Approved Orivane repository, distribution, import and executable names; local config is orivane.toml.
+- Existing public exports, runtime behavior and telemetry field names are preserved.
+
 ### Added
 
+- Private release preparation: package metadata/readmes, wheel/sdist and isolated installation checks.
+- Offline executable examples, public API documentation, and naming/license/publication gates.
 - Separate developer CLI package with safe offline init, static TOML validate, stdin run and local trace.
 - Structured lifecycle logging and OpenTelemetry parent spans for workflows, sessions and agents.
 - Private run correlation with context restoration and concurrent task isolation.

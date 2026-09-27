@@ -1,5 +1,8 @@
 # ADR-0001: Default Agent backend
 
+Package/import/command references reflect the approved Orivane rename. The original
+architectural decision is unchanged; historical issues and Git history are preserved.
+
 Status: accepted in Phase 0; Phase 1B implements the runtime without changing Core.
 
 ## Context

@@ -5,8 +5,8 @@ import gc
 import weakref
 
 import pytest
-from agent_framework_core import RunRequest, RunResult, SessionState
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import RunRequest, RunResult, SessionState
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.messages import (
     ModelMessage,
     ModelMessagesTypeAdapter,

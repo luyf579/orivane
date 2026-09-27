@@ -11,7 +11,7 @@ class _ConfigError(ValueError):
 
 def load_config(root: Path) -> tuple[str, str]:
     try:
-        with (root / "agent-framework.toml").open("rb") as source:
+        with (root / "orivane.toml").open("rb") as source:
             data = tomllib.load(source)
     except (OSError, ValueError) as error:
         raise _ConfigError("cannot read valid TOML") from error

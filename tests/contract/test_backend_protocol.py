@@ -1,7 +1,7 @@
 import inspect
 
 import pytest
-from agent_framework_core import AgentBackend, RunRequest, RunResult, SessionState
+from orivane_core import AgentBackend, RunRequest, RunResult, SessionState
 
 
 class FakeBackend:

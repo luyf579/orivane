@@ -9,12 +9,12 @@ from ._loader import load_runner, project_path
 from ._trace import capture, format_spans
 
 _TEMPLATES = {
-    "agent-framework.toml": 'schema_version = 1\n\n[app]\nfactory = "app:create_runner"\n',
+    "orivane.toml": 'schema_version = 1\n\n[app]\nfactory = "app:create_runner"\n',
     ".gitignore": ".env\n.venv/\n__pycache__/\n*.pyc\n",
     "app.py": """from collections.abc import Awaitable, Callable
 
-from agent_framework_core import RunRequest
-from agent_framework_pydantic import PydanticAgentBackend
+from orivane_core import RunRequest
+from orivane_pydantic import PydanticAgentBackend
 from pydantic_ai.models.test import TestModel
 
 
