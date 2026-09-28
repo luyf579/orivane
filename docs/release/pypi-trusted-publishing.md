@@ -1,8 +1,9 @@
 # PyPI Trusted Publishing setup
 
-This document prepares Phase 1J-B configuration. Phase 1J-A creates only the workflow
-and these instructions: no pending publisher, GitHub environment, tag or upload is
-created. The final release PR must first receive Maintainer Release Review.
+PyPI publication is currently deferred. The source repository is public, but the
+packages are not yet published and no tag or GitHub Release exists. These instructions
+apply to a separately authorized future publication task. The tag-only workflow and
+GitHub `pypi` environment already exist; pending publishers have not been verified.
 
 ## Pending publishers on PyPI
 
@@ -16,8 +17,8 @@ Trusted Publisher for each project below. Select GitHub as the provider.
 | orivane-cli | luyf579 | orivane | release.yml | pypi |
 
 The workflow field is the filename `release.yml`; the repository file is
-`.github/workflows/release.yml`. Use the final repository ID `1391821801`, never
-either private archive. The publisher configuration must match the names exactly.
+`.github/workflows/release.yml`. Verify the repository is `luyf579/orivane`, ID
+`1392226219`. The publisher configuration must match the names exactly.
 
 A pending publisher does not create a project or reserve its name until first use.
 Recheck all three names immediately before publication; another user can register
@@ -26,8 +27,9 @@ See [PyPI's pending publisher documentation](https://docs.pypi.org/trusted-publi
 
 ## GitHub environment
 
-After separate approval, open the final repository's **Settings → Environments →
-New environment**, and name it `pypi`.
+The existing `pypi` environment permits deployment tags matching `v*`. Before a
+separately approved publication, open **Settings → Environments → pypi** and verify
+its configuration rather than creating another environment.
 
 Where supported by the account/plan, set the repository owner as a required reviewer
 and select deployment **tag** rules that allow only release tags matching `v*`.
@@ -38,7 +40,7 @@ GitHub documents required reviewers as public-repository-only on Free, Pro and T
 plans. Private environment availability and tag restrictions also depend on plan.
 If a control is unavailable, record that limitation in the publication review;
 do not upgrade a plan or weaken the publishing design to work around it. Configuration
-and its effective protection must be verified in Phase 1J-B.
+and its effective protection must be verified when publication resumes.
 See [GitHub's deployment environment rules](https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments).
 
 ## Workflow and artifact boundary
@@ -62,10 +64,11 @@ and the [official PyPA action](https://github.com/pypa/gh-action-pypi-publish).
 
 ## Controlled publication sequence
 
-After Maintainer approval, Phase 1J-B must verify all gates, perform the explicitly
-approved public conversion and PR merge, configure/recheck the publishers and `pypi`
-environment, and create the approved `v0.1.0` tag at the reviewed commit. Pushing that
-tag triggers the publishing workflow. Do not create a temporary tag to test publishing.
-GitHub Release creation is a separate controlled operation; the workflow does not
-write repository content. Finish with fresh PyPI installs and CLI smoke on Python
-3.11/3.12. None of those publication actions is performed by this PR.
+After separate Maintainer approval, verify all package publication gates, recheck
+names, configure/verify the publishers and existing `pypi` environment, and review
+the exact release commit and artifacts. Only then create the approved `v0.1.0` tag
+at that commit. Pushing the tag triggers the publishing workflow; ordinary main
+pushes do not. Do not create a temporary tag to test publishing.
+Verify fresh PyPI installs and CLI smoke on Python 3.11/3.12 before creating a
+separately approved GitHub Release. The workflow does not write repository content.
+None of these publication actions is part of documentation maintenance.

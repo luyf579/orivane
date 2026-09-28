@@ -1,14 +1,14 @@
 # Release checklist
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
+**SOURCE PUBLIC — PYPI PUBLICATION DEFERRED**
 
-Checked items refer to completed final release preparation. Publication remains a
-separate decision; see the [publication gate](publication-gate.md).
+Checked items refer to completed release preparation and GitHub-only public launch.
+Package publication remains a separate decision; see the [publication gate](publication-gate.md).
 
 - [x] Naming Gate approved: Orivane; accepted discoverability overlap documented.
 - [x] License Gate approved: standard MIT; canonical root and exact package copies.
-- [x] Clean publication repository: final repository ID 1391821801.
-- [x] Identity audit: canonical noreply history; both archives permanently private.
+- [x] Clean publication repository: final repository ID 1392226219.
+- [x] Identity audit: canonical noreply history, verified before and after public launch.
 - [x] Final package names: orivane-core, orivane-backend-pydantic, orivane-cli.
 - [x] Final version metadata: 0.1.0; SPDX license, URLs, Python range, exact internal dependencies.
 - [x] Remove Private classifier from all three distributions.
@@ -27,17 +27,18 @@ separate decision; see the [publication gate](publication-gate.md).
 - [x] CHANGELOG: 0.1.0 entry and empty Unreleased section.
 - [x] Release notes: capabilities, compatibility, limitations, privacy and MIT.
 - [x] Final PyPI name availability recheck before release commit.
-- [ ] Repository public, following explicit visibility approval.
+- [x] Repository public, following explicit visibility approval on 2026-09-28.
 - [ ] Pending PyPI Trusted Publishers configured for all three packages.
-- [ ] GitHub pypi environment configured.
-- [ ] Final release PR merged after Maintainer Release Review.
-- [ ] Enable and verify GitHub Private Vulnerability Reporting after public conversion.
+- [x] GitHub pypi environment configured with deployment tag rule v*.
+- [ ] Maintainer approval of the exact release commit and artifacts when publication resumes.
+- [x] GitHub Private Vulnerability Reporting enabled and verified.
 - [ ] v0.1.0 tag under separate authorization.
 - [ ] GitHub Release under separate authorization.
 - [ ] PyPI publish under separate authorization.
 - [ ] Post-PyPI install verification, smoke and release acceptance.
 
-No upload, name reservation, tag, Release, PR merge or public conversion occurs in
-Phase 1J-A. Build evidence is produced by [packaging verification](packaging.md).
-Prepare publishers and environment only after the final review, following
+The preparation checks above were completed before the GitHub-only public launch.
+That launch created no tag, GitHub Release or package upload. Remaining publication
+steps are deferred to a separate task. Build evidence is produced by
+[packaging verification](packaging.md); future publication follows
 [Trusted Publishing](pypi-trusted-publishing.md).

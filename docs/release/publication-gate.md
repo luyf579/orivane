@@ -1,26 +1,30 @@
 # Publication gate
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
+**SOURCE PUBLIC — PYPI PUBLICATION DEFERRED**
 
 Naming Gate: **APPROVED — ORIVANE**
 License Gate: **APPROVED — MIT**
 Identity Review: **APPROVED — CLEAN PUBLICATION REPOSITORY**
-Public Repository Gate: **OPEN — PRIVATE UNTIL SEPARATE APPROVAL**
-PyPI Gate: **CLOSED — NOT YET PUBLISHED**
+Public Repository Gate: **COMPLETE — PUBLIC**
+PyPI Gate: **DEFERRED — NOT YET PUBLISHED**
+Git tags: **NONE**
+GitHub Releases: **NONE**
 
-The final repository is `luyf579/orivane`, repository ID `1391821801`.
-Its approved clean main baseline is `459e73405d21885ee548efffda324aa7c44caa1b`.
-The development and pre-public archives remain permanently private and are not
-publication targets. The [historical RC blocker](rc-gate.md) has been resolved.
+The public source repository is `luyf579/orivane`, repository ID `1392226219`.
+It became public on 2026-09-28 at the approved launch baseline
+`bfb9843dcefe67d33bad39fc0d78c7733e1ca738`. GitHub Private Vulnerability Reporting
+is enabled; see [SECURITY](../../SECURITY.md). The [RC gate](rc-gate.md) remains a
+historical preparation record.
 
-Phase 1J-A prepares synchronized 0.1.0 metadata, removes the three private classifiers,
-validates wheels/sdists on Python 3.11/3.12 and adds a tag-only Trusted Publishing
-workflow. The final release PR must remain OPEN for Maintainer Release Review.
-Green CI does not authorize merging, public visibility, a tag, a GitHub Release,
-TestPyPI or PyPI upload.
+Final release preparation synchronized 0.1.0 metadata, removed the three private
+classifiers, validated wheels/sdists on Python 3.11/3.12 and added a tag-only Trusted
+Publishing workflow. The GitHub-only public launch created no tag, GitHub Release
+or package upload. Source version 0.1.0 does not imply a published distribution.
 
-Before the separately authorized Phase 1J-B publication, recheck PyPI names,
-configure the three pending publishers and the `pypi` environment, and review the
-exact commit/artifacts. No static publishing credential is used. Follow the
+PyPI publication will resume as a separate, explicitly authorized task. Before
+publishing, recheck package names, configure and verify the three pending publishers,
+verify the existing `pypi` environment, and review the exact commit/artifacts.
+No static publishing credential is used. Follow the
 [checklist](checklist.md) and [Trusted Publishing instructions](pypi-trusted-publishing.md).
-After publication, verify fresh PyPI installs and GitHub Private Vulnerability Reporting.
+Tags, GitHub Releases, TestPyPI and PyPI uploads require separate Maintainer approval;
+green CI alone does not authorize them. After PyPI publication, verify fresh installs.

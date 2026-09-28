@@ -1,7 +1,7 @@
 # orivane-cli
 
-The local Orivane CLI, version 0.1.0, under the MIT license. This is an early release
-awaiting final review; it is not yet published to PyPI.
+The local Orivane CLI, version 0.1.0, under the MIT license. The source is public;
+this early release is not yet published to PyPI. PyPI publication is deferred.
 
 The `orivane` command provides deterministic offline init, static TOML
 validate, stdin run and local structural trace. It uses a synchronous application
@@ -22,11 +22,10 @@ orivane validate .
 ```
 
 The generated starter uses offline TestModel and needs no API key. Installing the
-CLI resolves Core and the backend at exactly 0.1.0. During review, collaborators
-use `uv sync --locked --all-packages` or verified local wheels.
+CLI resolves Core and the backend at exactly 0.1.0. Until PyPI publication, use
+`uv sync --locked --all-packages` from the repository or locally built wheels.
 
-[Repository and documentation](https://github.com/luyf579/orivane) remain private
-until the separately approved publication step.
+[Repository and documentation](https://github.com/luyf579/orivane) are public.
 
 ## License
 

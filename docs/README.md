@@ -1,6 +1,7 @@
 # Documentation
 
-Orivane v0.1.0 is an early release, currently awaiting final release review.
+Orivane v0.1.0 is an early release with a public source repository. PyPI publication
+is deferred; no Git tag or GitHub Release has been created.
 Start with the repository [README](../README.md).
 
 - API: [public contracts and commands](api.md).

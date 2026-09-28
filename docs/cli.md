@@ -1,7 +1,7 @@
 # Developer CLI v0
 
-Project, distribution and command names are approved as Orivane. This private
-development CLI is not a published release. It is a separate `orivane-cli`
+Project, distribution and command names are approved as Orivane. The CLI source is
+public; the package is not yet published to PyPI. It is a separate `orivane-cli`
 package; Core and backend public APIs remain unchanged.
 
 ## Install and development invocation

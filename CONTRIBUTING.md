@@ -1,6 +1,6 @@
 # Contributing
 
-This is the private Orivane development repository.
+This is the public Orivane development repository. Contributions are welcome.
 Public API changes should be discussed in an Issue before implementation.
 Describe the use case, minimal contract change, compatibility impact, and tests.
 
@@ -38,8 +38,8 @@ Normal CI must not call real models or require model credentials. Use local fake
 backends; future adapter tests should use TestModel/FunctionModel.
 Do not publish releases or packages until explicitly approved and licensed.
 
-Package/release changes require Maintainer approval. Naming and MIT are approved; the
-publication gate remains open. Never reserve names by uploading placeholder packages.
+Package/release changes require Maintainer approval. Naming and MIT are approved;
+PyPI publication is currently deferred. Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
 sdist/wheel inclusion or entry points. All distributions and internal exact requirements
 now use 0.1.0; tag creation and publishing still require separate authorization.

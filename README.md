@@ -3,9 +3,9 @@
 A small, typed Python runtime for building backend-adaptable AI agents, sessions,
 workflows, observability, and developer tooling.
 
-Orivane v0.1.0 is an early release under the MIT license. This branch prepares
-version **0.1.0** for final Maintainer review; the repository remains private and
-the packages are **not yet published to PyPI**.
+Orivane v0.1.0 is an early release under the MIT license. The source repository is
+**public**. The Python packages are **not yet published to PyPI**; PyPI publication
+is currently deferred. No v0.1.0 tag or GitHub Release has been created.
 
 Public APIs follow semantic versioning from v0.1.0 onward, while 0.x minor releases
 may intentionally evolve the API with release notes. Orivane is not production ready.
@@ -126,7 +126,7 @@ echo "hello" | orivane run .
 echo "hello" | orivane trace .
 ```
 
-PowerShell can also use `"hello" | orivane run .`. During this private review,
+PowerShell can also use `"hello" | orivane run .`. During development,
 developers can use the workspace setup below and prefix each `orivane` invocation
 with `uv run --no-sync` from the repository root.
 
@@ -153,8 +153,8 @@ Once v0.1.0 is published to PyPI, install the CLI with `pipx install orivane-cli
 or use `pip install orivane-cli` inside your Python environment. The CLI installs
 matching Core and PydanticAI backend distributions automatically.
 
-Until publication, authorized collaborators use the private uv workspace below
-or the verified local wheels. Building final artifacts does not approve uploading them.
+Until PyPI publication, use the uv workspace below or locally built wheels.
+Building final artifacts does not approve uploading them.
 
 Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
 
@@ -194,8 +194,9 @@ See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. Package/releas
 changes require Maintainer approval. The [public release checklist](docs/release/checklist.md)
 and [packaging verification](docs/release/packaging.md) describe validation and remaining
 publication steps. Read the [v0.1.0 release notes](docs/release/v0.1.0.md) and
-[Trusted Publishing setup](docs/release/pypi-trusted-publishing.md). This repository
-remains PRIVATE, with no tag, GitHub Release or upload authorized by this PR.
+[Trusted Publishing setup](docs/release/pypi-trusted-publishing.md). The source
+repository is public; tags, GitHub Releases and package uploads require separate
+Maintainer authorization.
 
 ## License
 
