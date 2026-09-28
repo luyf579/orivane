@@ -26,8 +26,9 @@ Commit `uv.lock`; use `--locked` to detect stale manifests. Avoid unrelated upgr
 
 ## Branch and PR workflow
 
-Check the working tree before creating a `feature/<description>` or
-`fix/<description>` branch from main. Do not commit product changes directly to main.
+Check the working tree before creating a `feature/<description>`,
+`fix/<description>` or approved `release/<version>` branch from main.
+Do not commit product changes directly to main.
 Link the relevant issue, explain public API changes, and attach actual test results.
 Run Ruff, strict mypy, and tests for both supported Python versions. Request review
 and wait for green CI; do not treat local passing tests as remote CI success.
@@ -40,6 +41,8 @@ Do not publish releases or packages until explicitly approved and licensed.
 Package/release changes require Maintainer approval. Naming and MIT are approved; the
 publication gate remains open. Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
-sdist/wheel inclusion or entry points. Keep versions at 0.1.0rc1 until a separately
-approved release. The [offline examples](examples/README.md) are tested and included
+sdist/wheel inclusion or entry points. All distributions and internal exact requirements
+now use 0.1.0; tag creation and publishing still require separate authorization.
+See the [Trusted Publishing setup](docs/release/pypi-trusted-publishing.md).
+The [offline examples](examples/README.md) are tested and included
 in strict mypy; update them alongside documented API usage.

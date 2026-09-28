@@ -1,4 +1,4 @@
-"""Build/audit private artifacts and smoke-test an offline wheelhouse install. No upload."""
+"""Build/audit release artifacts and smoke-test an offline wheelhouse install. No upload."""
 
 import argparse
 import email.parser
@@ -96,6 +96,10 @@ def main() -> None:
                     str(destination),
                 ],
             )
+        distributions = [*destination.glob("*.whl"), *destination.glob("*.tar.gz")]
+        assert len(list(destination.glob("*.whl"))) == 3
+        assert len(list(destination.glob("*.tar.gz"))) == 3
+        assert set(destination.iterdir()) - set(distributions) <= {destination / ".gitignore"}
     records = []
     for package, module in PACKAGES.items():
         project = tomllib.loads((REPO / "packages" / package / "pyproject.toml").read_text())[
@@ -104,7 +108,7 @@ def main() -> None:
         wheel = next(first.glob(project["name"].replace("-", "_") + "-*.whl"))
         files = wheel_files(wheel)
         assert files == wheel_files(second / wheel.name), "Repeated wheel content changed"
-        prefix = project["name"].replace("-", "_") + "-0.1.0rc1.dist-info/"
+        prefix = project["name"].replace("-", "_") + "-0.1.0.dist-info/"
         expected = {
             str(p.relative_to(REPO / "packages" / package / "src")).replace("\\", "/")
             for p in (REPO / "packages" / package / "src" / module).rglob("*")
@@ -117,12 +121,15 @@ def main() -> None:
         for name, data in files.items():
             check_content(name, data)
         metadata = email.parser.BytesParser().parsebytes(files[prefix + "METADATA"])
-        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.1.0rc1"
+        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.1.0"
         assert metadata["Requires-Python"] == ">=3.11"
         assert {requirement(r) for r in metadata.get_all("Requires-Dist", [])} == {
             requirement(r) for r in project["dependencies"]
         }
-        assert "Private :: Do Not Upload" in metadata.get_all("Classifier", [])
+        assert "Private :: Do Not Upload" not in metadata.get_all("Classifier", [])
+        assert set(metadata.get_all("Project-URL", [])) == {
+            f"{label}, {url}" for label, url in project["urls"].items()
+        }
         assert metadata["Description-Content-Type"] == "text/markdown"
         assert metadata["License-Expression"] == "MIT"
         assert metadata.get_all("License-File") == ["LICENSE"]
@@ -165,6 +172,22 @@ def main() -> None:
                         check_content(name, content)
                         if name == "LICENSE":
                             assert content == (REPO / "LICENSE").read_bytes()
+                        if name == "PKG-INFO":
+                            sdist_metadata = email.parser.BytesParser().parsebytes(content)
+                            for field in [
+                                "Name",
+                                "Version",
+                                "License-Expression",
+                                "License-File",
+                                "Requires-Python",
+                                "Requires-Dist",
+                                "Project-URL",
+                                "Classifier",
+                            ]:
+                                assert sorted(sdist_metadata.get_all(field, [])) == sorted(
+                                    metadata.get_all(field, [])
+                                ), (package, field)
+                            (metadata_dir / (package + "-PKG-INFO.txt")).write_bytes(content)
                 assert {"README.md", "LICENSE", "pyproject.toml", "PKG-INFO"} <= set(names)
                 archive.extractall(unpacked, filter="data")
             run(
@@ -198,6 +221,10 @@ def main() -> None:
                 "files": len(files),
                 "requires_dist": metadata.get_all("Requires-Dist", []),
                 "version": metadata["Version"],
+                "license": metadata["License-Expression"],
+                "requires_python": metadata["Requires-Python"],
+                "project_urls": metadata.get_all("Project-URL", []),
+                "classifiers": metadata.get_all("Classifier", []),
                 "repeat_content": "PASS",
                 "sdist_rebuild": "PASS",
             }
@@ -260,7 +287,7 @@ def main() -> None:
                 "--no-index",
                 "--find-links",
                 str(wheelhouse),
-                str(cli_wheel),
+                "orivane-cli==0.1.0",
             ],
             cwd=root,
         )
@@ -297,11 +324,11 @@ for old in ['agent-framework-core', 'agent-framework-backend-pydantic', 'agent-f
     else:
         raise AssertionError('Legacy distribution must not be installed')
 for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
-    assert metadata.version(name) == '0.1.0rc1'
+    assert metadata.version(name) == '0.1.0'
 """
         run("wheel-install.txt", [str(python), "-I", "-c", smoke], cwd=root)
         result = run("wheel-install.txt", [str(command), "--version"], cwd=root)
-        assert result.stdout == "0.1.0rc1\n"
+        assert result.stdout == "0.1.0\n"
         run("wheel-install.txt", [str(command), "--help"], cwd=root)
         assert not command.with_name(
             "agent-framework.exe" if os.name == "nt" else "agent-framework"

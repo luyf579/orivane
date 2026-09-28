@@ -1,23 +1,20 @@
 # orivane-core
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
-
-Private development package, version 0.1.0rc1; not production ready and not
-published by this project on PyPI. The Orivane name is approved; the user accepted the documented GitHub same-name
-discoverability risk. Publication approval is still required.
+The typed core of Orivane, version 0.1.0, under the MIT license. This is an early
+release awaiting final review; it is not yet published to PyPI.
 
 Provides typed AgentBackend, ToolDefinition, RunRequest, RunResult, SessionState,
 InMemorySessionRuntime and Workflow contracts. Sessions are in memory; workflows
 are linear async steps with basic branching, without durable execution.
 Core imports no PydanticAI runtime. Python 3.11/3.12 are tested; py.typed is included.
 
-Develop from the authorized private repository with `uv sync --locked --all-packages`.
-Local wheels are for packaging verification only. No public installation is offered.
-License metadata declares MIT and includes the canonical license text.
-Author/maintainer identities are not yet approved for publication.
+Once v0.1.0 is published to PyPI, install with `pip install orivane-core`.
+During review, authorized collaborators use `uv sync --locked --all-packages` or
+verified local wheels. Public APIs follow semantic versioning; 0.x minor releases
+may intentionally evolve APIs with release notes. No production-readiness claim is made.
 
-[Repository and documentation](https://github.com/luyf579/orivane)
-require private repository access.
+[Repository and documentation](https://github.com/luyf579/orivane) remain private
+until the separately approved publication step.
 
 ## License
 

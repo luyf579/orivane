@@ -2,10 +2,14 @@
 
 ## Unreleased
 
+## 0.1.0 - 2026-09-28
+
 ### Changed
 
 - Approved Orivane repository, distribution, import and executable names; local config is orivane.toml.
-- MIT adopted; all packages move to 0.1.0rc1 with included license files.
+- MIT adopted; all three distributions use 0.1.0 with included license files.
+- Private package classifiers removed for final release review.
+- Tag-only PyPI Trusted Publishing workflow prepared; publication awaits approval.
 - Pre-public telemetry schema migrates to Orivane with no legacy aliases.
 - Existing public exports, execution behavior and privacy guarantees are preserved.
 
@@ -24,7 +28,7 @@
 - Per-session in-process serialization and cancellation-safe entry cleanup.
 - Explicit session creation, capacity and idle-only deletion semantics.
 - Initial workspace.
-- Minimal backend contract.
+- Typed AgentBackend contract.
 - Development tooling.
 - PydanticAI 2.48.0 runtime adapter.
 - Validated ToolDefinition bridge.

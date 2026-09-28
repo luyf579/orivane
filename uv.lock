@@ -478,7 +478,7 @@ wheels = [
 
 [[package]]
 name = "orivane-backend-pydantic"
-version = "0.1.0rc1"
+version = "0.1.0"
 source = { editable = "packages/backend-pydantic" }
 dependencies = [
     { name = "orivane-core" },
@@ -493,7 +493,7 @@ requires-dist = [
 
 [[package]]
 name = "orivane-cli"
-version = "0.1.0rc1"
+version = "0.1.0"
 source = { editable = "packages/cli" }
 dependencies = [
     { name = "opentelemetry-sdk" },
@@ -510,7 +510,7 @@ requires-dist = [
 
 [[package]]
 name = "orivane-core"
-version = "0.1.0rc1"
+version = "0.1.0"
 source = { editable = "packages/core" }
 dependencies = [
     { name = "opentelemetry-api" },
@@ -525,7 +525,7 @@ requires-dist = [
 
 [[package]]
 name = "orivane-workspace"
-version = "0.1.0rc1"
+version = "0.1.0"
 source = { virtual = "." }
 
 [package.dev-dependencies]

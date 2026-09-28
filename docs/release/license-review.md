@@ -21,7 +21,7 @@ metadata (checked 2026-09-27):
 | opentelemetry-api | Core DIRECT | 1.44.0 | [Apache-2.0](https://pypi.org/pypi/opentelemetry-api/1.44.0/json) |
 | pydantic-ai-slim | Backend DIRECT | 2.48.0 | [MIT](https://pypi.org/pypi/pydantic-ai-slim/2.48.0/json) |
 | opentelemetry-sdk | CLI DIRECT; workspace DEV DIRECT | 1.44.0 | [Apache-2.0](https://pypi.org/pypi/opentelemetry-sdk/1.44.0/json) |
-| Orivane Core / backend | Internal DIRECT | 0.1.0rc1 | MIT |
+| Orivane Core / backend | Internal DIRECT | 0.1.0 | MIT |
 
 No audited direct dependency requires Orivane itself to adopt Apache-2.0 merely
 because it is a dependency. The Apache license definition excludes works that remain

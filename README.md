@@ -3,14 +3,12 @@
 A small, typed Python runtime for building backend-adaptable AI agents, sessions,
 workflows, observability, and developer tooling.
 
-Orivane is the approved project name. The user accepted the documented GitHub
-same-name discoverability risk; see the [naming decision](docs/release/naming-gate.md).
+Orivane v0.1.0 is an early release under the MIT license. This branch prepares
+version **0.1.0** for final Maintainer review; the repository remains private and
+the packages are **not yet published to PyPI**.
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**. This is the early-stage
-v0.1.0 pre-release, version **0.1.0rc1**, under the MIT license. Naming and license
-approval do not authorize publication; the repository remains private.
-
-This repository is in private development and is **not production ready**.
+Public APIs follow semantic versioning from v0.1.0 onward, while 0.x minor releases
+may intentionally evolve the API with release notes. Orivane is not production ready.
 Agent is the core abstraction. PydanticAI is the first backend; business
 code should depend on our contract rather than directly on PydanticAI.
 Commerce extension is planned but not in current scope.
@@ -24,7 +22,7 @@ Commerce extension is planned but not in current scope.
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
 - `orivane-cli` / `orivane_cli`: local init, validate, run and trace commands.
-- No durable workflow engine, commerce, multi-backend implementation, or public release.
+- No durable workflow engine, commerce package, or second backend.
 
 ## Core concepts and backend
 
@@ -116,16 +114,23 @@ for value ownership, concurrency and an example using the owned AgentBackend con
 
 ## CLI quickstart
 
-After the development setup below, run from the repository root in PowerShell:
+Once v0.1.0 is published to PyPI, run in a directory where you want to create a
+new project. These commands also work in Windows PowerShell:
 
 ```powershell
-uv run --no-sync orivane init demo
-uv run --no-sync orivane validate demo
-"hello" | uv run --no-sync orivane run demo
-"hello" | uv run --no-sync orivane trace demo
+pipx install orivane-cli
+orivane init demo
+cd demo
+orivane validate .
+echo "hello" | orivane run .
+echo "hello" | orivane trace .
 ```
 
-The generated starter is fully offline and needs no API key. `validate` does not read
+PowerShell can also use `"hello" | orivane run .`. During this private review,
+developers can use the workspace setup below and prefix each `orivane` invocation
+with `uv run --no-sync` from the repository root.
+
+The generated starter uses offline `TestModel` and needs no API key. `validate` does not read
 stdin or import the application. `run` and `trace` read the whole prompt from stdin;
 trace displays a local structural span list after the application result. Names are
 approved as Orivane. See [CLI documentation](docs/cli.md) for configuration, factory convention,
@@ -144,9 +149,12 @@ for privacy boundaries and configuration responsibility.
 
 ## Installation and development
 
-This project has **not been published to PyPI**. Authorized collaborators use
-the private uv workspace below.
-Local wheels are verification artifacts, not an approved public release.
+Once v0.1.0 is published to PyPI, install the CLI with `pipx install orivane-cli`,
+or use `pip install orivane-cli` inside your Python environment. The CLI installs
+matching Core and PydanticAI backend distributions automatically.
+
+Until publication, authorized collaborators use the private uv workspace below
+or the verified local wheels. Building final artifacts does not approve uploading them.
 
 Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
 
@@ -173,16 +181,21 @@ all architecture, API, CLI and release preparation documents.
 
 ## Limitations
 
-Not production ready. No real-provider certification, durable workflow, persistent
-session store, multi-process session ordering, commerce or second backend. Applications
-own model resources, side effects, native-history protection and telemetry configuration.
+Only the PydanticAI backend is implemented and pinned to 2.48.0. Sessions are in
+memory; same-session serialization covers one process and one event loop. Workflows
+are linear with basic branching. There is no durable workflow, persistent memory,
+multi-agent orchestration, Commerce package, plugin ecosystem or real-provider
+certification matrix. Applications own model resources, side effects, native-history
+protection and telemetry configuration.
 
 ## Contributing and release preparation
 
 See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. Package/release
 changes require Maintainer approval. The [public release checklist](docs/release/checklist.md)
-and [packaging verification](docs/release/packaging.md) describe work still required;
-this repository remains PRIVATE, with no tag, GitHub Release or upload authorized.
+and [packaging verification](docs/release/packaging.md) describe validation and remaining
+publication steps. Read the [v0.1.0 release notes](docs/release/v0.1.0.md) and
+[Trusted Publishing setup](docs/release/pypi-trusted-publishing.md). This repository
+remains PRIVATE, with no tag, GitHub Release or upload authorized by this PR.
 
 ## License
 

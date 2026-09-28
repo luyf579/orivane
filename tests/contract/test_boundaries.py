@@ -27,7 +27,7 @@ def test_distribution_dependency_direction() -> None:
     core = tomllib.loads((ROOT / "packages/core/pyproject.toml").read_text())
     adapter = tomllib.loads((ROOT / "packages/backend-pydantic/pyproject.toml").read_text())
     assert core["project"]["dependencies"] == ["pydantic>=2.12,<3", "opentelemetry-api>=1.44,<2"]
-    assert "orivane-core==0.1.0rc1" in adapter["project"]["dependencies"]
+    assert "orivane-core==0.1.0" in adapter["project"]["dependencies"]
     assert "pydantic-ai-slim==2.48.0" in adapter["project"]["dependencies"]
     assert adapter["tool"]["uv"]["sources"]["orivane-core"] == {"workspace": True}
 
@@ -93,8 +93,8 @@ def test_observability_does_not_expand_public_api_or_install_exporters() -> None
 def test_cli_dependency_and_private_import_boundary() -> None:
     manifest = tomllib.loads((ROOT / "packages/cli/pyproject.toml").read_text())
     assert manifest["project"]["dependencies"] == [
-        "orivane-core==0.1.0rc1",
-        "orivane-backend-pydantic==0.1.0rc1",
+        "orivane-core==0.1.0",
+        "orivane-backend-pydantic==0.1.0",
         "opentelemetry-sdk>=1.44,<2",
     ]
     for path in (ROOT / "packages/cli/src").rglob("*.py"):

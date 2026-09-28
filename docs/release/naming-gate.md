@@ -26,7 +26,8 @@ Read-only PyPI JSON checks on 2026-09-27 returned HTTP 404 (NOT FOUND) for
 [orivane-commerce](https://pypi.org/pypi/orivane-commerce/json).
 NOT FOUND does not guarantee registration availability, grant ownership or reserve
 a name. Repeat checks before a separately authorized publication; never upload
-placeholder packages. Private :: Do Not Upload remains on all three distributions.
+placeholder packages. The approved final release PR removes Private :: Do Not Upload
+from all three distributions and rechecks the three package names against official PyPI.
 
 ## Accepted discoverability overlap
 

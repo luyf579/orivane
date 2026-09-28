@@ -2,8 +2,8 @@
 
 **DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
-Hatchling remains the build backend. All versions remain 0.1.0rc1 and retain
-Private :: Do Not Upload. Package readmes are self-contained; sdists include only
+Hatchling remains the build backend. All versions are 0.1.0; all three distributions
+omit Private :: Do Not Upload. Package readmes are self-contained; sdists include only
 README, pyproject, source/type markers, MIT LICENSE and build metadata. Root LICENSE
 is canonical; each package has an exact copy checked by tests. SPDX license metadata
 and wheel/sdist license bytes are verified against the root file.
@@ -26,9 +26,9 @@ as an isolated download-only tool to populate a platform-specific wheelhouse,
 constrained by uv.lock. This tooling is not a runtime or project dependency.
 Downloads/build tooling may access public indexes; application smoke tests are offline.
 
-Then it creates a new unseeded venv outside the repository and installs only the
-CLI wheel as the requested package with `uv pip install --offline --no-index
---find-links <wheelhouse>`. Core/backend are resolved from wheel requirements.
+Then it creates a new unseeded venv outside the repository and installs only
+`orivane-cli==0.1.0` as the requested package with `uv pip install --offline --no-index
+--find-links <wheelhouse>`. Core/backend are resolved from local wheel requirements.
 It verifies module paths are under that venv's site-packages, runs all examples,
 checks help/version and performs ten init/validate/run/trace rounds with the installed
 executable. It rejects the old config filename and verifies that old modules,
@@ -36,6 +36,10 @@ distributions, executable and telemetry namespace are absent.
 Core/backend py.typed and dependency direction are verified in actual wheels.
 The CLI is a command interface and does not claim an intended typed library API.
 
-CI runs this on both supported Python versions. Results, file lists, METADATA,
-entry points, hashes and install transcripts are local artifacts, never uploads.
+CI runs this on both supported Python versions. Results, file lists, wheel METADATA,
+sdist PKG-INFO, entry points, hashes and install transcripts are local evidence.
+The tag-only release workflow runs the same validator in a build job and transfers
+only its first `dist/` set (three wheels and three sdists) to a separate OIDC publishing
+job. Repeat builds and sdist rebuilds validate those candidates; the publish job
+does not build again. See [Trusted Publishing](pypi-trusted-publishing.md).
 Supply an unused output directory; the tool refuses to overwrite an earlier run.
