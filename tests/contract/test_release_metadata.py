@@ -154,3 +154,69 @@ def test_release_trigger_and_oidc_permissions_remain_restricted() -> None:
             ]
     assert "contents: write" not in workflow and "packages: write" not in workflow
     assert "secrets." not in workflow
+
+
+@pytest.mark.parametrize(
+    ("path", "install"),
+    [
+        ("packages/core/README.md", "pip install orivane-core"),
+        ("packages/backend-pydantic/README.md", "pip install orivane-backend-pydantic"),
+        ("packages/cli/README.md", "pipx install orivane-cli"),
+        ("packages/commerce/README.md", "pip install orivane-commerce"),
+        ("README.md", "pip install orivane-commerce"),
+        ("docs/release/v0.1.0.md", "pipx install orivane-cli"),
+    ],
+)
+def test_release_readme_content_is_ready_for_publication(path: str, install: str) -> None:
+    content = " ".join((ROOT / path).read_text(encoding="utf-8").replace("**", "").lower().split())
+    assert not re.search(r"\bnot yet published\b|\bdeferred\b", content)
+    assert "once v0.1.0 is published" not in content
+    assert "until pypi publication" not in content
+    assert install in content
+
+
+def test_staged_bootstrap_documents_core_first_and_commerce_before_remaining_jobs() -> None:
+    content = (ROOT / "docs/release/pypi-trusted-publishing.md").read_text(encoding="utf-8")
+    assert "## Initial bootstrap sequencing\n" in content
+    bootstrap = content.split("## Initial bootstrap sequencing\n", 1)[1].split("\n## ", 1)[0]
+    steps = re.split(r"^\d+\. ", bootstrap, flags=re.MULTILINE)[1:]
+    expected_terms = [
+        ("orivane-core", "orivane-backend-pydantic", "orivane-cli"),
+        ("v0.1.0", "approved commit"),
+        ("only", "publish-core"),
+        ("normal", "removes", "3 to 2"),
+        ("orivane-commerce", "pypi-commerce", "verify"),
+        ("backend", "cli", "commerce"),
+    ]
+    assert len(steps) == len(expected_terms)
+    for step, terms in zip(steps, expected_terms, strict=True):
+        normalized = " ".join(step.lower().split())
+        assert all(term in normalized for term in terms)
+    assert "three pending" in bootstrap.lower()
+
+
+def test_current_publication_gate_requires_staged_bootstrap_without_pre_tag_four_pending() -> None:
+    gate = (ROOT / "docs/release/publication-gate.md").read_text(encoding="utf-8")
+    assert "STAGED FIRST-PUBLISH BOOTSTRAP REQUIRED" in gate
+    assert "3/4 Pending Publishers configured" in gate
+    for path in [
+        "docs/release/publication-gate.md",
+        "docs/release/checklist.md",
+        "docs/release/pypi-trusted-publishing.md",
+        "docs/release/versioning.md",
+    ]:
+        content = " ".join((ROOT / path).read_text(encoding="utf-8").lower().split())
+        assert "deferred" not in content
+        assert "all four pending publishers" not in content
+        assert "verify all four publishers and publishing environments" not in content
+    checklist = (ROOT / "docs/release/checklist.md").read_text(encoding="utf-8").lower()
+    for label in [
+        "multi-project workflow",
+        "four github environments",
+        "core pending publisher",
+        "backend pending publisher",
+        "cli pending publisher",
+    ]:
+        assert f"- [x] {label}" in checklist
+    assert "- [ ] commerce pending publisher" in checklist
+    assert "- [ ] core first publication" in checklist

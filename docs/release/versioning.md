@@ -4,9 +4,10 @@
 
 Final release preparation replaced 0.1.0rc1 with **0.1.0** consistently in Core,
 backend, CLI and the virtual workspace. Commerce 0.1.0 is the fourth distribution,
-added in source before the first publication. The source repository is public, but no
-Git tag, GitHub Release or PyPI publication exists. PyPI publication is deferred;
-tags, Releases and package uploads require separate Maintainer approval.
+added in source before the first publication. The source repository is public;
+releases use the tag-triggered Trusted Publishing workflow. Initial publication
+requires the [staged bootstrap](pypi-trusted-publishing.md#initial-bootstrap-sequencing).
+Tags, Releases and package uploads require separate Maintainer approval.
 
 The four current distributions move together in v0. Backend/Core are tightly coupled,
 including a private observability helper. Backend requires Core == the same version;

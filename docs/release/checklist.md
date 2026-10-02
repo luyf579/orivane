@@ -1,8 +1,6 @@
 # Release checklist
 
-**SOURCE PUBLIC — PYPI PUBLICATION DEFERRED**
-
-**MULTI-PROJECT TRUSTED PUBLISHING CONFIGURATION IN PROGRESS**
+**SOURCE PUBLIC — STAGED FIRST-PUBLISH BOOTSTRAP REQUIRED**
 
 Checked items cover release preparation, GitHub-only public launch and the
 subsequent four-package Commerce validation.
@@ -27,26 +25,32 @@ Package publication remains a separate decision; see the [publication gate](publ
 - [x] Telemetry migration and full privacy regression; no legacy aliases.
 - [x] Full tests, Ruff, strict mypy and 100% statement/branch coverage on both versions.
 - [x] Current-tree/build secret and local-path scans.
-- [x] README final install/quickstart wording, with future publication tense.
+- [x] README final install/quickstart wording that remains accurate across publication.
 - [x] CHANGELOG: 0.1.0 entry and empty Unreleased section.
 - [x] Release notes: capabilities, compatibility, limitations, privacy and MIT.
 - [ ] Recheck all four PyPI names immediately before a separately approved publication.
 - [x] Repository public, following explicit visibility approval on 2026-09-28.
-- [x] Core Pending Trusted Publisher configured with release.yml and environment pypi.
-- [ ] Backend, CLI and Commerce Pending Publishers configured with their distinct environments.
-- [x] Existing GitHub pypi environment configured with deployment tag rule v*.
-- [ ] Three additional GitHub publishing environments configured: pypi-backend-pydantic, pypi-cli and pypi-commerce; final publishing environment count: four.
-- [ ] All four environments verified: v* tags only, reviewer luyf579, Prevent self-review false, no credential secrets.
+- [x] Multi-project workflow configured: one validated build and core → backend-pydantic → CLI → Commerce publication order.
+- [x] Four GitHub environments configured: pypi, pypi-backend-pydantic, pypi-cli and pypi-commerce.
+- [x] Core Pending Publisher configured with release.yml and environment pypi.
+- [x] Backend Pending Publisher configured with release.yml and environment pypi-backend-pydantic.
+- [x] CLI Pending Publisher configured with release.yml and environment pypi-cli.
+- [ ] Commerce Pending Publisher — waiting for one pending slot to be freed.
+- [x] All four environments verified: v* tags only, reviewer luyf579, Prevent self-review false, no credential secrets.
 - [ ] Maintainer approval of the exact release commit and artifacts when publication resumes.
 - [x] GitHub Private Vulnerability Reporting enabled and verified.
 - [ ] v0.1.0 tag under separate authorization.
+- [ ] Core first publication under separate authorization; approve only publish-core initially.
+- [ ] Commerce Pending Publisher configured and verified after core reification frees one slot.
+- [ ] Backend publication after Commerce Pending Publisher verification.
+- [ ] CLI publication.
+- [ ] Commerce publication.
+- [ ] Public install verification, smoke and release acceptance.
 - [ ] GitHub Release under separate authorization.
-- [ ] PyPI publish under separate authorization.
-- [ ] Post-PyPI install verification, smoke and release acceptance.
 
 The original release preparation preceded the GitHub-only public launch; Commerce
 was added to source and included in subsequent four-package validation. That launch
-created no tag, GitHub Release or package upload. Remaining publication
-steps are deferred to a separate task. Build evidence is produced by
-[packaging verification](packaging.md); future publication follows
-[Trusted Publishing](pypi-trusted-publishing.md).
+created no tag, GitHub Release or package upload. Initial publication requires
+the staged bootstrap in a separately authorized task. Build evidence is produced by
+[packaging verification](packaging.md); publication follows
+[Initial bootstrap sequencing](pypi-trusted-publishing.md#initial-bootstrap-sequencing).

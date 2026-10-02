@@ -1,12 +1,17 @@
 # orivane-commerce
 
-Platform-neutral commerce domain models and marketplace adapter contracts for
-Orivane. Version 0.1.0; Python 3.11+; MIT. This is an experimental source package,
-not yet published to PyPI; publication is deferred.
+orivane-commerce is an experimental platform-neutral Commerce domain package.
+Version 0.1.0; Python 3.11+; MIT.
 
 The only public concepts are Product, Listing, and MarketplaceAdapter. Pydantic v2
 is the only direct dependency. Core, CLI, a model backend, and marketplace SDKs are
 not required. Typed distributions include `py.typed`.
+
+Install with:
+
+```powershell
+pip install orivane-commerce
+```
 
 ```python
 from orivane_commerce import Listing, Product
@@ -21,7 +26,8 @@ Product holds supplied facts for one selected configuration; Listing holds separ
 presentation content. Ingestion and generation are application responsibilities.
 MarketplaceAdapter is a synchronous structural Protocol with a `platform` property
 and `adapt(listing)` method returning the implementation's own typed draft.
-There are no supplied platform adapters, publisher, variant family, or network calls.
+There are no real marketplace adapters, marketplace publishing, Listing Agent,
+variant family, or network calls.
 
 Text values are stripped and must remain non-blank; optional text may instead be
 None. Top-level attribute keys must be non-empty strings with no leading or

@@ -1,15 +1,16 @@
 # PyPI Trusted Publishing setup
 
-PyPI publication is currently deferred. The source repository is public, but the
-packages are not yet published and no tag or GitHub Release exists. These instructions
-apply to a separately authorized future publication task. The tag-only workflow uses four publishing environments. The existing core Pending
-Publisher uses `pypi`; backend, CLI and Commerce configuration is in progress.
+The public source repository uses a tag-only workflow with four publishing
+environments. Core, backend and CLI Pending Publishers are configured; Commerce
+requires one pending slot to be freed by the first core publication. These
+instructions apply to a separately authorized publication task.
 
 ## Pending publishers on PyPI
 
-Open PyPI **Account → Publishing** after configuration approval and inspect existing
-records. Preserve the configured core Pending Publisher without deleting, changing
-or resubmitting it. Create only missing mappings below, using GitHub as the provider.
+Open PyPI **Account → Publishing** and inspect existing records. Preserve the
+configured core, backend and CLI Pending Publishers without deleting, changing or
+resubmitting them. Configure Commerce only when the initial bootstrap frees a slot,
+using GitHub as the provider and the exact mapping below.
 
 | PyPI project | Owner | Repository | Workflow filename | Environment |
 | --- | --- | --- | --- | --- |
@@ -36,9 +37,8 @@ See [PyPI's pending publisher documentation](https://docs.pypi.org/trusted-publi
 ## GitHub environments
 
 The four publishing environments are `pypi`, `pypi-backend-pydantic`, `pypi-cli` and
-`pypi-commerce`. Preserve the existing `pypi` environment and create only missing
-environments after the configuration commit passes CI. Verify each under
-**Settings → Environments**.
+`pypi-commerce`. All four are configured; preserve their mappings and verify each
+under **Settings → Environments** before publication.
 
 Each environment must allow only deployment **tags** matching `v*`, require reviewer
 `luyf579`, and keep **Prevent self-review** disabled so the sole reviewer can approve
@@ -81,13 +81,25 @@ build execution outside the privileged publish job and generates publish attesta
 by default. See [PyPI usage](https://docs.pypi.org/trusted-publishers/using-a-publisher/)
 and the [official PyPA action](https://github.com/pypa/gh-action-pypi-publish).
 
-## Controlled publication sequence
+## Initial bootstrap sequencing
 
-After separate Maintainer approval, verify all package publication gates, recheck
-names, verify all four publishers and publishing environments, and review
-the exact release commit and artifacts. Only then create the approved `v0.1.0` tag
-at that commit. Pushing the tag triggers the publishing workflow; ordinary main
-pushes do not. Do not create a temporary tag to test publishing.
-Verify fresh PyPI installs and CLI smoke on Python 3.11/3.12 before creating a
-separately approved GitHub Release. The workflow does not write repository content.
-None of these publication actions is part of documentation maintenance.
+PyPI currently limits an account to three Pending Trusted Publishers at once.
+For the initial Orivane publication, recheck all four project names and review the
+exact release commit, artifacts and all four GitHub environments before tagging.
+The approved bootstrap proceeds as follows:
+
+1. Verify that `orivane-core`, `orivane-backend-pydantic` and `orivane-cli` Pending Publishers exist with the exact mappings above.
+2. Under separate Maintainer authorization, create and push `v0.1.0` at the approved commit. The tag triggers the validated build; ordinary main pushes do not. Do not create a temporary tag to test publishing.
+3. Approve only `publish-core` in `pypi`. Hold approval of the remaining publishing jobs.
+4. Verify successful first core publication: PyPI reifies the core Pending Publisher into a normal project publisher and removes its Pending record, reducing the pending count from 3 to 2.
+5. Configure `orivane-commerce` with environment `pypi-commerce` and verify its complete mapping before approving any remaining publishing job.
+6. Continue backend → CLI → Commerce publication in the existing job order. Verify fresh public installs and CLI smoke on Python 3.11/3.12 before creating a separately approved GitHub Release.
+
+## Subsequent releases
+
+Once the projects exist, they use normal Trusted Publishers rather than Pending
+Publishers; subsequent releases do not require this first-publication pending quota
+bootstrap. Review project ownership, publisher mappings, the exact release
+commit/artifacts and all four environment protections before each approved release.
+The workflow does not write repository content. None of these publication actions
+is part of documentation maintenance.

@@ -4,8 +4,8 @@ A small, typed Python runtime for building backend-adaptable AI agents, sessions
 workflows, observability, and developer tooling.
 
 Orivane v0.1.0 is an early release under the MIT license. The source repository is
-**public**. The Python packages are **not yet published to PyPI**; PyPI publication
-is currently deferred. No v0.1.0 tag or GitHub Release has been created.
+**public**. The repository's tag-triggered GitHub Actions workflow uses Trusted
+Publishing to release the four Python distributions.
 
 Public APIs follow semantic versioning from v0.1.0 onward, while 0.x minor releases
 may intentionally evolve the API with release notes. Orivane is not production ready.
@@ -27,8 +27,8 @@ Orivane includes an experimental platform-neutral Commerce domain package.
 ## Experimental commerce domain
 
 `orivane-commerce` is an experimental platform-neutral Commerce domain package.
-It is available in source but is not yet published to PyPI. It currently provides
-Product, Listing, and MarketplaceAdapter only.
+It provides Product, Listing, and MarketplaceAdapter only.
+Install with `pip install orivane-commerce`.
 See the [commerce architecture](docs/architecture/commerce.md).
 It provides no marketplace implementations, publishing, ingestion, or Listing Agent.
 
@@ -122,8 +122,8 @@ for value ownership, concurrency and an example using the owned AgentBackend con
 
 ## CLI quickstart
 
-Once v0.1.0 is published to PyPI, run in a directory where you want to create a
-new project. These commands also work in Windows PowerShell:
+Install the CLI and run in a directory where you want to create a new project.
+These commands work in Windows PowerShell:
 
 ```powershell
 pipx install orivane-cli
@@ -157,12 +157,18 @@ for privacy boundaries and configuration responsibility.
 
 ## Installation and development
 
-Once v0.1.0 is published to PyPI, install the CLI with `pipx install orivane-cli`,
-or use `pip install orivane-cli` inside your Python environment. The CLI installs
-matching Core and PydanticAI backend distributions automatically.
+Install the distribution needed by your application:
 
-Until PyPI publication, use the uv workspace below or locally built wheels.
-Building final artifacts does not approve uploading them.
+```powershell
+pip install orivane-core
+pip install orivane-backend-pydantic
+pipx install orivane-cli
+pip install orivane-commerce
+```
+
+Alternatively, use `pip install orivane-cli` inside your Python environment.
+The CLI installs matching Core and PydanticAI backend distributions automatically.
+For local development, use the uv workspace below or locally built wheels.
 
 Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
 
