@@ -20,6 +20,7 @@ PACKAGES = {
     "core": "orivane_core",
     "backend-pydantic": "orivane_pydantic",
     "cli": "orivane_cli",
+    "commerce": "orivane_commerce",
 }
 UV = ["uv"] if shutil.which("uv") else [sys.executable, "-m", "uv"]
 PATH_PATTERN = re.compile(
@@ -97,8 +98,8 @@ def main() -> None:
                 ],
             )
         distributions = [*destination.glob("*.whl"), *destination.glob("*.tar.gz")]
-        assert len(list(destination.glob("*.whl"))) == 3
-        assert len(list(destination.glob("*.tar.gz"))) == 3
+        assert len(list(destination.glob("*.whl"))) == len(PACKAGES)
+        assert len(list(destination.glob("*.tar.gz"))) == len(PACKAGES)
         assert set(destination.iterdir()) - set(distributions) <= {destination / ".gitignore"}
     records = []
     for package, module in PACKAGES.items():
@@ -244,6 +245,7 @@ def main() -> None:
         encoding="utf-8",
     )
     cli_wheel = next(wheelhouse.glob("orivane_cli-*.whl"))
+    commerce_wheel = next(wheelhouse.glob("orivane_commerce-*.whl"))
     run(
         "wheel-install.txt",
         [
@@ -267,6 +269,7 @@ def main() -> None:
             "--constraint",
             str(constraints),
             str(cli_wheel),
+            str(commerce_wheel),
         ],
     )
     with tempfile.TemporaryDirectory(prefix="framework-installed-") as temp:
@@ -300,6 +303,7 @@ from orivane_core import (
 from orivane_pydantic import (
     PydanticAgentBackend, BACKEND_ID, BACKEND_VERSION, FORMAT_VERSION, validate_session_state,
 )
+assert importlib.util.find_spec('orivane_commerce') is None
 paths = {}
 for name in ['orivane_core', 'orivane_pydantic', 'orivane_cli']:
     path = pathlib.Path(importlib.import_module(name).__file__).resolve()
@@ -366,11 +370,70 @@ for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
             shutil.copy2(source, target)
             result = run("wheel-install.txt", [str(python), "-I", str(target)], cwd=root)
             assert result.stdout == expected
+
+    with tempfile.TemporaryDirectory(prefix="commerce-installed-") as temp:
+        root = Path(temp)
+        env = root / "venv"
+        log = "commerce-wheel-install.txt"
+        run(log, [*UV, "venv", "--python", args.python, str(env)], cwd=root)
+        python = env / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+        run(
+            log,
+            [
+                *UV,
+                "pip",
+                "install",
+                "--python",
+                str(python),
+                "--offline",
+                "--no-index",
+                "--find-links",
+                str(wheelhouse),
+                str(commerce_wheel),
+            ],
+            cwd=root,
+        )
+        run(log, [*UV, "pip", "check", "--python", str(python)], cwd=root)
+        smoke = """import importlib.util, json, pathlib, sys
+import importlib.metadata as metadata
+import orivane_commerce
+from orivane_commerce import Product, Listing, MarketplaceAdapter
+from pydantic import ValidationError
+
+path = pathlib.Path(orivane_commerce.__file__).resolve()
+assert path.is_relative_to(pathlib.Path(sys.prefix).resolve()) and 'site-packages' in path.parts
+assert path.with_name('py.typed').is_file()
+assert orivane_commerce.__all__ == ['Product', 'Listing', 'MarketplaceAdapter']
+for name in ['orivane_core', 'orivane_pydantic', 'orivane_cli', 'pydantic_ai']:
+    assert importlib.util.find_spec(name) is None, name
+installed = {d.metadata['Name'].replace('_', '-').lower() for d in metadata.distributions()}
+assert installed == {
+    'orivane-commerce', 'pydantic', 'pydantic-core', 'annotated-types',
+    'typing-extensions', 'typing-inspection',
+}, installed
+assert metadata.version('orivane-commerce') == '0.1.0'
+product = Product(name='Trowel', attributes={'Product Type': 'tool', 'Color': 'red'})
+listing = Listing(title='Trowel', description='Garden tool', language='en', keywords=('garden',))
+assert Product.model_validate_json(product.model_dump_json()) == product
+assert Listing.model_validate_json(listing.model_dump_json()) == listing
+for key in [' Color', 'Color ', '   ']:
+    try:
+        Product(name='Trowel', attributes={key: 'red'})
+    except ValidationError:
+        pass
+    else:
+        raise AssertionError('Surrounding whitespace accepted')
+print(json.dumps({'module': str(path), 'installed': sorted(installed), 'roundtrips': 'PASS',
+                  'attribute_keys': 'PASS', 'py_typed': True, 'core_backend_cli_absent': True}))
+"""
+        run(log, [str(python), "-I", "-c", smoke], cwd=root)
     (output / "result.json").write_text(
         json.dumps(
             {
                 "packages": records,
                 "clean_install": "PASS",
+                "commerce_clean_install": "PASS",
+                "expected_artifact_count": 2 * len(PACKAGES),
                 "cli_roundtrip": "PASS",
                 "cli_roundtrip_rounds": 10,
                 "legacy_config": "NOT ACCEPTED",

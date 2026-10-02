@@ -11,7 +11,7 @@ Public APIs follow semantic versioning from v0.1.0 onward, while 0.x minor relea
 may intentionally evolve the API with release notes. Orivane is not production ready.
 Agent is the core abstraction. PydanticAI is the first backend; business
 code should depend on our contract rather than directly on PydanticAI.
-Commerce extension is planned but not in current scope.
+Orivane includes an experimental platform-neutral Commerce domain package.
 
 ## Current features
 
@@ -22,7 +22,15 @@ Commerce extension is planned but not in current scope.
   backend available in development, with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
 - `orivane-cli` / `orivane_cli`: local init, validate, run and trace commands.
-- No durable workflow engine, commerce package, or second backend.
+- No durable workflow engine or second backend.
+
+## Experimental commerce domain
+
+`orivane-commerce` is an experimental platform-neutral Commerce domain package.
+It is available in source but is not yet published to PyPI. It currently provides
+Product, Listing, and MarketplaceAdapter only.
+See the [commerce architecture](docs/architecture/commerce.md).
+It provides no marketplace implementations, publishing, ingestion, or Listing Agent.
 
 ## Core concepts and backend
 
@@ -184,7 +192,7 @@ all architecture, API, CLI and release preparation documents.
 Only the PydanticAI backend is implemented and pinned to 2.48.0. Sessions are in
 memory; same-session serialization covers one process and one event loop. Workflows
 are linear with basic branching. There is no durable workflow, persistent memory,
-multi-agent orchestration, Commerce package, plugin ecosystem or real-provider
+multi-agent orchestration, commerce platform integration, plugin ecosystem or real-provider
 certification matrix. Applications own model resources, side effects, native-history
 protection and telemetry configuration.
 

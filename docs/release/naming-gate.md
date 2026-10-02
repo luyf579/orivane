@@ -16,7 +16,7 @@ and 0.1.0rc1.
 | CLI distribution / import | orivane-cli / orivane_cli |
 | Executable | orivane |
 | Local CLI config | orivane.toml |
-| Future commerce distribution | orivane-commerce (name only; no package or reservation) |
+| Commerce distribution / import | orivane-commerce / orivane_commerce (source package; PyPI deferred) |
 
 Read-only PyPI JSON checks on 2026-09-27 returned HTTP 404 (NOT FOUND) for
 [orivane](https://pypi.org/pypi/orivane/json),
@@ -26,8 +26,9 @@ Read-only PyPI JSON checks on 2026-09-27 returned HTTP 404 (NOT FOUND) for
 [orivane-commerce](https://pypi.org/pypi/orivane-commerce/json).
 NOT FOUND does not guarantee registration availability, grant ownership or reserve
 a name. Repeat checks before a separately authorized publication; never upload
-placeholder packages. The approved final release PR removes Private :: Do Not Upload
-from all three distributions and rechecks the three package names against official PyPI.
+placeholder packages. The original final release PR removed Private :: Do Not Upload
+from the then-existing distributions. Commerce is now the fourth source distribution;
+all four omit that classifier and need name checks before a separately approved publication.
 
 ## Accepted discoverability overlap
 

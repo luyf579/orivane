@@ -1,0 +1,26 @@
+[project]
+name = "orivane-commerce"
+version = "0.1.0"
+description = "Platform-neutral commerce domain models and marketplace adapter contracts for Orivane"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+keywords = ["commerce", "typing", "agents"]
+dependencies = ["pydantic>=2.12,<3"]
+classifiers = ["Development Status :: 3 - Alpha", "Intended Audience :: Developers", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12", "Typing :: Typed"]
+
+[project.urls]
+Repository = "https://github.com/luyf579/orivane"
+Documentation = "https://github.com/luyf579/orivane/tree/main/docs"
+Issues = "https://github.com/luyf579/orivane/issues"
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/orivane_commerce"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/src", "/README.md", "/pyproject.toml", "/LICENSE"]

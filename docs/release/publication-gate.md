@@ -16,13 +16,14 @@ It became public on 2026-09-28 at the approved launch baseline
 is enabled; see [SECURITY](../../SECURITY.md). The [RC gate](rc-gate.md) remains a
 historical preparation record.
 
-Final release preparation synchronized 0.1.0 metadata, removed the three private
-classifiers, validated wheels/sdists on Python 3.11/3.12 and added a tag-only Trusted
-Publishing workflow. The GitHub-only public launch created no tag, GitHub Release
+Final release preparation synchronized 0.1.0 metadata, removed private classifiers,
+validated wheels/sdists on Python 3.11/3.12 and added a tag-only Trusted Publishing
+workflow. Commerce was added to source before any PyPI publication or tag. All four
+current distributions use 0.1.0, omit the Private classifier and undergo packaging checks. The GitHub-only public launch created no tag, GitHub Release
 or package upload. Source version 0.1.0 does not imply a published distribution.
 
 PyPI publication will resume as a separate, explicitly authorized task. Before
-publishing, recheck package names, configure and verify the three pending publishers,
+publishing, recheck package names, configure and verify the four pending publishers,
 verify the existing `pypi` environment, and review the exact commit/artifacts.
 No static publishing credential is used. Follow the
 [checklist](checklist.md) and [Trusted Publishing instructions](pypi-trusted-publishing.md).

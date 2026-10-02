@@ -15,13 +15,14 @@ Trusted Publisher for each project below. Select GitHub as the provider.
 | orivane-core | luyf579 | orivane | release.yml | pypi |
 | orivane-backend-pydantic | luyf579 | orivane | release.yml | pypi |
 | orivane-cli | luyf579 | orivane | release.yml | pypi |
+| orivane-commerce | luyf579 | orivane | release.yml | pypi |
 
 The workflow field is the filename `release.yml`; the repository file is
 `.github/workflows/release.yml`. Verify the repository is `luyf579/orivane`, ID
 `1392226219`. The publisher configuration must match the names exactly.
 
 A pending publisher does not create a project or reserve its name until first use.
-Recheck all three names immediately before publication; another user can register
+Recheck all four names immediately before publication; another user can register
 one in the meantime. Never upload placeholder packages to reserve names.
 See [PyPI's pending publisher documentation](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/).
 
@@ -47,9 +48,9 @@ See [GitHub's deployment environment rules](https://docs.github.com/en/actions/r
 
 The workflow runs only on pushes of `v*` tags, without `workflow_dispatch`.
 The build job checks out that exact tag, verifies its version, and runs the existing
-packaging validator with pinned uv 0.12.18. It validates all three packages, repeated
+packaging validator with pinned uv 0.12.18. It validates all four packages, repeated
 wheel content, sdist rebuilds and offline installation. Only the first validated
-`dist/` set of three wheels and three sdists is transferred as `release-distributions`.
+`dist/` set of four wheels and four sdists is transferred as `release-distributions`.
 
 The publish job downloads that same artifact and runs the official PyPA publishing
 action, pinned to an immutable commit. It does not check out source or rebuild.

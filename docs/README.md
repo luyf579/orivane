@@ -7,10 +7,10 @@ Start with the repository [README](../README.md).
 - API: [public contracts and commands](api.md).
 - Architecture: [backend](architecture/backend-contract.md), [tools](architecture/tool-contract.md),
   [sessions](architecture/session-runtime.md), [Workflow](architecture/workflow.md),
-  [observability](architecture/observability.md).
+  [observability](architecture/observability.md), [Commerce](architecture/commerce.md).
 - ADRs: [backend](adr/0001-default-agent-backend.md), [sessions](adr/0002-session-serialization.md),
   [Workflow](adr/0003-workflow-v0.md), [observability](adr/0004-observability-v0.md),
-  [CLI](adr/0005-cli-v0.md).
+  [CLI](adr/0005-cli-v0.md), [commerce domain v0](adr/0006-commerce-domain-v0.md).
 - CLI: [configuration, factory, commands and privacy](cli.md).
 - Development: [contributing](../CONTRIBUTING.md), [Python support](development/python-support.md),
   [offline examples](../examples/README.md).

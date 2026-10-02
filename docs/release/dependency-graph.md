@@ -2,7 +2,7 @@
 
 **DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
-Derived from the three current pyproject.toml files and uv.lock. Internal package
+Derived from the four current distribution pyproject.toml files and uv.lock. Internal package
 requirements in wheel METADATA must match these declarations after normalization.
 
 | Distribution | Direct production requirements |
@@ -10,8 +10,10 @@ requirements in wheel METADATA must match these declarations after normalization
 | orivane-core | pydantic>=2.12,<3; opentelemetry-api>=1.44,<2 |
 | orivane-backend-pydantic | orivane-core==0.1.0; pydantic-ai-slim==2.48.0 |
 | orivane-cli | orivane-core==0.1.0; orivane-backend-pydantic==0.1.0; opentelemetry-sdk>=1.44,<2 |
+| orivane-commerce | pydantic>=2.12,<3 |
 
 Core has no backend/PydanticAI dependency. Backend points to Core; CLI points to both.
+Commerce depends on Pydantic only, with no Core, backend or CLI dependency.
 Workspace source overrides are local development instructions, not wheel requirements.
 The wheel installation check resolves CLI's dependencies from local wheel metadata.
 

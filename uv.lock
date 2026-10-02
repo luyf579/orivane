@@ -11,6 +11,7 @@ resolution-markers = [
 members = [
     "orivane-backend-pydantic",
     "orivane-cli",
+    "orivane-commerce",
     "orivane-core",
     "orivane-workspace",
 ]
@@ -507,6 +508,17 @@ requires-dist = [
     { name = "orivane-backend-pydantic", editable = "packages/backend-pydantic" },
     { name = "orivane-core", editable = "packages/core" },
 ]
+
+[[package]]
+name = "orivane-commerce"
+version = "0.1.0"
+source = { editable = "packages/commerce" }
+dependencies = [
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pydantic", specifier = ">=2.12,<3" }]
 
 [[package]]
 name = "orivane-core"

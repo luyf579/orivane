@@ -7,7 +7,7 @@
 ### Changed
 
 - Approved Orivane repository, distribution, import and executable names; local config is orivane.toml.
-- MIT adopted; all three distributions use 0.1.0 with included license files.
+- MIT adopted; all four distributions use 0.1.0 with included license files.
 - Private package classifiers removed for final release review.
 - Tag-only PyPI Trusted Publishing workflow prepared; publication awaits approval.
 - Pre-public telemetry schema migrates to Orivane with no legacy aliases.
@@ -15,6 +15,7 @@
 
 ### Added
 
+- Experimental `orivane-commerce` source package with Product, Listing and MarketplaceAdapter.
 - Private release preparation: package metadata/readmes, wheel/sdist and isolated installation checks.
 - Offline executable examples, public API documentation, and naming/license/publication gates.
 - Separate developer CLI package with safe offline init, static TOML validate, stdin run and local trace.

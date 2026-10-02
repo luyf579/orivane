@@ -32,9 +32,9 @@ jobs:
           version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
           assert os.environ["RELEASE_TAG"] == f"v{version}", "Tag/version mismatch"
           PY
-      - name: Build and validate all three distributions
+      - name: Build and validate all four distributions
         run: uv run --no-project python scripts/packaging_check.py --output artifacts/release
-      - name: Store the six validated distributions
+      - name: Store the eight validated distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-distributions

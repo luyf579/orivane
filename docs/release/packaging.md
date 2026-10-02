@@ -2,7 +2,7 @@
 
 **DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
 
-Hatchling remains the build backend. All versions are 0.1.0; all three distributions
+Hatchling remains the build backend. All versions are 0.1.0; all four distributions
 omit Private :: Do Not Upload. Package readmes are self-contained; sdists include only
 README, pyproject, source/type markers, MIT LICENSE and build metadata. Root LICENSE
 is canonical; each package has an exact copy checked by tests. SPDX license metadata
@@ -33,13 +33,16 @@ It verifies module paths are under that venv's site-packages, runs all examples,
 checks help/version and performs ten init/validate/run/trace rounds with the installed
 executable. It rejects the old config filename and verifies that old modules,
 distributions, executable and telemetry namespace are absent.
-Core/backend py.typed and dependency direction are verified in actual wheels.
+A separate isolated venv installs only the Commerce wheel from the same local
+wheelhouse. It verifies imports, JSON round-trips, key validation and py.typed, and
+confirms that no Core, backend, CLI or PydanticAI package is installed.
+Core/backend/Commerce py.typed and dependency direction are verified in actual wheels.
 The CLI is a command interface and does not claim an intended typed library API.
 
 CI runs this on both supported Python versions. Results, file lists, wheel METADATA,
 sdist PKG-INFO, entry points, hashes and install transcripts are local evidence.
 The tag-only release workflow runs the same validator in a build job and transfers
-only its first `dist/` set (three wheels and three sdists) to a separate OIDC publishing
+only its first `dist/` set (four wheels and four sdists; eight validated distributions) to a separate OIDC publishing
 job. Repeat builds and sdist rebuilds validate those candidates; the publish job
 does not build again. See [Trusted Publishing](pypi-trusted-publishing.md).
 Supply an unused output directory; the tool refuses to overwrite an earlier run.
