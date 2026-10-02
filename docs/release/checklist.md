@@ -2,6 +2,8 @@
 
 **SOURCE PUBLIC — PYPI PUBLICATION DEFERRED**
 
+**MULTI-PROJECT TRUSTED PUBLISHING CONFIGURATION IN PROGRESS**
+
 Checked items cover release preparation, GitHub-only public launch and the
 subsequent four-package Commerce validation.
 Package publication remains a separate decision; see the [publication gate](publication-gate.md).
@@ -30,8 +32,11 @@ Package publication remains a separate decision; see the [publication gate](publ
 - [x] Release notes: capabilities, compatibility, limitations, privacy and MIT.
 - [ ] Recheck all four PyPI names immediately before a separately approved publication.
 - [x] Repository public, following explicit visibility approval on 2026-09-28.
-- [ ] Pending PyPI Trusted Publishers configured for all four packages.
-- [x] GitHub pypi environment configured with deployment tag rule v*.
+- [x] Core Pending Trusted Publisher configured with release.yml and environment pypi.
+- [ ] Backend, CLI and Commerce Pending Publishers configured with their distinct environments.
+- [x] Existing GitHub pypi environment configured with deployment tag rule v*.
+- [ ] Three additional GitHub publishing environments configured: pypi-backend-pydantic, pypi-cli and pypi-commerce; final publishing environment count: four.
+- [ ] All four environments verified: v* tags only, reviewer luyf579, Prevent self-review false, no credential secrets.
 - [ ] Maintainer approval of the exact release commit and artifacts when publication resumes.
 - [x] GitHub Private Vulnerability Reporting enabled and verified.
 - [ ] v0.1.0 tag under separate authorization.

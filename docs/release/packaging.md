@@ -42,7 +42,14 @@ The CLI is a command interface and does not claim an intended typed library API.
 CI runs this on both supported Python versions. Results, file lists, wheel METADATA,
 sdist PKG-INFO, entry points, hashes and install transcripts are local evidence.
 The tag-only release workflow runs the same validator in a build job and transfers
-only its first `dist/` set (four wheels and four sdists; eight validated distributions) to a separate OIDC publishing
-job. Repeat builds and sdist rebuilds validate those candidates; the publish job
-does not build again. See [Trusted Publishing](pypi-trusted-publishing.md).
+only its first `dist/` set (four wheels and four sdists; eight validated distributions)
+as four GitHub Actions artifacts. Each artifact contains one project's wheel and
+sdist: release-orivane-core, release-orivane-backend-pydantic, release-orivane-cli
+and release-orivane-commerce. Repeat builds and sdist rebuilds validate those
+candidates; there is only one release build job.
+
+Four privileged OIDC publish jobs each download only their own project artifact and
+set `packages-dir: dist/`. They run in explicit dependency order: Core, backend, CLI,
+then Commerce. They do not check out source, rebuild or run tests. All uploaded
+files therefore originate from the same validated build. See [Trusted Publishing](pypi-trusted-publishing.md).
 Supply an unused output directory; the tool refuses to overwrite an earlier run.

@@ -7,6 +7,7 @@ License Gate: **APPROVED — MIT**
 Identity Review: **APPROVED — CLEAN PUBLICATION REPOSITORY**
 Public Repository Gate: **COMPLETE — PUBLIC**
 PyPI Gate: **DEFERRED — NOT YET PUBLISHED**
+Configuration: **MULTI-PROJECT TRUSTED PUBLISHING CONFIGURATION IN PROGRESS**
 Git tags: **NONE**
 GitHub Releases: **NONE**
 
@@ -24,7 +25,9 @@ or package upload. Source version 0.1.0 does not imply a published distribution.
 
 PyPI publication will resume as a separate, explicitly authorized task. Before
 publishing, recheck package names, configure and verify the four pending publishers,
-verify the existing `pypi` environment, and review the exact commit/artifacts.
+verify all four publishing environments (`pypi`, `pypi-backend-pydantic`, `pypi-cli`
+and `pypi-commerce`), and review the exact commit/artifacts. The existing core
+Pending Publisher is configured; backend, CLI and Commerce setup is pending.
 No static publishing credential is used. Follow the
 [checklist](checklist.md) and [Trusted Publishing instructions](pypi-trusted-publishing.md).
 Tags, GitHub Releases, TestPyPI and PyPI uploads require separate Maintainer approval;
