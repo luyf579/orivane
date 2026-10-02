@@ -2,7 +2,8 @@
 
 The experimental `orivane-commerce` source package, import `orivane_commerce`,
 version 0.1.0, provides platform-neutral domain models and an adapter contract.
-It is not yet published to PyPI. [ADR-0006](../adr/0006-commerce-domain-v0.md) is
+It was published on [PyPI](https://pypi.org/project/orivane-commerce/0.1.0/)
+on 2026-10-02. [ADR-0006](../adr/0006-commerce-domain-v0.md) is
 Accepted; the [research report](../research/commerce-domain-design.md) preserves
 historical design evidence.
 

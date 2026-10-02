@@ -2,21 +2,23 @@
 
 ## Unreleased
 
-## 0.1.0 - 2026-09-28
+## 0.1.0 - 2026-10-02
 
 ### Changed
 
 - Approved Orivane repository, distribution, import and executable names; local config is orivane.toml.
 - MIT adopted; all four distributions use 0.1.0 with included license files.
 - Private package classifiers removed for final release review.
-- Tag-only PyPI Trusted Publishing workflow prepared; publication awaits approval.
+- Published the four 0.1.0 distributions through GitHub OIDC Trusted Publishing.
+- Published the v0.1.0 GitHub Release.
+- PyPI artifacts include publish attestations.
 - Pre-public telemetry schema migrates to Orivane with no legacy aliases.
 - Existing public exports, execution behavior and privacy guarantees are preserved.
 
 ### Added
 
 - Experimental `orivane-commerce` source package with Product, Listing and MarketplaceAdapter.
-- Private release preparation: package metadata/readmes, wheel/sdist and isolated installation checks.
+- Package metadata/readmes, wheel/sdist and isolated installation checks.
 - Offline executable examples, public API documentation, and naming/license/publication gates.
 - Separate developer CLI package with safe offline init, static TOML validate, stdin run and local trace.
 - Structured lifecycle logging and OpenTelemetry parent spans for workflows, sessions and agents.

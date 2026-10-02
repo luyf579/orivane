@@ -1,6 +1,8 @@
 # Local packaging verification
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
+This document describes the packaging verification used for releases.
+v0.1.0 was published on 2026-10-02. Publishing a future version requires separate
+Maintainer approval.
 
 Hatchling remains the build backend. All versions are 0.1.0; all four distributions
 omit Private :: Do Not Upload. Package readmes are self-contained; sdists include only

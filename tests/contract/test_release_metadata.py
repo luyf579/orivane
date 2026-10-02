@@ -177,15 +177,15 @@ def test_release_readme_content_is_ready_for_publication(path: str, install: str
 
 def test_staged_bootstrap_documents_core_first_and_commerce_before_remaining_jobs() -> None:
     content = (ROOT / "docs/release/pypi-trusted-publishing.md").read_text(encoding="utf-8")
-    assert "## Initial bootstrap sequencing\n" in content
-    bootstrap = content.split("## Initial bootstrap sequencing\n", 1)[1].split("\n## ", 1)[0]
+    assert "## Historical initial bootstrap — v0.1.0\n" in content
+    bootstrap = content.split("## Historical initial bootstrap — v0.1.0\n", 1)[1]
     steps = re.split(r"^\d+\. ", bootstrap, flags=re.MULTILINE)[1:]
     expected_terms = [
         ("orivane-core", "orivane-backend-pydantic", "orivane-cli"),
         ("v0.1.0", "approved commit"),
         ("only", "publish-core"),
-        ("normal", "removes", "3 to 2"),
-        ("orivane-commerce", "pypi-commerce", "verify"),
+        ("normal", "removed", "3 to 2"),
+        ("orivane-commerce", "pypi-commerce", "verified"),
         ("backend", "cli", "commerce"),
     ]
     assert len(steps) == len(expected_terms)
@@ -193,30 +193,63 @@ def test_staged_bootstrap_documents_core_first_and_commerce_before_remaining_job
         normalized = " ".join(step.lower().split())
         assert all(term in normalized for term in terms)
     assert "three pending" in bootstrap.lower()
+    assert "Completed on 2026-10-02." in bootstrap
+    assert "is not required for normal subsequent releases" in bootstrap
 
 
-def test_current_publication_gate_requires_staged_bootstrap_without_pre_tag_four_pending() -> None:
+def test_v010_publication_gate_and_checklist_record_completed_release() -> None:
     gate = (ROOT / "docs/release/publication-gate.md").read_text(encoding="utf-8")
-    assert "STAGED FIRST-PUBLISH BOOTSTRAP REQUIRED" in gate
-    assert "3/4 Pending Publishers configured" in gate
-    for path in [
-        "docs/release/publication-gate.md",
+    assert "SOURCE PUBLIC — V0.1.0 RELEASE COMPLETE" in gate
+    assert "PyPI Gate: **COMPLETE**" in gate
+    assert "Trusted Publishers: **4 NORMAL**" in gate
+    assert "Pending Publishers: **0**" in gate
+    assert "4bc7534f43a10c13784946da754e0f4010a70a12" in gate
+    checklist = (ROOT / "docs/release/checklist.md").read_text(encoding="utf-8")
+    assert "V0.1.0 RELEASE COMPLETE" in checklist
+    assert "- [ ]" not in checklist
+    assert "Initial bootstrap completed successfully on 2026-10-02." in checklist
+    publishing = (ROOT / "docs/release/pypi-trusted-publishing.md").read_text(encoding="utf-8")
+    current = publishing.split("## Historical initial bootstrap — v0.1.0", 1)[0]
+    assert "## Normal publishers on PyPI" in current
+    assert "## Subsequent releases" in current
+    assert "normal subsequent releases do not require creating Pending Publishers" in current
+
+
+# Explicitly exclude RC, draft, naming/license/rename preparation records, ADRs and research.
+# The dated bootstrap history embedded in these current documents describes completed steps.
+@pytest.mark.parametrize(
+    "path",
+    [
+        "README.md",
+        "CONTRIBUTING.md",
+        "SECURITY.md",
+        "CHANGELOG.md",
+        "docs/README.md",
+        "docs/cli.md",
+        "docs/architecture/commerce.md",
         "docs/release/checklist.md",
+        "docs/release/publication-gate.md",
         "docs/release/pypi-trusted-publishing.md",
         "docs/release/versioning.md",
-    ]:
-        content = " ".join((ROOT / path).read_text(encoding="utf-8").lower().split())
-        assert "deferred" not in content
-        assert "all four pending publishers" not in content
-        assert "verify all four publishers and publishing environments" not in content
-    checklist = (ROOT / "docs/release/checklist.md").read_text(encoding="utf-8").lower()
-    for label in [
-        "multi-project workflow",
-        "four github environments",
-        "core pending publisher",
-        "backend pending publisher",
-        "cli pending publisher",
-    ]:
-        assert f"- [x] {label}" in checklist
-    assert "- [ ] commerce pending publisher" in checklist
-    assert "- [ ] core first publication" in checklist
+        "docs/release/packaging.md",
+        "docs/release/dependency-graph.md",
+        "docs/release/v0.1.0.md",
+        "packages/core/README.md",
+        "packages/backend-pydantic/README.md",
+        "packages/cli/README.md",
+        "packages/commerce/README.md",
+    ],
+)
+def test_current_release_documents_do_not_revert_to_unpublished_state(path: str) -> None:
+    content = " ".join((ROOT / path).read_text(encoding="utf-8").replace("**", "").lower().split())
+    stale = (
+        r"\b(?:pypi\s+)?publication\s+(?:is\s+)?(?:currently\s+)?(?:deferred|awaits\s+approval)\b"
+        r"|\bnot\s+yet\s+published\b|\bno\s+git\s+tag\b|\bno\s+github\s+release\b"
+        r"|\bgit\s+tags:\s*none\b|\bgithub\s+releases:\s*none\b"
+        r"|\bstaged\s+first-publish\s+bootstrap\s+required\b|\b3/4\s+pending\b"
+        r"|\bwaiting\s+for\s+(?:one\s+pending\s+)?slot\b"
+        r"|\bremaining\s+publication\s+steps\b|\bdo\s+not\s+publish\s+until\b"
+        r"|\bdo\s+not\s+publish\s*[—-]\s*publication\s+approval\s+required\b"
+        r"|\bpending\s+bootstrap\s+incomplete\b"
+    )
+    assert not re.search(stale, content), path

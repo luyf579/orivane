@@ -1,12 +1,15 @@
 # Developer CLI v0
 
 Project, distribution and command names are approved as Orivane. The CLI source is
-public; the package is not yet published to PyPI. It is a separate `orivane-cli`
-package; Core and backend public APIs remain unchanged.
+public, and [`orivane-cli==0.1.0`](https://pypi.org/project/orivane-cli/0.1.0/)
+was published on 2026-10-02. It is a separate package; Core and backend public APIs
+remain unchanged.
 
 ## Install and development invocation
 
-From the repository root in PowerShell, using Python 3.11+ and the existing uv tool:
+Install with `pipx install orivane-cli`, or `pip install orivane-cli` inside a
+Python environment. For development, run from the repository root in PowerShell
+using Python 3.11+ and the existing uv tool:
 
 ```powershell
 uv sync --locked --all-packages --python 3.11
@@ -204,7 +207,9 @@ web UI, commerce or release publishing. TOML is the only v0 format; YAML/JSON su
 may be considered later with a concrete requirement.
 
 CLI directly depends on exact workspace Core/backend versions and OTel SDK >=1.44,<2.
-Core keeps its direct OTel API dependency. Semantic-conventions 0.65b0 remains the
-expected SDK transitive dependency, not a direct declaration or project import.
+Core keeps its direct OTel API dependency. The development lock resolves SDK 1.44.0
+and semantic-conventions 0.65b0; public installs may resolve newer versions within
+the declared ranges. Semantic conventions is an SDK transitive dependency, not a
+direct declaration or project import.
 PydanticAI and pydantic-graph stay at 2.48.0. No CLI framework/parser/template dependency
 was added. See [ADR-0005](adr/0005-cli-v0.md).

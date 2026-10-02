@@ -2,8 +2,8 @@
 
 Orivane 0.x is early-stage software. Only the current development line receives
 best-effort fixes; there is no long-term support or guaranteed response window.
-The source repository is public; no GitHub Release or PyPI package has been
-published. Do not put credentials, prompts or native session histories in Issues,
+The source repository is public; v0.1.0 is published on GitHub Releases and PyPI.
+Do not put credentials, prompts or native session histories in Issues,
 logs or reports.
 
 GitHub Private Vulnerability Reporting is enabled. Use

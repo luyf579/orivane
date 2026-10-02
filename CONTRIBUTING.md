@@ -36,13 +36,14 @@ and wait for green CI; do not treat local passing tests as remote CI success.
 Never commit secrets, `.env`, tokens, credential files, or local evidence artifacts.
 Normal CI must not call real models or require model credentials. Use local fake
 backends; future adapter tests should use TestModel/FunctionModel.
-Do not publish releases or packages until explicitly approved and licensed.
+Future releases and package publications require explicit Maintainer approval.
 
-Package/release changes require Maintainer approval. Naming and MIT are approved;
-PyPI publication is currently deferred. Never reserve names by uploading placeholder packages.
+Orivane v0.1.0 was published on PyPI and GitHub Releases on 2026-10-02.
+Package/release changes require Maintainer approval. Naming and MIT are approved.
+Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
 sdist/wheel inclusion or entry points. All distributions and internal exact requirements
-now use 0.1.0; tag creation and publishing still require separate authorization.
-See the [Trusted Publishing setup](docs/release/pypi-trusted-publishing.md).
+now use 0.1.0; future tag creation and publishing require separate authorization.
+See the [Trusted Publishing configuration](docs/release/pypi-trusted-publishing.md).
 The [offline examples](examples/README.md) are tested and included
 in strict mypy; update them alongside documented API usage.

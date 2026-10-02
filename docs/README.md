@@ -1,7 +1,8 @@
 # Documentation
 
-Orivane v0.1.0 is an early release with a public source repository. PyPI publication
-is deferred; no Git tag or GitHub Release has been created.
+Orivane v0.1.0 is an early release published on PyPI and
+[GitHub Releases](https://github.com/luyf579/orivane/releases/tag/v0.1.0)
+on 2026-10-02, with a public source repository.
 Start with the repository [README](../README.md).
 
 - API: [public contracts and commands](api.md).
@@ -14,9 +15,11 @@ Start with the repository [README](../README.md).
 - CLI: [configuration, factory, commands and privacy](cli.md).
 - Development: [contributing](../CONTRIBUTING.md), [Python support](development/python-support.md),
   [offline examples](../examples/README.md).
-- Release: [checklist](release/checklist.md), [local packaging](release/packaging.md),
-  [naming gate](release/naming-gate.md), [naming requirements](release/naming-requirements.md),
-  [rename impact](release/rename-impact.md), [license review](release/license-review.md),
-  [publication gate](release/publication-gate.md), [versioning](release/versioning.md),
-  [dependency graph](release/dependency-graph.md), [v0.1.0 notes](release/v0.1.0.md),
-  [Trusted Publishing](release/pypi-trusted-publishing.md), [historical RC gate](release/rc-gate.md).
+- Release: [v0.1.0 notes](release/v0.1.0.md), [completed checklist](release/checklist.md),
+  [publication gate](release/publication-gate.md), [Trusted Publishing](release/pypi-trusted-publishing.md),
+  [local packaging](release/packaging.md), [versioning](release/versioning.md),
+  [dependency graph](release/dependency-graph.md).
+- Historical release preparation: [naming gate](release/naming-gate.md),
+  [naming requirements](release/naming-requirements.md), [rename impact](release/rename-impact.md),
+  [license review](release/license-review.md), [RC gate](release/rc-gate.md)
+  and [v0.1.0 draft](release/v0.1.0-draft.md).

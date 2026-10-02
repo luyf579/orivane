@@ -3,9 +3,13 @@
 A small, typed Python runtime for building backend-adaptable AI agents, sessions,
 workflows, observability, and developer tooling.
 
-Orivane v0.1.0 is an early release under the MIT license. The source repository is
-**public**. The repository's tag-triggered GitHub Actions workflow uses Trusted
-Publishing to release the four Python distributions.
+Orivane v0.1.0 is an early release published on 2026-10-02 under the MIT license.
+The source repository is **public**. See the [GitHub Release](https://github.com/luyf579/orivane/releases/tag/v0.1.0)
+and the four PyPI distributions: [Core](https://pypi.org/project/orivane-core/),
+[PydanticAI backend](https://pypi.org/project/orivane-backend-pydantic/),
+[CLI](https://pypi.org/project/orivane-cli/) and
+[Commerce](https://pypi.org/project/orivane-commerce/).
+The tag-triggered GitHub Actions workflow publishes them through Trusted Publishing.
 
 Public APIs follow semantic versioning from v0.1.0 onward, while 0.x minor releases
 may intentionally evolve the API with release notes. Orivane is not production ready.
@@ -19,7 +23,7 @@ Orivane includes an experimental platform-neutral Commerce domain package.
   `InMemorySessionRuntime` for explicit in-process session ordering and `Workflow`
   for typed linear async steps and basic if/else.
 - `orivane-backend-pydantic` / `orivane_pydantic`: real PydanticAI
-  backend available in development, with validated tools and native history snapshots.
+  backend with validated tools and native history snapshots.
 - PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
 - `orivane-cli` / `orivane_cli`: local init, validate, run and trace commands.
 - No durable workflow engine or second backend.
@@ -183,7 +187,7 @@ uv run --no-sync coverage report
 
 If uv is installed as a Python user package but its executable is not on PATH,
 replace `uv` with `python -m uv`. Normal tests need no real model credentials.
-Do not publish until the separate publication approval is complete.
+Development setup does not authorize an additional release.
 
 See [contributing](CONTRIBUTING.md), [contract](docs/architecture/backend-contract.md),
 [ADR-0001](docs/adr/0001-default-agent-backend.md), and
@@ -191,7 +195,7 @@ See [contributing](CONTRIBUTING.md), [contract](docs/architecture/backend-contra
 
 Run the [three offline examples](examples/README.md) after setup; tests execute them
 on both supported Python versions. The [documentation index](docs/README.md) links
-all architecture, API, CLI and release preparation documents.
+all architecture, API, CLI and release documents.
 
 ## Limitations
 
@@ -202,15 +206,16 @@ multi-agent orchestration, commerce platform integration, plugin ecosystem or re
 certification matrix. Applications own model resources, side effects, native-history
 protection and telemetry configuration.
 
-## Contributing and release preparation
+## Contributing and releases
 
-See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. Package/release
-changes require Maintainer approval. The [public release checklist](docs/release/checklist.md)
-and [packaging verification](docs/release/packaging.md) describe validation and remaining
-publication steps. Read the [v0.1.0 release notes](docs/release/v0.1.0.md) and
-[Trusted Publishing setup](docs/release/pypi-trusted-publishing.md). The source
-repository is public; tags, GitHub Releases and package uploads require separate
-Maintainer authorization.
+See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. The
+[v0.1.0 release checklist](docs/release/checklist.md) and
+[publication gate](docs/release/publication-gate.md) record the completed release.
+Read the [v0.1.0 release notes](docs/release/v0.1.0.md),
+[packaging verification](docs/release/packaging.md) and
+[Trusted Publishing configuration](docs/release/pypi-trusted-publishing.md)
+for release evidence and the subsequent-release process.
+Future release and package publication changes require explicit Maintainer approval.
 
 ## License
 

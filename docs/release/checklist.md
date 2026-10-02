@@ -1,10 +1,13 @@
 # Release checklist
 
-**SOURCE PUBLIC — STAGED FIRST-PUBLISH BOOTSTRAP REQUIRED**
+**V0.1.0 RELEASE COMPLETE**
 
-Checked items cover release preparation, GitHub-only public launch and the
-subsequent four-package Commerce validation.
-Package publication remains a separate decision; see the [publication gate](publication-gate.md).
+Orivane v0.1.0 was published on 2026-10-02. The approved release commit and
+lightweight tag `v0.1.0` point to `4bc7534f43a10c13784946da754e0f4010a70a12`.
+The [publication gate](publication-gate.md) records release acceptance.
+Future releases require explicit Maintainer approval.
+
+## Preparation completed
 
 - [x] Naming Gate approved: Orivane; accepted discoverability overlap documented.
 - [x] License Gate approved: standard MIT; canonical root and exact package copies.
@@ -28,29 +31,45 @@ Package publication remains a separate decision; see the [publication gate](publ
 - [x] README final install/quickstart wording that remains accurate across publication.
 - [x] CHANGELOG: 0.1.0 entry and empty Unreleased section.
 - [x] Release notes: capabilities, compatibility, limitations, privacy and MIT.
-- [ ] Recheck all four PyPI names immediately before a separately approved publication.
-- [x] Repository public, following explicit visibility approval on 2026-09-28.
-- [x] Multi-project workflow configured: one validated build and core → backend-pydantic → CLI → Commerce publication order.
-- [x] Four GitHub environments configured: pypi, pypi-backend-pydantic, pypi-cli and pypi-commerce.
-- [x] Core Pending Publisher configured with release.yml and environment pypi.
-- [x] Backend Pending Publisher configured with release.yml and environment pypi-backend-pydantic.
-- [x] CLI Pending Publisher configured with release.yml and environment pypi-cli.
-- [ ] Commerce Pending Publisher — waiting for one pending slot to be freed.
-- [x] All four environments verified: v* tags only, reviewer luyf579, Prevent self-review false, no credential secrets.
-- [ ] Maintainer approval of the exact release commit and artifacts when publication resumes.
-- [x] GitHub Private Vulnerability Reporting enabled and verified.
-- [ ] v0.1.0 tag under separate authorization.
-- [ ] Core first publication under separate authorization; approve only publish-core initially.
-- [ ] Commerce Pending Publisher configured and verified after core reification frees one slot.
-- [ ] Backend publication after Commerce Pending Publisher verification.
-- [ ] CLI publication.
-- [ ] Commerce publication.
-- [ ] Public install verification, smoke and release acceptance.
-- [ ] GitHub Release under separate authorization.
 
-The original release preparation preceded the GitHub-only public launch; Commerce
-was added to source and included in subsequent four-package validation. That launch
-created no tag, GitHub Release or package upload. Initial publication requires
-the staged bootstrap in a separately authorized task. Build evidence is produced by
-[packaging verification](packaging.md); publication follows
-[Initial bootstrap sequencing](pypi-trusted-publishing.md#initial-bootstrap-sequencing).
+- [x] Repository public, following explicit visibility approval on 2026-09-28.
+- [x] Multi-project workflow configured: one validated build and Core → backend-pydantic → CLI → Commerce publication order.
+- [x] Four GitHub environments configured: pypi, pypi-backend-pydantic, pypi-cli and pypi-commerce.
+- [x] All four environments verified: v* tags only, reviewer luyf579, Prevent self-review false, no credential secrets.
+- [x] GitHub Private Vulnerability Reporting enabled and verified.
+
+## Publication completed
+
+- [x] Final PyPI names checked immediately before publication.
+- [x] Exact release commit and artifacts approved by the Maintainer.
+- [x] v0.1.0 lightweight tag created at the approved release commit.
+- [x] Core publication.
+- [x] Core Pending Publisher reified into a normal Trusted Publisher.
+- [x] Commerce Pending Publisher configured and verified after Core freed a slot.
+- [x] Backend publication.
+- [x] CLI publication.
+- [x] Commerce publication.
+- [x] Four normal GitHub Trusted Publishers verified.
+- [x] Zero Pending Publishers verified.
+- [x] 8/8 PyPI files verified: four wheels and four sdists.
+- [x] 8/8 artifact hashes matched the validated release build.
+- [x] 8/8 publish attestations present; publisher identities and subject hashes matched.
+- [x] Python 3.11 fresh public installation.
+- [x] Python 3.12 fresh public installation.
+- [x] CLI public smoke.
+- [x] Commerce public smoke.
+- [x] Commerce isolation: no Core, backend, CLI or PydanticAI installed.
+- [x] GitHub Release published as Orivane v0.1.0, with Draft false and Prerelease false.
+
+## Historical initial bootstrap — v0.1.0
+
+Initial bootstrap completed successfully on 2026-10-02. The GitHub-only public
+source launch on 2026-09-28 preceded all tag and package publication. PyPI's account
+limit of three pending publishers required Core first → reification → one slot freed
+→ Commerce Pending Publisher configured → backend → CLI → Commerce.
+All four projects now exist and use normal Trusted Publishers; future releases use
+the [subsequent-release process](pypi-trusted-publishing.md#subsequent-releases).
+The [historical bootstrap record](pypi-trusted-publishing.md#historical-initial-bootstrap--v010)
+preserves the initial sequence. Build evidence comes from
+[packaging verification](packaging.md). Attestation presence checks did not perform
+cryptographic signature verification.

@@ -1,6 +1,6 @@
 # Direct dependency graph
 
-**DO NOT PUBLISH — PUBLICATION APPROVAL REQUIRED**
+All four v0.1.0 distributions are published; their dependency declarations are unchanged.
 
 Derived from the four current distribution pyproject.toml files and uv.lock. Internal package
 requirements in wheel METADATA must match these declarations after normalization.
@@ -17,7 +17,9 @@ Commerce depends on Pydantic only, with no Core, backend or CLI dependency.
 Workspace source overrides are local development instructions, not wheel requirements.
 The wheel installation check resolves CLI's dependencies from local wheel metadata.
 
-Current lock: Pydantic 2.13.5; PydanticAI and pydantic-graph 2.48.0;
+Current development lock: Pydantic 2.13.5; PydanticAI and pydantic-graph 2.48.0;
 OpenTelemetry API/SDK 1.44.0. Semantic conventions 0.65b0 remains SDK-required
 TRANSITIVE, not directly declared or imported by project code. SDK is also DEV DIRECT
-for tests. No exporter or unrelated runtime dependency is added for packaging.
+for tests. Public installs may resolve newer Pydantic/OpenTelemetry versions within
+the declared ranges; the development lock does not pin downstream environments.
+No exporter or unrelated runtime dependency is added for packaging.
