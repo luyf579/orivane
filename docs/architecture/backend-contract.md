@@ -24,6 +24,10 @@ root/adapter, not each RunRequest. Core must not import PydanticAI or its adapte
 
 ## Runtime adapter
 
+This evaluation branch prepares a PydanticAI 2.54.0 foundation for a future
+v0.2.0 release. All local Orivane distribution versions remain 0.1.1 for
+evaluation only. Published v0.1.1 and its historical release notes remain unchanged.
+
 `PydanticAgentBackend[DepsT, OutputT]` structurally implements AgentBackend. Construct
 it with a public PydanticAI Model instance, explicit output_type, instructions, and
 owned tools. request_limit and tool_calls_limit default to 50; both must be finite
@@ -43,12 +47,28 @@ promise lossless migration across backends. next_state replaces the complete pri
 snapshot; never append it again to old history.
 
 The adapter's guard currently accepts backend_id `pydantic-ai`, format_version `1`,
-and backend_version `2.48.0` only. All three mismatches raise ValueError. No silent
+and backend_version `2.54.0` only. All three mismatches raise ValueError. No silent
 reset or history drop is allowed. The exported validate_session_state helper still
 checks only the envelope. Runtime restoration calls it first, then parses payload
 with public ModelMessagesTypeAdapter. Malformed native JSON/schema raises a generic
 ValueError without including payload contents or displaying the validation cause.
 Successful runs use all_messages_json() once to return the full replacement snapshot.
+The public BACKEND_VERSION value changes from 2.48.0 to 2.54.0; public export names
+and function/class signatures remain unchanged. Version mismatch errors identify
+only the supported version, without echoing the supplied version or native data.
+
+When a future Orivane release switches to PydanticAI 2.54.0,
+SessionState snapshots labeled backend_version 2.48.0 are rejected.
+
+Applications persisting SessionState must start a new session
+or perform an explicitly application-owned migration.
+
+Orivane provides no automatic migration in this phase. Technical cross-version
+payload parsing does not authorize accepting an old envelope. No compatibility
+window, relabeling, payload rewriting or migration utility is provided. Process
+restart usually clears InMemorySessionRuntime, but applications may persist the
+public SessionState and must explicitly handle its version mismatch.
+
 No native message type is added to Core. Histories themselves retain upstream data,
 including prompts/tool arguments; error redaction is not payload anonymization.
 
@@ -66,7 +86,7 @@ session; there are no backend-owned external provider/model resources to close.
 Future backend-owned resources require an explicit ownership design before implementation.
 
 The Agent object is adapter-created and adapter-owned. For the tested PydanticAI
-2.48.0 public API path (a directly supplied Model and ordinary function tools), no
+2.54.0 public API path (a directly supplied Model and ordinary function tools), no
 explicit adapter shutdown action is required. This does not claim Agent has no
 lifecycle API: Agent and Model have public async context hooks. This adapter does
 not enter an Agent context or manage those hooks for the borrowed model. Upstream

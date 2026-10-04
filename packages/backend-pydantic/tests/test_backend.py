@@ -1,6 +1,6 @@
 import pytest
 from orivane_core import AgentBackend, RunRequest, RunResult, ToolDefinition
-from orivane_pydantic import PydanticAgentBackend
+from orivane_pydantic import BACKEND_VERSION, PydanticAgentBackend
 from pydantic import BaseModel, JsonValue
 from pydantic_ai import ModelRetry
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
@@ -20,7 +20,7 @@ async def test_structured_output_through_owned_protocol() -> None:
     result = await backend.run(RunRequest("Return total", None))
     assert isinstance(result, RunResult)
     assert result.output == Answer(total=7)
-    assert result.next_state.backend_version == "2.48.0"
+    assert result.next_state.backend_version == BACKEND_VERSION
 
 
 @pytest.mark.asyncio

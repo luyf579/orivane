@@ -6,7 +6,7 @@ from orivane_core import SessionState
 
 BACKEND_ID: Final = "pydantic-ai"
 FORMAT_VERSION: Final = 1
-BACKEND_VERSION: Final = "2.48.0"
+BACKEND_VERSION: Final = "2.54.0"
 
 
 def validate_session_state(state: SessionState) -> None:
@@ -16,4 +16,4 @@ def validate_session_state(state: SessionState) -> None:
     if state.format_version != FORMAT_VERSION:
         raise ValueError("Unsupported session format_version; expected 1")
     if state.backend_version != BACKEND_VERSION:
-        raise ValueError("Unsupported session backend_version; expected 2.48.0")
+        raise ValueError(f"Unsupported session backend_version; expected {BACKEND_VERSION}")

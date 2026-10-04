@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Changed
+
+- Prepare a local v0.2.0 foundation candidate pinned to pydantic-ai-slim 2.54.0.
+  Orivane distribution versions remain 0.1.1 for evaluation only; these candidate
+  artifacts must not be published.
+- Change the public BACKEND_VERSION value to 2.54.0 and accept only that exact
+  native SessionState version before decoding. Old 2.48.0 snapshots are rejected
+  without automatic migration, a compatibility window or a migration utility.
+  Applications persisting state must start a new session or explicitly own its
+  migration. Core contract shapes, exports and API signatures remain unchanged.
+
 ## 0.1.1 - 2026-10-04
 
 ### Fixed

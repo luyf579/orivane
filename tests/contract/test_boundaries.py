@@ -28,7 +28,7 @@ def test_distribution_dependency_direction() -> None:
     adapter = tomllib.loads((ROOT / "packages/backend-pydantic/pyproject.toml").read_text())
     assert core["project"]["dependencies"] == ["pydantic>=2.12,<3", "opentelemetry-api>=1.44,<2"]
     assert "orivane-core==0.1.1" in adapter["project"]["dependencies"]
-    assert "pydantic-ai-slim==2.48.0" in adapter["project"]["dependencies"]
+    assert "pydantic-ai-slim==2.54.0" in adapter["project"]["dependencies"]
     assert adapter["tool"]["uv"]["sources"]["orivane-core"] == {"workspace": True}
 
 
@@ -47,7 +47,7 @@ def test_workflow_imports_only_standard_library_and_private_observability() -> N
 
 
 def test_adapter_can_use_core_without_initializing_a_model() -> None:
-    state = orivane_core.SessionState("pydantic-ai", 1, "2.48.0", b"opaque")
+    state = orivane_core.SessionState("pydantic-ai", 1, orivane_pydantic.BACKEND_VERSION, b"opaque")
     orivane_pydantic.validate_session_state(state)
 
 
