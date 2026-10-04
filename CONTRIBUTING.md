@@ -42,9 +42,9 @@ Orivane v0.1.0 was published on PyPI and GitHub Releases on 2026-10-02.
 Package/release changes require Maintainer approval. Naming and MIT are approved.
 Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
-sdist/wheel inclusion or entry points. All distributions and internal exact requirements
-now use 0.1.1 for the local hotfix candidate; the published release remains
-v0.1.0. Future tag creation and publishing require separate authorization.
+sdist/wheel inclusion or entry points. The current synchronized source/package
+version is 0.1.1, including internal exact requirements. Future tag creation and
+publication require explicit Maintainer approval.
 See the [Trusted Publishing configuration](docs/release/pypi-trusted-publishing.md).
 The [offline examples](examples/README.md) are tested and included
 in strict mypy; update them alongside documented API usage.

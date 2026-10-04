@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-## 0.1.1 - Local hotfix candidate (unpublished)
+## 0.1.1 - 2026-10-04
 
 ### Fixed
 

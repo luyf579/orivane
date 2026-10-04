@@ -1,8 +1,7 @@
 # orivane-cli
 
 The local Orivane CLI, version 0.1.1, under the MIT license. The source is public.
-This is a local hotfix candidate, unpublished on PyPI and GitHub Releases. The
-published release remains v0.1.0. No production-readiness claim is made.
+No production-readiness claim is made.
 
 The `orivane` command provides deterministic offline init, static TOML
 validate, stdin run and local structural trace. It uses a synchronous application
@@ -11,7 +10,7 @@ exporter or automatic environment-file loading is included. Python 3.11/3.12 are
 tested. This distribution has a command interface, not an intended typed library API;
 it does not advertise PEP 561 support.
 
-Install the published v0.1.0 CLI and create an offline starter project in PowerShell:
+Install the CLI and create an offline starter project in PowerShell:
 
 ```powershell
 pipx install orivane-cli
@@ -22,9 +21,9 @@ orivane validate .
 "hello" | orivane trace .
 ```
 
-The generated starter uses offline TestModel and needs no API key. The 0.1.1
-candidate CLI resolves Core and the backend at exactly 0.1.1; install this candidate
-from locally built wheels. `pip install orivane-cli` installs the published release
+The generated starter uses offline TestModel and needs no API key. Installation
+automatically resolves `orivane-core==0.1.1` and
+`orivane-backend-pydantic==0.1.1`. `pip install orivane-cli` installs the CLI
 inside a Python environment. For local development, use
 `uv sync --locked --all-packages` from the repository.
 

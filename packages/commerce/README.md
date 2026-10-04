@@ -1,14 +1,13 @@
 # orivane-commerce
 
 orivane-commerce is an experimental platform-neutral Commerce domain package.
-Version 0.1.1; Python 3.11+; MIT. This is a local hotfix candidate, unpublished on
-PyPI and GitHub Releases. The published release remains v0.1.0.
+Version 0.1.1; Python 3.11+; MIT.
 
 The only public concepts are Product, Listing, and MarketplaceAdapter. Pydantic v2
 is the only direct dependency. Core, CLI, a model backend, and marketplace SDKs are
 not required. Typed distributions include `py.typed`.
 
-Install the published v0.1.0 release with:
+Install with:
 
 ```powershell
 pip install orivane-commerce
@@ -38,6 +37,6 @@ nested edits require fresh validation through `Product.model_validate(product.mo
 Listing is frozen and uses tuples for bullets and keywords. Neither type installs
 logging; callers must protect content and validation errors from automatic telemetry.
 
-Install this 0.1.1 candidate from a locally built wheel. For local development,
+For local development,
 run `uv sync --locked --all-packages` from the monorepo root. This package does not claim marketplace acceptance
 or production readiness. The included LICENSE matches the repository MIT license.

@@ -3,8 +3,9 @@
 A small, typed Python runtime for building backend-adaptable AI agents, sessions,
 workflows, observability, and developer tooling.
 
-Orivane v0.1.0 is an early release published on 2026-10-02 under the MIT license.
-The source repository is **public**. See the [GitHub Release](https://github.com/luyf579/orivane/releases/tag/v0.1.0)
+Orivane is an early release under the MIT license.
+The source repository is **public**. Releases are available through
+[GitHub Releases](https://github.com/luyf579/orivane/releases)
 and the four PyPI distributions: [Core](https://pypi.org/project/orivane-core/),
 [PydanticAI backend](https://pypi.org/project/orivane-backend-pydantic/),
 [CLI](https://pypi.org/project/orivane-cli/) and
@@ -211,7 +212,9 @@ protection and telemetry configuration.
 See [CONTRIBUTING](CONTRIBUTING.md) for setup, checks and review. The
 [v0.1.0 release checklist](docs/release/checklist.md) and
 [publication gate](docs/release/publication-gate.md) record the completed release.
-Read the [v0.1.0 release notes](docs/release/v0.1.0.md),
+Read the [v0.1.1 release notes](docs/release/v0.1.1.md), the historical
+[v0.1.0 release notes](docs/release/v0.1.0.md) and
+[v0.1.0 GitHub Release](https://github.com/luyf579/orivane/releases/tag/v0.1.0),
 [packaging verification](docs/release/packaging.md) and
 [Trusted Publishing configuration](docs/release/pypi-trusted-publishing.md)
 for release evidence and the subsequent-release process.

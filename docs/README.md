@@ -1,8 +1,8 @@
 # Documentation
 
-Orivane v0.1.0 is an early release published on PyPI and
-[GitHub Releases](https://github.com/luyf579/orivane/releases/tag/v0.1.0)
-on 2026-10-02, with a public source repository.
+Orivane is an early release under the MIT license, with a public source repository.
+Releases are available on PyPI and
+[GitHub Releases](https://github.com/luyf579/orivane/releases).
 Start with the repository [README](../README.md).
 
 - API: [public contracts and commands](api.md).
@@ -15,7 +15,8 @@ Start with the repository [README](../README.md).
 - CLI: [configuration, factory, commands and privacy](cli.md).
 - Development: [contributing](../CONTRIBUTING.md), [Python support](development/python-support.md),
   [offline examples](../examples/README.md).
-- Release: [v0.1.0 notes](release/v0.1.0.md), [completed checklist](release/checklist.md),
+- Release: [v0.1.1 notes](release/v0.1.1.md), [v0.1.0 notes](release/v0.1.0.md),
+  [completed checklist](release/checklist.md),
   [publication gate](release/publication-gate.md), [Trusted Publishing](release/pypi-trusted-publishing.md),
   [local packaging](release/packaging.md), [versioning](release/versioning.md),
   [dependency graph](release/dependency-graph.md).

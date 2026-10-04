@@ -4,9 +4,8 @@ This document describes the packaging verification used for releases.
 v0.1.0 was published on 2026-10-02. Publishing a future version requires separate
 Maintainer approval.
 
-Hatchling remains the build backend. The local hotfix candidate uses 0.1.1 for the
-workspace and all four distributions; this candidate is unpublished on PyPI and
-GitHub Releases. All four distributions
+Hatchling remains the build backend. The current package version is 0.1.1,
+synchronized across the workspace and all four distributions. All four distributions
 omit Private :: Do Not Upload. Package readmes are self-contained; sdists include only
 README, pyproject, source/type markers, MIT LICENSE and build metadata. Root LICENSE
 is canonical; each package has an exact copy checked by tests. SPDX license metadata
@@ -50,7 +49,7 @@ only its first `dist/` set (four wheels and four sdists; eight validated distrib
 as four GitHub Actions artifacts. Each artifact contains one project's wheel and
 sdist: release-orivane-core, release-orivane-backend-pydantic, release-orivane-cli
 and release-orivane-commerce. Repeat builds and sdist rebuilds validate those
-candidates; there is only one release build job.
+distributions; there is only one release build job.
 
 Four privileged OIDC publish jobs each download only their own project artifact and
 set `packages-dir: dist/`. They run in explicit dependency order: Core, backend, CLI,

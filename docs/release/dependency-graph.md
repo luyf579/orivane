@@ -1,8 +1,7 @@
 # Direct dependency graph
 
-All four v0.1.0 distributions are published. The current workspace is the local
-0.1.1 hotfix candidate, unpublished on PyPI and GitHub Releases. Its internal exact
-requirements move to 0.1.1; external dependency declarations are unchanged.
+The current synchronized source/package version is 0.1.1. Its internal exact
+requirements use 0.1.1; external dependency declarations are unchanged.
 
 Derived from the four current distribution pyproject.toml files and uv.lock. Internal package
 requirements in wheel METADATA must match these declarations after normalization.
