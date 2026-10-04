@@ -1,14 +1,14 @@
 [project]
 name = "orivane-backend-pydantic"
-version = "0.1.1"
+version = "0.2.0"
 description = "Development PydanticAI runtime with validated tools and native session state"
 readme = "README.md"
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 keywords = ["agents", "pydantic-ai", "typing"]
-dependencies = ["orivane-core==0.1.1", "pydantic-ai-slim==2.54.0"]
-classifiers = ["Development Status :: 3 - Alpha", "Intended Audience :: Developers", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12", "Typing :: Typed"]
+dependencies = ["orivane-core==0.2.0", "pydantic-ai-slim==2.54.0"]
+classifiers = ["Development Status :: 3 - Alpha", "Intended Audience :: Developers", "Programming Language :: Python :: 3.11", "Programming Language :: Python :: 3.12", "Programming Language :: Python :: 3.13", "Typing :: Typed"]
 
 [project.urls]
 Repository = "https://github.com/luyf579/orivane"

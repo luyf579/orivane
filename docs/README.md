@@ -1,7 +1,8 @@
 # Documentation
 
 Orivane is an early release under the MIT license, with a public source repository.
-Releases are available on PyPI and
+The current source baseline is 0.2.0, unreleased development source; the latest
+published release remains v0.1.1. Releases are available on PyPI and
 [GitHub Releases](https://github.com/luyf579/orivane/releases).
 Start with the repository [README](../README.md).
 

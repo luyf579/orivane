@@ -3,7 +3,7 @@
 Business tools belong to Core and do not inherit from PydanticAI Tool. Parameters
 are a Pydantic BaseModel subclass; the adapter owns upstream schema conversion.
 
-PydanticAI 2.48.0 `Tool.from_schema` does not perform strong validation using our
+The PydanticAI 2.54.0 adapter does not rely on `Tool.from_schema` to validate our
 business parameter model. The implemented bridge executes this before any business side effect:
 
 ```python
@@ -29,4 +29,4 @@ JSON-compatible tool results, and heterogeneous parameter models. This is not a
 general exactly-once guarantee. The JSON return contract remains a typed obligation
 of business tools, not a new adapter coercion/serialization policy.
 
-Source: [Tool.from_schema at the tested baseline](https://github.com/pydantic/pydantic-ai/blob/06be8e7a0056d6c6c72d2868f6b26ee8e7364c77/pydantic_ai_slim/pydantic_ai/tools.py).
+Historical Phase 0 source: [Tool.from_schema at the original 2.48.0 baseline](https://github.com/pydantic/pydantic-ai/blob/06be8e7a0056d6c6c72d2868f6b26ee8e7364c77/pydantic_ai_slim/pydantic_ai/tools.py).

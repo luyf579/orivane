@@ -39,32 +39,32 @@ jobs:
         with:
           name: release-orivane-core
           path: |
-            artifacts/release/dist/orivane_core-0.1.1-*.whl
-            artifacts/release/dist/orivane_core-0.1.1.tar.gz
+            artifacts/release/dist/orivane_core-0.2.0-*.whl
+            artifacts/release/dist/orivane_core-0.2.0.tar.gz
           if-no-files-found: error
       - name: Store the validated backend-pydantic distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-orivane-backend-pydantic
           path: |
-            artifacts/release/dist/orivane_backend_pydantic-0.1.1-*.whl
-            artifacts/release/dist/orivane_backend_pydantic-0.1.1.tar.gz
+            artifacts/release/dist/orivane_backend_pydantic-0.2.0-*.whl
+            artifacts/release/dist/orivane_backend_pydantic-0.2.0.tar.gz
           if-no-files-found: error
       - name: Store the validated cli distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-orivane-cli
           path: |
-            artifacts/release/dist/orivane_cli-0.1.1-*.whl
-            artifacts/release/dist/orivane_cli-0.1.1.tar.gz
+            artifacts/release/dist/orivane_cli-0.2.0-*.whl
+            artifacts/release/dist/orivane_cli-0.2.0.tar.gz
           if-no-files-found: error
       - name: Store the validated commerce distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-orivane-commerce
           path: |
-            artifacts/release/dist/orivane_commerce-0.1.1-*.whl
-            artifacts/release/dist/orivane_commerce-0.1.1.tar.gz
+            artifacts/release/dist/orivane_commerce-0.2.0-*.whl
+            artifacts/release/dist/orivane_commerce-0.2.0.tar.gz
           if-no-files-found: error
 
   publish-core:

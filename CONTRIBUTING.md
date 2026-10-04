@@ -18,7 +18,7 @@ uv run --no-sync coverage run -m pytest
 uv run --no-sync coverage report
 ```
 
-Repeat with `--python 3.12` in a separate environment when checking both versions;
+Repeat with `--python 3.12` and `--python 3.13` in separate environments;
 see [Python support](docs/development/python-support.md). `python -m uv` is an
 equivalent command prefix when the uv executable is not on PATH.
 Use `uv run --no-sync ruff format .` to format changes before reviewing the diff.
@@ -30,7 +30,7 @@ Check the working tree before creating a `feature/<description>`,
 `fix/<description>` or approved `release/<version>` branch from main.
 Do not commit product changes directly to main.
 Link the relevant issue, explain public API changes, and attach actual test results.
-Run Ruff, strict mypy, and tests for both supported Python versions. Request review
+Run Ruff, strict mypy, and tests for Python 3.11, 3.12 and 3.13. Request review
 and wait for green CI; do not treat local passing tests as remote CI success.
 
 Never commit secrets, `.env`, tokens, credential files, or local evidence artifacts.
@@ -43,7 +43,8 @@ Package/release changes require Maintainer approval. Naming and MIT are approved
 Never reserve names by uploading placeholder packages.
 Run the [local packaging checks](docs/release/packaging.md) for changes to manifests,
 sdist/wheel inclusion or entry points. The current synchronized source/package
-version is 0.1.1, including internal exact requirements. Future tag creation and
+version is 0.2.0, including internal exact requirements, as unreleased development
+source. The latest published release remains v0.1.1. Future tag creation and
 publication require explicit Maintainer approval.
 See the [Trusted Publishing configuration](docs/release/pypi-trusted-publishing.md).
 The [offline examples](examples/README.md) are tested and included

@@ -4,6 +4,8 @@ A small, typed Python runtime for building backend-adaptable AI agents, sessions
 workflows, observability, and developer tooling.
 
 Orivane is an early release under the MIT license.
+The current source baseline is **0.2.0, unreleased development source**. The latest
+published release remains **v0.1.1**; normal PyPI installs use the published packages.
 The source repository is **public**. Releases are available through
 [GitHub Releases](https://github.com/luyf579/orivane/releases)
 and the four PyPI distributions: [Core](https://pypi.org/project/orivane-core/),
@@ -25,7 +27,7 @@ Orivane includes an experimental platform-neutral Commerce domain package.
   for typed linear async steps and basic if/else.
 - `orivane-backend-pydantic` / `orivane_pydantic`: real PydanticAI
   backend with validated tools and native history snapshots.
-- PydanticAI is pinned to `pydantic-ai-slim==2.48.0`, the Phase 0 tested baseline.
+- The development backend is pinned to `pydantic-ai-slim==2.54.0`.
 - `orivane-cli` / `orivane_cli`: local init, validate, run and trace commands.
 - No durable workflow engine or second backend.
 
@@ -71,6 +73,9 @@ Only successful runs return a replacement SessionState. Failures propagate witho
 automatic whole-run retry; tool side effects cannot be rolled back. Cancellation and
 borrowed-model ownership are covered by offline tests. Real-provider integration is
 not certified. Native histories may contain sensitive inputs; callers must protect them.
+The development adapter accepts only snapshots labeled PydanticAI 2.54.0 and rejects
+old 2.48.0 snapshots before decoding. Persisted state requires a new session or an
+explicit application-owned migration; Orivane provides no automatic migration.
 
 ## Session
 
@@ -175,7 +180,8 @@ Alternatively, use `pip install orivane-cli` inside your Python environment.
 The CLI installs matching Core and PydanticAI backend distributions automatically.
 For local development, use the uv workspace below or locally built wheels.
 
-Python 3.11+ and uv 0.12.18+. Run from the repository root in PowerShell:
+Python 3.11+ and uv 0.12.18+. Python 3.11, 3.12 and 3.13 are tested.
+Run from the repository root in PowerShell:
 
 ```powershell
 uv sync --locked --all-packages --python 3.11
@@ -195,12 +201,12 @@ See [contributing](CONTRIBUTING.md), [contract](docs/architecture/backend-contra
 [Python support](docs/development/python-support.md).
 
 Run the [three offline examples](examples/README.md) after setup; tests execute them
-on both supported Python versions. The [documentation index](docs/README.md) links
+on all three tested Python versions. The [documentation index](docs/README.md) links
 all architecture, API, CLI and release documents.
 
 ## Limitations
 
-Only the PydanticAI backend is implemented and pinned to 2.48.0. Sessions are in
+Only the PydanticAI backend is implemented; the development pin is 2.54.0. Sessions are in
 memory; same-session serialization covers one process and one event loop. Workflows
 are linear with basic branching. There is no durable workflow, persistent memory,
 multi-agent orchestration, commerce platform integration, plugin ecosystem or real-provider

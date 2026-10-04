@@ -1,8 +1,9 @@
 # Versioning
 
 v0.1.0 was first published on 2026-10-02. Core, backend, CLI and Commerce are the
-four distributions. The current synchronized source/package version is **0.1.1**,
-including the virtual workspace and all four package versions.
+four distributions. The latest published release remains **v0.1.1**.
+The current synchronized source/package version is **0.2.0, unreleased development
+source**, including the virtual workspace and all four package versions.
 The source repository is public, and releases use the tag-triggered Trusted Publishing workflow.
 Future releases require separate Maintainer approval and follow the
 [subsequent-release process](pypi-trusted-publishing.md#subsequent-releases).
@@ -13,11 +14,12 @@ CLI requires Core and backend == that version. Wheel requirements are ordinary e
 requirements, never workspace=true or checkout paths. CLI --version reads installed
 distribution metadata, without a second runtime version constant.
 Commerce requires only Pydantic, so it has no internal exact Orivane dependency.
-All four current package versions are 0.1.1.
+All four current development package versions are 0.2.0.
 
-The release preparation lock change was limited to internal Orivane versions;
-external packages in the development lock are unchanged.
-PydanticAI and pydantic-graph are pinned to 2.48.0. The development lock resolves
+The approved development dependency change upgrades PydanticAI and pydantic-graph
+from 2.48.0 to 2.54.0, with genai-prices 0.1.8 to 0.1.9 as the required transitive
+lock update. No other external or development-tool dependency changes are included.
+PydanticAI and pydantic-graph are pinned to 2.54.0. The development lock resolves
 OpenTelemetry API/SDK 1.44.0 and SDK-required semantic conventions 0.65b0 (TRANSITIVE).
 Public installs may resolve newer OpenTelemetry versions within the declared >=1.44,<2
 ranges; those dependencies are not exact pins. Release preparation removed

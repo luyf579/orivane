@@ -4,14 +4,18 @@
 
 ### Changed
 
-- Prepare a local v0.2.0 foundation candidate pinned to pydantic-ai-slim 2.54.0.
-  Orivane distribution versions remain 0.1.1 for evaluation only; these candidate
-  artifacts must not be published.
+- Prepare the synchronized 0.2.0 workspace and four distributions as unreleased
+  development source. The latest published release remains v0.1.1.
+- Upgrade the backend baseline from pydantic-ai-slim 2.48.0 to 2.54.0, with matching
+  pydantic-graph 2.54.0 and the required genai-prices 0.1.9 lock update.
 - Change the public BACKEND_VERSION value to 2.54.0 and accept only that exact
   native SessionState version before decoding. Old 2.48.0 snapshots are rejected
   without automatic migration, a compatibility window or a migration utility.
   Applications persisting state must start a new session or explicitly own its
   migration. Core contract shapes, exports and API signatures remain unchanged.
+- Add Python 3.13 to the tested Python 3.11/3.12/3.13 baseline and the checks and
+  packaging CI matrices; requires-python remains >=3.11. The focused OpenTelemetry
+  CI matrix covers Python 3.12/3.13 with API/SDK 1.44.0/1.45.0.
 
 ## 0.1.1 - 2026-10-04
 

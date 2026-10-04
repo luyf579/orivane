@@ -1,7 +1,8 @@
 # orivane-commerce
 
 orivane-commerce is an experimental platform-neutral Commerce domain package.
-Version 0.1.1; Python 3.11+; MIT.
+Version 0.2.0; Python 3.11+; MIT. Python 3.11/3.12/3.13 are tested.
+This is unreleased development source; the latest published release remains v0.1.1.
 
 The only public concepts are Product, Listing, and MarketplaceAdapter. Pydantic v2
 is the only direct dependency. Core, CLI, a model backend, and marketplace SDKs are

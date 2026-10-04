@@ -109,7 +109,7 @@ def main() -> None:
         wheel = next(first.glob(project["name"].replace("-", "_") + "-*.whl"))
         files = wheel_files(wheel)
         assert files == wheel_files(second / wheel.name), "Repeated wheel content changed"
-        prefix = project["name"].replace("-", "_") + "-0.1.1.dist-info/"
+        prefix = project["name"].replace("-", "_") + "-0.2.0.dist-info/"
         expected = {
             str(p.relative_to(REPO / "packages" / package / "src")).replace("\\", "/")
             for p in (REPO / "packages" / package / "src" / module).rglob("*")
@@ -122,7 +122,7 @@ def main() -> None:
         for name, data in files.items():
             check_content(name, data)
         metadata = email.parser.BytesParser().parsebytes(files[prefix + "METADATA"])
-        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.1.1"
+        assert metadata["Name"] == project["name"] and metadata["Version"] == "0.2.0"
         assert metadata["Requires-Python"] == ">=3.11"
         assert {requirement(r) for r in metadata.get_all("Requires-Dist", [])} == {
             requirement(r) for r in project["dependencies"]
@@ -290,7 +290,7 @@ def main() -> None:
                 "--no-index",
                 "--find-links",
                 str(wheelhouse),
-                "orivane-cli==0.1.1",
+                "orivane-cli==0.2.0",
             ],
             cwd=root,
         )
@@ -309,8 +309,8 @@ for name in ['orivane_core', 'orivane_pydantic', 'orivane_cli']:
     path = pathlib.Path(importlib.import_module(name).__file__).resolve()
     assert path.is_relative_to(pathlib.Path(sys.prefix).resolve()) and 'site-packages' in path.parts
     paths[name] = str(path)
-assert metadata.version('pydantic-ai-slim') == metadata.version('pydantic-graph') == '2.48.0'
-assert BACKEND_ID == 'pydantic-ai' and BACKEND_VERSION == '2.48.0' and FORMAT_VERSION == 1
+assert metadata.version('pydantic-ai-slim') == metadata.version('pydantic-graph') == '2.54.0'
+assert BACKEND_ID == 'pydantic-ai' and BACKEND_VERSION == '2.54.0' and FORMAT_VERSION == 1
 print(json.dumps(paths))
 for old in ['agent_framework_core', 'agent_framework_pydantic', 'agent_framework_cli']:
     assert importlib.util.find_spec(old) is None, 'Legacy import must not be installed'
@@ -328,11 +328,11 @@ for old in ['agent-framework-core', 'agent-framework-backend-pydantic', 'agent-f
     else:
         raise AssertionError('Legacy distribution must not be installed')
 for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
-    assert metadata.version(name) == '0.1.1'
+    assert metadata.version(name) == '0.2.0'
 """
         run("wheel-install.txt", [str(python), "-I", "-c", smoke], cwd=root)
         result = run("wheel-install.txt", [str(command), "--version"], cwd=root)
-        assert result.stdout == "0.1.1\n"
+        assert result.stdout == "0.2.0\n"
         run("wheel-install.txt", [str(command), "--help"], cwd=root)
         assert not command.with_name(
             "agent-framework.exe" if os.name == "nt" else "agent-framework"
@@ -411,7 +411,7 @@ assert installed == {
     'orivane-commerce', 'pydantic', 'pydantic-core', 'annotated-types',
     'typing-extensions', 'typing-inspection',
 }, installed
-assert metadata.version('orivane-commerce') == '0.1.1'
+assert metadata.version('orivane-commerce') == '0.2.0'
 product = Product(name='Trowel', attributes={'Product Type': 'tool', 'Color': 'red'})
 listing = Listing(title='Trowel', description='Garden tool', language='en', keywords=('garden',))
 assert Product.model_validate_json(product.model_dump_json()) == product

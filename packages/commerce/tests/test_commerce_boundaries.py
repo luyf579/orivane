@@ -51,7 +51,7 @@ def test_source_imports_only_stdlib_pydantic_and_own_modules() -> None:
 def test_only_pydantic_dependency_and_no_extra_domain_classes() -> None:
     project = tomllib.loads((PACKAGE / "pyproject.toml").read_text())["project"]
     assert project["dependencies"] == ["pydantic>=2.12,<3"]
-    assert project["version"] == "0.1.1"
+    assert project["version"] == "0.2.0"
     classes = {
         n.name
         for path in (PACKAGE / "src/orivane_commerce").glob("*.py")

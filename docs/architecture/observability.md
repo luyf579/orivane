@@ -105,18 +105,18 @@ sensitive application data; these telemetry rules do not anonymize stored state.
 
 ## PydanticAI integration
 
-Pinned PydanticAI 2.48.0 supports public per-Agent
+Pinned PydanticAI 2.54.0 supports public per-Agent
 `capabilities=[Instrumentation(settings=InstrumentationSettings(...))]`. Each
 adapter-created Agent receives `include_content=False`, `include_binary_content=False`
 and `include_model_request_parameters=False`. It uses the host TracerProvider and
 does not call `Agent.instrument_all` or change another Agent's configuration.
 
-The installed 2.48.0 source and offline tests verify that content-disabled native
+The installed 2.54.0 source and offline tests verify that content-disabled native
 model/tool/agent spans withhold exception messages and stack traces as well as
 prompt/tool/result content. Tests identify native spans by their `pydantic-ai`
 instrumentation scope and `gen_ai.operation.name` (`chat`, `execute_tool`), rather
 than relying on every upstream span name. Both PydanticAI and pydantic-graph remain
-2.48.0. Native child tracing is enabled; the privacy deferral gate was not needed.
+2.54.0. Native child tracing remains enabled with content capture disabled.
 
 The native instrumentation can also emit usage metrics through the host's OTel
 MeterProvider; the framework installs no meter provider, reader or exporter.
@@ -171,7 +171,7 @@ it neither installs a global TracerProvider nor adds custom sampling. A host sam
 can drop all spans without changing execution. Nothing uploads telemetry by default.
 Ordinary CI uses only an InMemorySpanExporter in tests, never remote credentials.
 
-PydanticAI 2.48.0 separately prints a once-per-process local startup banner in
+PydanticAI 2.54.0 separately prints a once-per-process local startup banner in
 interactive/coding-agent environments. This preexisting upstream UI is not telemetry
 export and does not include run content. Hosts requiring completely silent stderr
 can set the public `pydantic_ai.BANNER_ENABLED = False` before running, or set

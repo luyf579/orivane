@@ -80,7 +80,7 @@ All four projects use normal Trusted Publishers. For a future version:
 
 1. Review and obtain Maintainer approval for the exact release commit and artifacts.
 2. Confirm that all four package versions and exact internal requirements are synchronized as approved.
-3. Require successful tests, metadata checks and packaging CI on Python 3.11/3.12.
+3. Require successful tests, metadata checks and packaging CI on Python 3.11/3.12/3.13.
 4. Verify project ownership and all four normal Trusted Publisher mappings.
 5. Verify all four GitHub environments, required reviewer and v* tag restrictions.
 6. Create and push the approved release tag at the reviewed commit.

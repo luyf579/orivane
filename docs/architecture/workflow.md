@@ -134,7 +134,8 @@ special nested workflow node.
 No DAG, Graph, State Machine, parallel branches, durable execution, checkpointing,
 automatic retry, multi-agent orchestration, backend selection, provider management,
 session storage, or rollback. Workflow v0 added no dependency; Phase 1F adds the
-OpenTelemetry API for private observability. PydanticAI remains 2.48.0.
+OpenTelemetry API for private observability. The current development backend is
+pinned to PydanticAI 2.54.0; Workflow contracts remain unchanged.
 PydanticAI's internal graph is not this public workflow API.
 
 ## Future evolution

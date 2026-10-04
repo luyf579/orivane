@@ -1,7 +1,8 @@
 # Public API (development)
 
-This describes the current __all__ exports. Package names are approved as Orivane; APIs are
-pre-release. See the linked architecture documents for ownership and failure rules.
+This describes the current 0.2.0 unreleased development source __all__ exports.
+Package names are approved as Orivane; 0.x APIs may evolve with release notes.
+See the linked architecture documents for ownership and failure rules.
 
 ## Core: orivane_core
 
@@ -28,8 +29,14 @@ cancellation without retry/rollback. See [sessions](architecture/session-runtime
 | PydanticAgentBackend[DepsT, OutputT] | Compatible public PydanticAI Model; explicit output_type; optional instructions/tools and finite request/tool-call limits; implements AgentBackend.run |
 | BACKEND_ID | "pydantic-ai" |
 | FORMAT_VERSION | 1 |
-| BACKEND_VERSION | "2.48.0" |
+| BACKEND_VERSION | "2.54.0" |
 | validate_session_state(state) | Validate envelope identity/versions without decoding payload; raises ValueError on mismatch |
+
+BACKEND_VERSION changes from 2.48.0 to 2.54.0; export names and signatures remain
+unchanged. The adapter accepts only the exact current native-state version and
+rejects old 2.48.0 snapshots before decoding. Applications persisting state must
+start a new session or explicitly own its migration; Orivane supplies no automatic
+migration, compatibility window, or migration utility.
 
 Models are borrowed; their lifecycle belongs to the application. Native histories
 may include sensitive content. Real provider operation is not certified by this

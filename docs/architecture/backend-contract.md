@@ -24,9 +24,9 @@ root/adapter, not each RunRequest. Core must not import PydanticAI or its adapte
 
 ## Runtime adapter
 
-This evaluation branch prepares a PydanticAI 2.54.0 foundation for a future
-v0.2.0 release. All local Orivane distribution versions remain 0.1.1 for
-evaluation only. Published v0.1.1 and its historical release notes remain unchanged.
+The current 0.2.0 source is unreleased development source with a PydanticAI 2.54.0
+baseline. The latest published release remains v0.1.1; its artifacts and historical
+release notes remain unchanged.
 
 `PydanticAgentBackend[DepsT, OutputT]` structurally implements AgentBackend. Construct
 it with a public PydanticAI Model instance, explicit output_type, instructions, and
@@ -57,13 +57,13 @@ The public BACKEND_VERSION value changes from 2.48.0 to 2.54.0; public export na
 and function/class signatures remain unchanged. Version mismatch errors identify
 only the supported version, without echoing the supplied version or native data.
 
-When a future Orivane release switches to PydanticAI 2.54.0,
-SessionState snapshots labeled backend_version 2.48.0 are rejected.
+This development adapter rejects SessionState snapshots labeled backend_version
+2.48.0 before history decoding or model/tool execution.
 
 Applications persisting SessionState must start a new session
 or perform an explicitly application-owned migration.
 
-Orivane provides no automatic migration in this phase. Technical cross-version
+Orivane provides no automatic migration. Technical cross-version
 payload parsing does not authorize accepting an old envelope. No compatibility
 window, relabeling, payload rewriting or migration utility is provided. Process
 restart usually clears InMemorySessionRuntime, but applications may persist the

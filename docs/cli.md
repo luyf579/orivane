@@ -211,5 +211,5 @@ Core keeps its direct OTel API dependency. The development lock resolves SDK 1.4
 and semantic-conventions 0.65b0; public installs may resolve newer versions within
 the declared ranges. Semantic conventions is an SDK transitive dependency, not a
 direct declaration or project import.
-PydanticAI and pydantic-graph stay at 2.48.0. No CLI framework/parser/template dependency
+The current 0.2.0 development source pins PydanticAI and pydantic-graph to 2.54.0. No CLI framework/parser/template dependency
 was added. See [ADR-0005](adr/0005-cli-v0.md).

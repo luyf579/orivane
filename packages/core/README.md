@@ -1,11 +1,12 @@
 # orivane-core
 
-The typed core of Orivane, version 0.1.1, under the MIT license. The source is public.
+The typed core of Orivane, version 0.2.0, under the MIT license. The source is public.
+This is unreleased development source; the latest published release remains v0.1.1.
 
 Provides typed AgentBackend, ToolDefinition, RunRequest, RunResult, SessionState,
 InMemorySessionRuntime and Workflow contracts. Sessions are in memory; workflows
 are linear async steps with basic branching, without durable execution.
-Core imports no PydanticAI runtime. Python 3.11/3.12 are tested; py.typed is included.
+Core imports no PydanticAI runtime. Python 3.11/3.12/3.13 are tested; py.typed is included.
 
 Install with `pip install orivane-core`. For local development, use
 `uv sync --locked --all-packages` from the repository.
