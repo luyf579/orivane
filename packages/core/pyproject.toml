@@ -1,6 +1,6 @@
 [project]
 name = "orivane-core"
-version = "0.1.0"
+version = "0.1.1"
 description = "Typed Orivane agent contracts, sessions and linear workflows"
 readme = "README.md"
 license = "MIT"

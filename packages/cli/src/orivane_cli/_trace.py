@@ -43,6 +43,19 @@ def capture() -> Iterator[InMemorySpanExporter]:
             provider.shutdown()
 
 
+def _json_safe_attribute(value: object) -> object:
+    if value is None or isinstance(value, (str, bool, int, float)):
+        return value
+    if isinstance(value, bytes):
+        try:
+            return value.decode("utf-8")
+        except UnicodeDecodeError:
+            return "<bytes>"
+    if isinstance(value, (list, tuple)):
+        return [_json_safe_attribute(item) for item in value]
+    return "<unsupported>"
+
+
 def format_spans(spans: Sequence[ReadableSpan]) -> str:
     if not spans:
         return "(no spans)"
@@ -58,7 +71,7 @@ def format_spans(spans: Sequence[ReadableSpan]) -> str:
                     "parent_span_id": format(span.parent.span_id, "016x") if span.parent else None,
                     "status": span.status.status_code.name,
                     "attributes": {
-                        key: value
+                        key: _json_safe_attribute(value)
                         for key, value in (span.attributes or {}).items()
                         if key in _ATTRIBUTES
                     },

@@ -4,7 +4,9 @@ This document describes the packaging verification used for releases.
 v0.1.0 was published on 2026-10-02. Publishing a future version requires separate
 Maintainer approval.
 
-Hatchling remains the build backend. All versions are 0.1.0; all four distributions
+Hatchling remains the build backend. The local hotfix candidate uses 0.1.1 for the
+workspace and all four distributions; this candidate is unpublished on PyPI and
+GitHub Releases. All four distributions
 omit Private :: Do Not Upload. Package readmes are self-contained; sdists include only
 README, pyproject, source/type markers, MIT LICENSE and build metadata. Root LICENSE
 is canonical; each package has an exact copy checked by tests. SPDX license metadata
@@ -29,7 +31,7 @@ constrained by uv.lock. This tooling is not a runtime or project dependency.
 Downloads/build tooling may access public indexes; application smoke tests are offline.
 
 Then it creates a new unseeded venv outside the repository and installs only
-`orivane-cli==0.1.0` as the requested package with `uv pip install --offline --no-index
+`orivane-cli==0.1.1` as the requested package with `uv pip install --offline --no-index
 --find-links <wheelhouse>`. Core/backend are resolved from local wheel requirements.
 It verifies module paths are under that venv's site-packages, runs all examples,
 checks help/version and performs ten init/validate/run/trace rounds with the installed

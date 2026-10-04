@@ -1,6 +1,6 @@
 [project]
 name = "orivane-commerce"
-version = "0.1.0"
+version = "0.1.1"
 description = "Platform-neutral commerce domain models and marketplace adapter contracts for Orivane"
 readme = "README.md"
 license = "MIT"

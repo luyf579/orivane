@@ -1,6 +1,8 @@
 # Direct dependency graph
 
-All four v0.1.0 distributions are published; their dependency declarations are unchanged.
+All four v0.1.0 distributions are published. The current workspace is the local
+0.1.1 hotfix candidate, unpublished on PyPI and GitHub Releases. Its internal exact
+requirements move to 0.1.1; external dependency declarations are unchanged.
 
 Derived from the four current distribution pyproject.toml files and uv.lock. Internal package
 requirements in wheel METADATA must match these declarations after normalization.
@@ -8,8 +10,8 @@ requirements in wheel METADATA must match these declarations after normalization
 | Distribution | Direct production requirements |
 | --- | --- |
 | orivane-core | pydantic>=2.12,<3; opentelemetry-api>=1.44,<2 |
-| orivane-backend-pydantic | orivane-core==0.1.0; pydantic-ai-slim==2.48.0 |
-| orivane-cli | orivane-core==0.1.0; orivane-backend-pydantic==0.1.0; opentelemetry-sdk>=1.44,<2 |
+| orivane-backend-pydantic | orivane-core==0.1.1; pydantic-ai-slim==2.48.0 |
+| orivane-cli | orivane-core==0.1.1; orivane-backend-pydantic==0.1.1; opentelemetry-sdk>=1.44,<2 |
 | orivane-commerce | pydantic>=2.12,<3 |
 
 Core has no backend/PydanticAI dependency. Backend points to Core; CLI points to both.

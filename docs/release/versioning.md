@@ -1,8 +1,9 @@
 # Versioning
 
 v0.1.0 was published on 2026-10-02. Core, backend, CLI and Commerce are the four
-published distributions; the virtual workspace also uses **0.1.0**. The source
-repository is public, and releases use the tag-triggered Trusted Publishing workflow.
+published distributions. The virtual workspace and all four package versions now
+use **0.1.1** for a local hotfix candidate, unpublished on PyPI and GitHub Releases.
+The source repository is public, and releases use the tag-triggered Trusted Publishing workflow.
 Future releases require separate Maintainer approval and follow the
 [subsequent-release process](pypi-trusted-publishing.md#subsequent-releases).
 
@@ -12,7 +13,7 @@ CLI requires Core and backend == that version. Wheel requirements are ordinary e
 requirements, never workspace=true or checkout paths. CLI --version reads installed
 distribution metadata, without a second runtime version constant.
 Commerce requires only Pydantic, so it has no internal exact Orivane dependency.
-All four package versions remain 0.1.0.
+All four candidate package versions are 0.1.1; the published release remains 0.1.0.
 
 The release preparation lock change was limited to internal Orivane versions;
 external packages in the development lock are unchanged.

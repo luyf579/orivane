@@ -170,3 +170,37 @@ def test_cli_validation_subprocess_never_executes_application(tmp_path: Path) ->
     )
     assert invoke(tmp_path, "validate").returncode == 0
     assert not (tmp_path / "executed").exists()
+
+
+def test_cli_trace_bytes_attributes_subprocess(tmp_path: Path) -> None:
+    (tmp_path / "orivane.toml").write_text(
+        'schema_version = 1\n[app]\nfactory = "app:create_runner"\n'
+    )
+    (tmp_path / "app.py").write_text("""from opentelemetry import trace
+
+def create_runner():
+    async def run(prompt):
+        with trace.get_tracer("phase3a-audit").start_as_current_span(
+            "audit.span", attributes={
+                "orivane.operation": b"audit-operation",
+                "orivane.node.kind": (b"first", b"second"),
+                "prompt": prompt,
+                "output": b"SECRET_OUTPUT_CLI_9f12",
+                "tool.arguments": b"SECRET_TOOL_ARGS_CLI_9f12",
+                "session.payload": b"SECRET_SESSION_CLI_9f12",
+            }
+        ):
+            return "SECRET_OUTPUT_CLI_9f12"
+    return run
+""")
+    result = invoke(tmp_path, "trace", prompt="SECRET_PROMPT_CLI_9f12")
+    assert result.returncode == 0 and result.stderr == ""
+    output, structural = result.stdout.split("\nTRACE\n", 1)
+    assert output == "SECRET_OUTPUT_CLI_9f12"
+    assert "SECRET_" not in structural
+    rows = [json.loads(line) for line in structural.splitlines()]
+    assert len(rows) == 1 and rows[0]["name"] == "audit.span"
+    assert rows[0]["attributes"] == {
+        "orivane.operation": "audit-operation",
+        "orivane.node.kind": ["first", "second"],
+    }

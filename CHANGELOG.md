@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+## 0.1.1 - Local hotfix candidate (unpublished)
+
+### Fixed
+
+- Normalize allowlisted CLI trace attributes before JSON formatting, so UTF-8 bytes
+  retained by OpenTelemetry 1.45 do not cause a TypeError. Recursively normalize
+  lists and tuples; replace invalid UTF-8 bytes and unsupported values with fixed
+  structural markers without printing their raw contents.
+- Preserve the trace attribute allowlist and application failure behavior. Core,
+  backend and Commerce runtime code and public APIs are unchanged.
+
 ## 0.1.0 - 2026-10-02
 
 ### Changed
