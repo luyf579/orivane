@@ -41,3 +41,9 @@ logging; callers must protect content and validation errors from automatic telem
 For local development,
 run `uv sync --locked --all-packages` from the monorepo root. This package does not claim marketplace acceptance
 or production readiness. The included LICENSE matches the repository MIT license.
+
+The repository's [offline CSV reference example](../../examples/README.md#commerce-csv-reference)
+shows application-owned CSV -> Product -> deterministic Listing -> a frozen typed
+draft for offline-reference. The parser, adapter and draft are example code,
+not package APIs. It uses no model, network or real marketplace publishing;
+the only public package concepts remain Product, Listing and MarketplaceAdapter.

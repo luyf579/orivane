@@ -362,7 +362,10 @@ for name in ['orivane-core', 'orivane-backend-pydantic', 'orivane-cli']:
         (root / "demo-0" / "orivane.toml").rename(root / "demo-0" / "agent-framework.toml")
         run("wheel-install.txt", [str(command), "validate", "demo-0"], cwd=root, expected_code=2)
         for source, expected in zip(
-            sorted((REPO / "examples").glob("*.py")),
+            [
+                REPO / "examples" / name
+                for name in ["01_offline_agent.py", "02_session_runtime.py", "03_workflow.py"]
+            ],
             ["offline agent\n", "offline session\n", "offline workflow\n"],
             strict=True,
         ):
@@ -427,12 +430,31 @@ print(json.dumps({'module': str(path), 'installed': sorted(installed), 'roundtri
                   'attribute_keys': 'PASS', 'py_typed': True, 'core_backend_cli_absent': True}))
 """
         run(log, [str(python), "-I", "-c", smoke], cwd=root)
+        for source in [
+            REPO / "examples/04_commerce_csv_pipeline.py",
+            REPO / "examples/data/commerce_products.csv",
+            REPO / "examples/data/commerce_expected.jsonl",
+        ]:
+            shutil.copy2(source, root / source.name)
+        result = run(
+            log,
+            [
+                str(python),
+                "-I",
+                str(root / "04_commerce_csv_pipeline.py"),
+                str(root / "commerce_products.csv"),
+            ],
+            cwd=root,
+        )
+        assert result.stderr == ""
+        assert result.stdout.encode("utf-8") == (root / "commerce_expected.jsonl").read_bytes()
     (output / "result.json").write_text(
         json.dumps(
             {
                 "packages": records,
                 "clean_install": "PASS",
                 "commerce_clean_install": "PASS",
+                "commerce_csv_example": "PASS",
                 "expected_artifact_count": 2 * len(PACKAGES),
                 "cli_roundtrip": "PASS",
                 "cli_roundtrip_rounds": 10,

@@ -156,3 +156,22 @@ The first implementation keeps the existing 100% statement/branch coverage gate.
 Full families, publishing, marketplace APIs, ingestion parsers, agents, inventory,
 orders, advertising, and customer support remain deferred. Platform observations
 in research are not Orivane support guarantees.
+
+## Offline CSV reference application
+
+The repository ships one [CSV reference application](../../examples/README.md#commerce-csv-reference)
+in examples/04_commerce_csv_pipeline.py. Ingestion remains application-owned.
+It uses stdlib CSV/JSON and the unchanged Product, Listing and MarketplaceAdapter;
+there is no orivane-commerce public ingestion API or new public type.
+
+The exact eight-column schema is documented with the example. Product validates
+supplied facts; the deterministic Listing copies name, description, language and
+features, leaves keywords empty and adds no marketing claims. Missing description
+or language fails closed. The example preserves all unused Product facts.
+
+Its frozen OfflineReferenceDraft and structural OfflineReferenceAdapter belong to
+the application. offline-reference demonstrates Listing -> typed target draft.
+It does not describe a real marketplace, field limits, taxonomy, remote acceptance
+or publishing. No model, network, SDK, publisher or automatic telemetry is used.
+Buffered output prevents partial JSONL on a later-record input failure. Errors
+are safe categories/row numbers, without source values or validation tracebacks.

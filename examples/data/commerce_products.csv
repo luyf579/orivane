@@ -1,0 +1,3 @@
+name,brand,description,features_json,attributes_json,category,target_audience,language
+Hand Trowel,Fable Tools,"A compact trowel, with a ""blue"" handle.","[""Steel scoop"", ""Blue grip""]","{""Color"": ""blue"", ""dimensions"": {""length_cm"": 28, ""width_cm"": 8}, ""care"": [""wipe dry"", null]}",Garden tools,Adult gardeners,en
+Desk Lamp,,An adjustable desk lamp for reading.,"[""Adjustable arm""]","{""Color"": ""white"", ""power"": {""watts"": 7, ""dimmable"": false}}",,,en
