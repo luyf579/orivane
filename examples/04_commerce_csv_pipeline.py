@@ -4,7 +4,9 @@ import csv
 import json
 import sys
 from dataclasses import asdict, dataclass
+from io import StringIO
 from pathlib import Path
+from typing import NoReturn
 
 from orivane_commerce import Listing, MarketplaceAdapter, Product
 
@@ -46,10 +48,29 @@ class OfflineReferenceAdapter:
         )
 
 
+def _unique_json_object(pairs: list[tuple[str, object]]) -> dict[str, object]:
+    keys: set[str] = set()
+    for key, _ in pairs:
+        if key in keys:
+            raise ValueError("duplicate JSON key")
+        keys.add(key)
+    return dict(pairs)
+
+
+def _reject_json_constant(_value: str) -> NoReturn:
+    raise ValueError("invalid JSON constant")
+
+
 def _read_product(values: dict[str, str], row: int) -> Product:
     try:
         features: object = (
-            json.loads(values["features_json"]) if values["features_json"].strip() else []
+            json.loads(
+                values["features_json"],
+                object_pairs_hook=_unique_json_object,
+                parse_constant=_reject_json_constant,
+            )
+            if values["features_json"].strip()
+            else []
         )
     except (ValueError, RecursionError):
         raise _PipelineError(f"row {row}: invalid features_json") from None
@@ -57,7 +78,13 @@ def _read_product(values: dict[str, str], row: int) -> Product:
         raise _PipelineError(f"row {row}: invalid features_json")
     try:
         attributes: object = (
-            json.loads(values["attributes_json"]) if values["attributes_json"].strip() else {}
+            json.loads(
+                values["attributes_json"],
+                object_pairs_hook=_unique_json_object,
+                parse_constant=_reject_json_constant,
+            )
+            if values["attributes_json"].strip()
+            else {}
         )
     except (ValueError, RecursionError):
         raise _PipelineError(f"row {row}: invalid attributes_json") from None
@@ -90,27 +117,54 @@ def _make_listing(product: Product, row: int) -> Listing:
     )
 
 
+def _validate_csv_quotes(text: str) -> None:
+    state = "FIELD_START"
+    for character in text:
+        if state == "QUOTED":
+            if character == '"':
+                state = "AFTER_QUOTE"
+        elif state == "AFTER_QUOTE":
+            if character == '"':
+                state = "QUOTED"
+            elif character in ",\r\n":
+                state = "FIELD_START"
+            else:
+                raise csv.Error("invalid quoting")
+        elif character == '"':
+            if state != "FIELD_START":
+                raise csv.Error("invalid quoting")
+            state = "QUOTED"
+        elif character in ",\r\n":
+            state = "FIELD_START"
+        else:
+            state = "UNQUOTED"
+    if state == "QUOTED":
+        raise csv.Error("unterminated quoted field")
+
+
 def _render_jsonl(path: Path) -> bytes:
     adapter: MarketplaceAdapter[OfflineReferenceDraft] = OfflineReferenceAdapter()
     lines: list[str] = []
     with path.open(encoding="utf-8-sig", newline="") as stream:
-        reader = csv.reader(stream, strict=True)
-        header = next(reader, None)
-        if header is None or len(header) != len(_COLUMNS) or set(header) != set(_COLUMNS):
-            raise _PipelineError("invalid CSV header")
-        for row, values in enumerate(reader, start=1):
-            if len(values) != len(header):
-                raise _PipelineError(f"row {row}: invalid CSV record")
-            product = _read_product(dict(zip(header, values, strict=True)), row)
-            draft = adapter.adapt(_make_listing(product, row))
-            lines.append(
-                json.dumps(
-                    {"row": row, "platform": adapter.platform, "draft": asdict(draft)},
-                    ensure_ascii=False,
-                    sort_keys=True,
-                    separators=(",", ":"),
-                )
+        snapshot = stream.read()
+    _validate_csv_quotes(snapshot)
+    reader = csv.reader(StringIO(snapshot, newline=""), strict=True)
+    header = next(reader, None)
+    if header is None or len(header) != len(_COLUMNS) or set(header) != set(_COLUMNS):
+        raise _PipelineError("invalid CSV header")
+    for row, values in enumerate(reader, start=1):
+        if len(values) != len(header):
+            raise _PipelineError(f"row {row}: invalid CSV record")
+        product = _read_product(dict(zip(header, values, strict=True)), row)
+        draft = adapter.adapt(_make_listing(product, row))
+        lines.append(
+            json.dumps(
+                {"row": row, "platform": adapter.platform, "draft": asdict(draft)},
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
             )
+        )
     return ("".join(line + "\n" for line in lines)).encode("utf-8")
 
 

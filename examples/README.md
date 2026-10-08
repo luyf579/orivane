@@ -44,8 +44,14 @@ the canonical sample uses this order:
 | language | Required for this pipeline |
 
 Input accepts UTF-8 with or without BOM, standard CSV quoting and quoted
-multiline fields. Product owns text, attribute-key, JSON-value and finite-number
-validation. Brand, category, target audience and attributes remain in Product.
+multiline fields. Bare double quotes in unquoted fields and characters after a
+closing quote are rejected. JSON rejects duplicate object keys at every depth,
+including objects in arrays, and rejects NaN, Infinity and -Infinity constants.
+Product still owns text, attribute-key, JSON-value and finite-number validation.
+Brand, category, target audience and attributes remain in Product.
+
+Quote validation and stdlib CSV parsing use the same input text snapshot, read
+once. Input and output are buffered in memory; memory grows with both sizes.
 
 Listing projects only name -> title, description -> description,
 language -> language, features -> bullet_points; keywords=(). No description,

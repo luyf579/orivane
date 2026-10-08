@@ -155,7 +155,12 @@ def test_json_syntax_and_shape_fail_without_echo(tmp_path: Path, field: str, val
 def test_product_validation_is_authoritative(tmp_path: Path, field: str, value: str) -> None:
     record = _record()
     record[field] = value
-    _assert_error(_run(_write_csv(tmp_path, [record]), tmp_path), "row 1: invalid Product")
+    category = (
+        "invalid attributes_json"
+        if value in ('{"number":NaN}', '{"number":Infinity}')
+        else "invalid Product"
+    )
+    _assert_error(_run(_write_csv(tmp_path, [record]), tmp_path), f"row 1: {category}")
 
 
 @pytest.mark.parametrize("blank", ["", "   "])
@@ -326,3 +331,168 @@ def test_example_import_boundary_has_no_network_models_or_telemetry() -> None:
         and node.id in {"eval", "exec", "literal_eval", "__import__", "runtime_checkable"}
         for node in ast.walk(tree)
     )
+
+
+@pytest.mark.parametrize("row", [1, 2])
+@pytest.mark.parametrize(
+    "field,payload",
+    [
+        ("attributes_json", '{"secret":1,"secret":2}'),
+        ("attributes_json", '{"outer":{"secret":1,"secret":2}}'),
+        ("attributes_json", '{"items":[{"secret":1,"secret":2}]}'),
+        ("attributes_json", '{"数":1,"\\u6570":2}'),
+        ("attributes_json", '{"n":0,"\\u006e":1}'),
+        ("attributes_json", '{"n":NaN,"n":1}'),
+        ("attributes_json", '{"n":Infinity,"n":1}'),
+        ("attributes_json", '{"n":-Infinity,"n":1}'),
+        ("attributes_json", '{"n":1e9999,"n":1}'),
+        ("attributes_json", '{"n":NaN}'),
+        ("attributes_json", '{"n":Infinity}'),
+        ("attributes_json", '{"n":-Infinity}'),
+        ("attributes_json", '{"outer":{"n":NaN}}'),
+        ("attributes_json", '{"items":[{"n":-Infinity}]}'),
+        ("features_json", '[{"n":1,"n":2}]'),
+        ("features_json", '[{"outer":{"n":1,"n":2}}]'),
+        ("features_json", "[NaN]"),
+        ("features_json", "[Infinity]"),
+        ("features_json", "[-Infinity]"),
+        ("features_json", '[{"n":NaN,"n":1}]'),
+    ],
+)
+def test_strict_json_rejects_duplicates_and_constants_atomically(
+    tmp_path: Path, field: str, payload: str, row: int
+) -> None:
+    invalid = _record()
+    invalid[field] = payload
+    records = [invalid]
+    if row == 2:
+        first = _record()
+        first["description"] += "\nA second physical line."
+        records.insert(0, first)
+    result = _run(_write_csv(tmp_path, records), tmp_path)
+    _assert_error(result, f"row {row}: invalid {field}")
+    assert payload.encode() not in result.stderr
+    assert b"secret" not in result.stderr
+
+
+@pytest.mark.parametrize("row", [1, 2])
+@pytest.mark.parametrize(
+    "payload",
+    [
+        '{"n":1e9999}',
+        '{"n":-1e9999}',
+        '{"outer":{"n":1e9999}}',
+        '{"items":[-1e9999]}',
+    ],
+)
+def test_numeric_overflow_still_reaches_product_validation(
+    tmp_path: Path, payload: str, row: int
+) -> None:
+    invalid = _record()
+    invalid["attributes_json"] = payload
+    records = [invalid] if row == 1 else [_record(), invalid]
+    _assert_error(_run(_write_csv(tmp_path, records), tmp_path), f"row {row}: invalid Product")
+
+
+def test_legal_nested_unicode_json_preserves_values_and_key_order(tmp_path: Path) -> None:
+    record = _record()
+    record["attributes_json"] = (
+        '{"é":"雪","nested":{"alpha":1,"β":true},"items":[{"値":null}],"empty":{}}'
+    )
+    record["features_json"] = '["NaN","Infinity","-Infinity","雪"]'
+    product: Product = _example_module()._read_product(record, 1)
+    assert product.attributes == {
+        "é": "雪",
+        "nested": {"alpha": 1, "β": True},
+        "items": [{"値": None}],
+        "empty": {},
+    }
+    assert list(product.attributes) == ["é", "nested", "items", "empty"]
+    assert isinstance(product.attributes["nested"], dict)
+    assert list(product.attributes["nested"]) == ["alpha", "β"]
+    result = _run(_write_csv(tmp_path, [record], bom=True), tmp_path)
+    assert result.returncode == 0 and result.stderr == b""
+    assert json.loads(result.stdout)["draft"]["bullets"] == ["NaN", "Infinity", "-Infinity", "雪"]
+
+
+@pytest.mark.parametrize("later", [False, True])
+@pytest.mark.parametrize("ending", ["\n", "\r\n"])
+@pytest.mark.parametrize(
+    "raw_row",
+    [
+        'bad"quote,brand,description,,,category,audience,en',
+        'name,mi"ddle,description,,,category,audience,en',
+        '"closed"x,brand,description,,,category,audience,en',
+        '"closed" ,brand,description,,,category,audience,en',
+        '"unterminated,brand,description,,,category,audience,en',
+        'a",b,description,,,category,audience,en',
+        '"a",b"c,description,,,category,audience,en',
+        '商品"异常,品牌,说明,,,分类,受众,zh',
+    ],
+)
+def test_manual_invalid_csv_quotes_fail_without_partial_output(
+    tmp_path: Path, raw_row: str, ending: str, later: bool
+) -> None:
+    text = ",".join(COLUMNS) + ending
+    if later:
+        text += 'valid,brand,"first physical line' + ending
+        text += 'second physical line",,,category,audience,en' + ending
+    text += raw_row + ending + CANARY
+    path = tmp_path / "manual-invalid.csv"
+    path.write_bytes(text.encode("utf-8"))
+    _assert_error(_run(path, tmp_path), "invalid or unreadable CSV")
+
+
+@pytest.mark.parametrize("ending", ["\n", "\r\n", "\r"])
+@pytest.mark.parametrize("final_ending", [False, True])
+@pytest.mark.parametrize(
+    "encoded,decoded",
+    [
+        ("普通说明", "普通说明"),
+        ('"正常引用"', "正常引用"),
+        ('"说明,含逗号"', "说明,含逗号"),
+        ('"说明含""双引号"""', '说明含"双引号"'),
+        ('"第一行\n第二行"', "第一行\n第二行"),
+        ('"第一行\r\n第二行"', "第一行\r\n第二行"),
+    ],
+)
+def test_legal_manual_csv_preserves_quoting_and_record_endings(
+    tmp_path: Path, encoded: str, decoded: str, ending: str, final_ending: bool
+) -> None:
+    text = ",".join(COLUMNS) + ending + f"商品,品牌,{encoded},,,分类,受众,zh"
+    if final_ending:
+        text += ending
+    path = tmp_path / "manual-valid.csv"
+    path.write_bytes(b"\xef\xbb\xbf" + text.encode("utf-8"))
+    result = _run(path, tmp_path)
+    assert result.returncode == 0 and result.stderr == b""
+    draft = json.loads(result.stdout)["draft"]
+    assert draft["headline"] == "商品" and draft["body"] == decoded
+    assert draft["locale"] == "zh" and draft["bullets"] == draft["search_terms"] == []
+
+
+def test_reordered_columns_accept_empty_and_trailing_empty_fields(tmp_path: Path) -> None:
+    columns = ["language", *COLUMNS[:-1]]
+    text = ",".join(columns) + "\r\nen,name,,description,,,,"
+    path = tmp_path / "trailing-empty.csv"
+    path.write_bytes(text.encode())
+    result = _run(path, tmp_path)
+    assert result.returncode == 0 and result.stderr == b""
+    assert json.loads(result.stdout)["draft"]["body"] == "description"
+
+
+def test_quote_validation_and_parsing_use_the_same_snapshot(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    module = _example_module()
+    path = _write_csv(tmp_path, [_record()])
+    original_validator = module._validate_csv_quotes
+
+    def change_file_after_validation(snapshot: str) -> None:
+        original_validator(snapshot)
+        path.write_bytes(b'changed"invalid')
+
+    monkeypatch.setattr(module, "_validate_csv_quotes", change_file_after_validation)
+    output: bytes = module._render_jsonl(path)
+    assert json.loads(output)["draft"]["headline"] == _record()["name"]
+    assert path.read_bytes() == b'changed"invalid'
