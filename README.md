@@ -37,6 +37,7 @@ Orivane includes an experimental platform-neutral Commerce domain package.
 It provides Product, Listing, and MarketplaceAdapter only.
 Install with `pip install orivane-commerce`.
 See the [commerce architecture](docs/architecture/commerce.md).
+The v0.2 development source includes an [offline application-level CSV reference path](examples/README.md#commerce-csv-reference).
 It provides no marketplace implementations, publishing, ingestion, or Listing Agent.
 
 ## Core concepts and backend

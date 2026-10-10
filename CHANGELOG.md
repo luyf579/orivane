@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Added
+
+- Offline application-level CSV -> Product -> deterministic Listing -> typed
+  reference draft example. No new Commerce public API or marketplace publishing.
+
 ### Changed
 
 - Prepare the synchronized 0.2.0 workspace and four distributions as unreleased
