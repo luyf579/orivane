@@ -71,3 +71,10 @@ All records are parsed, validated and adapted before writing stdout. On input
 failure stdout is empty, stderr gives a safe fixed category/optional logical row,
 and exit status is 2; raw rows, descriptions, JSON inputs and tracebacks are not
 printed. The example emits no logs, traces or telemetry.
+
+## Offline Listing proposal and human review
+
+See [commerce_listing_review.md](commerce_listing_review.md) for example 05,
+JSON/JSONL inputs, offline modes, explicit human decisions, approved-only export,
+file integrity and safety limits. Fake Backend and TestModel are offline
+fixtures; no real LLM marketing generation or marketplace publishing is verified.

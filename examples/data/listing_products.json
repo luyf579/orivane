@@ -1,0 +1,28 @@
+[
+  {
+    "name": "云间便签架",
+    "brand": "虚构文具",
+    "description": "用于收纳便签的桌面支架，采用蓝色外观。",
+    "features": [
+      "桌面收纳",
+      "蓝色外观"
+    ],
+    "attributes": {
+      "color": "蓝色"
+    },
+    "language": "zh-CN"
+  },
+  {
+    "name": "Fable Note Stand",
+    "brand": "Fictional Desk",
+    "description": "A blue desktop stand for organising notes.",
+    "features": [
+      "Desktop note storage",
+      "Blue finish"
+    ],
+    "attributes": {
+      "color": "blue"
+    },
+    "language": "en"
+  }
+]
